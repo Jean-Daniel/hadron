@@ -1,0 +1,4 @@
+
+#include "../subconfig/WonderBox.xcconfig"
+// Pull in the general settings
+#include "../generic/DebugLeopard32.xcconfig"

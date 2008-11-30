@@ -1,0 +1,27 @@
+
+// Build all selected archs
+ONLY_ACTIVE_ARCH = NO
+
+GCC_OPTIMIZATION_LEVEL = s
+GCC_ENABLE_FIX_AND_CONTINUE = NO
+
+// Generate debug symbols to be able to symbolize stack trace if needed
+GCC_GENERATE_DEBUGGING_SYMBOLS = YES
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// Deployment postprocessing is what triggers Xcode to strip
+DEPLOYMENT_POSTPROCESSING = YES
+STRIP_INSTALLED_PRODUCT = YES
+COPY_PHASE_STRIP = NO
+STRIP_STYLE = non-global
+
+DEAD_CODE_STRIPPING = YES
+PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES
+
+GCC_WARN_UNUSED_VARIABLE = YES
+// init-self can only be turned on when optimizations are on
+WB_CONFIGURATION_WARNING_CFLAGS = -Winit-self -Wno-extra
+
+// Disable Carbon (NDEBUG) and Cocoa (NS_BLOCK_ASSERTIONS) Assertions
+WB_CONFIGURATION_GCC_PREPROCESSOR_DEFINITIONS = NDEBUG=1 NS_BLOCK_ASSERTIONS
+

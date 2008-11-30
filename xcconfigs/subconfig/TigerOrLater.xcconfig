@@ -1,0 +1,6 @@
+
+// according to Xcode release notes, GCC 4.2 must not be used to target 10.4
+GCC_VERSION = 4.0
+// System configuration Min: 10.4, Max: 10.5
+SDKROOT = macosx10.5
+MACOSX_DEPLOYMENT_TARGET = 10.4

@@ -1,0 +1,15 @@
+
+// Pull in the general settings
+#include "../subconfig/General.xcconfig"
+
+// Tiger or later
+#include "../subconfig/TigerOrLater.xcconfig"
+
+// 32 bits
+#include "../subconfig/Arch32.xcconfig"
+
+// Debug settings
+#include "../subconfig/Release.xcconfig"
+
+// Merge settings
+#include "../subconfig/WBMerge.xcconfig"

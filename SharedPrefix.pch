@@ -1,0 +1,625 @@
+/*
+ *  SharedPrefix.h
+ *  WonderBox
+ *
+ *  Created by Jean-Daniel Dupas.
+ *  Copyright (c) 2004 - 2008 Jean-Daniel Dupas. All rights reserved.
+ */
+/*!
+@header SharedPrefix
+ @abstract WonderBox Prefix Header.
+ @discussion A bunch of macros and inline functions usefull everywhere.
+ Some of them are affected by the DEBUG precompiler macros.
+ It can safely be include in C and Obj-C files.
+*/
+
+#if !defined(__SHARED_PREFIX_H)
+#define __SHARED_PREFIX_H 1
+
+/* allows compilation of some file without dependences on Foundation */
+#if !defined(WB_NO_OBJC) && (defined(__OBJC__) || defined(__OBJC2__))
+	#define __WB_OBJC__ 1
+#endif
+
+#include <tgmath.h>
+
+#if defined(__WB_OBJC__)
+#import <Cocoa/Cocoa.h>
+#else
+#include <CoreServices/CoreServices.h>
+#endif
+
+#if !defined(MAC_OS_X_VERSION_10_5)
+  #define MAC_OS_X_VERSION_10_5 1050
+#endif
+
+/* Wonderbox build support */
+#if defined(WONDERBOX_FRAMEWORK)
+  #if !defined(WONDERBOX_NAME)
+    #define WONDERBOX_NAME WonderBox
+  #endif
+  #define WBHEADER(header) <WONDERBOX_NAME/header>
+#else
+  #define WBHEADER(header) #header
+#endif
+
+#include <asl.h>
+#include <libgen.h>
+#include <libkern/OSAtomic.h>
+
+#pragma mark Visibility Macros
+
+#pragma mark Attributes
+
+#if !defined(WB_VISIBLE)
+  #define WB_VISIBLE __attribute__((visibility("default")))
+#endif
+
+#if !defined(WB_HIDDEN)
+  #define WB_HIDDEN __attribute__((visibility("hidden")))
+#endif
+
+#if !defined(WB_OBSOLETE)
+  #define WB_OBSOLETE __attribute__((deprecated))
+#endif
+
+#if !defined(WB_REQUIRES_NIL_TERMINATION)
+  #if defined(__APPLE_CC__) && (__APPLE_CC__ >= 5549)
+    #define WB_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
+  #else
+    #define WB_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
+  #endif
+#endif
+
+#if !defined(WB_REQUIRED_ARGS)
+  #define WB_REQUIRED_ARGS(idx, args...) __attribute__((nonnull(idx, ##args)))
+#endif
+
+#pragma mark Visibility
+/*!
+ @defined WB_PRIVATE
+ @abstract Private extern symbol.
+ */
+/*!
+ @defined WB_EXPORT
+ @abstract Exported Wonderbox Function.
+ @discussion If WONDERBOX_FRAMEWORK is not defined, WB_EXPORT is the same than WB_PRIVATE
+ */
+/*!
+ @defined WB_PLUGIN_EXPORT
+ @abstract Use for plugin entry point. Always export even if WONDERBOX_FRAMEWORK is not defined.
+ */
+
+#if defined(__cplusplus)
+  #define __inline__ inline
+  #define WB_PRIVATE extern "C" WB_HIDDEN
+	#define WB_PLUGIN_EXPORT extern "C" WB_VISIBLE
+
+  #if defined(WONDERBOX_FRAMEWORK)
+    #define WB_EXPORT extern "C" WB_VISIBLE
+  #else
+    #define WB_EXPORT extern "C" WB_HIDDEN
+  #endif
+#else
+  #define WB_PRIVATE extern WB_HIDDEN
+  #define WB_PLUGIN_EXPORT WB_VISIBLE
+
+  #if defined(WONDERBOX_FRAMEWORK)
+    #define WB_EXPORT extern WB_VISIBLE
+  #else
+    #define WB_EXPORT extern WB_HIDDEN
+  #endif /* Framework */
+#endif
+
+/*!
+ @defined WB_CLASS_EXPORT
+ @abstract Public class. (64 bits only)
+ @discussion If WONDERBOX_FRAMEWORK is not defined, WB_CLASS_EXPORT is the same than WB_CLASS_PRIVATE
+ */
+/*!
+ @defined WB_CLASS_PRIVATE
+ @abstract Internal class. (64 bits only)
+ */
+#if !defined(WB_CLASS_EXPORT)
+  #if __LP64__
+		#define WB_CLASS_PRIVATE WB_HIDDEN
+
+		#if defined(WONDERBOX_FRAMEWORK)
+    	#define WB_CLASS_EXPORT WB_VISIBLE
+		#else
+      #define WB_CLASS_EXPORT WB_CLASS_PRIVATE      
+		#endif
+  #else
+    #define WB_CLASS_EXPORT
+    #define WB_CLASS_PRIVATE    
+  #endif /* Framework && 64 bits runtime */
+#endif
+
+#if !defined(WB_INLINE)
+  #if !defined(__NO_INLINE__)
+    #define WB_INLINE static __inline__ __attribute__((always_inline))
+  #else
+    #define WB_INLINE static __inline__
+  #endif /* No inline */
+#endif
+
+#pragma mark -
+#pragma mark Leopard
+#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
+  #if !__LP64__
+    typedef int NSInteger;
+    typedef unsigned int NSUInteger;
+
+    typedef float CGFloat;
+    #define CGFLOAT_MIN FLT_MIN
+    #define CGFLOAT_MAX FLT_MAX
+  #else
+    #error 64 bits no supported for deployement version < MAC_OS_X_VERSION_10_5.
+  #endif
+
+  #define NSIntegerMax    LONG_MAX
+  #define NSIntegerMin    LONG_MIN
+  #define NSUIntegerMax   ULONG_MAX
+#endif
+
+/* Tiger only */
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+  #define NSIntegerHashCallBacks NSIntHashCallBacks
+  #define NSIntegerMapKeyCallBacks NSIntMapKeyCallBacks
+  #define NSIntegerMapValueCallBacks NSIntMapValueCallBacks
+#endif
+
+/* Garbage collector */
+#if defined(__OBJC_GC__)
+#define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
+#else
+#define WBMakeCollectable(ptr) (id)ptr
+#endif
+
+#pragma mark -
+#pragma mark Misc C Macros
+
+#if !defined(XOR)
+#define XOR(A, B)	({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); (__a || __b) && !(__a && __b); })
+#endif
+
+#if !defined(AVG)
+#define AVG(A, B)	({ (A + B) / 2; })
+#endif
+
+/*!
+ @defined WBFloatEquals
+ @abstract Compare to float numbers.
+ @discussion Because float are not exacts, we considere to float equals if difference is less than FLT_EPSILON.
+ */
+WB_INLINE
+bool WBRealEqualsf(float a, float b) { double __delta = a - b; return (__delta <= FLT_EPSILON && __delta >= -FLT_EPSILON); }
+WB_INLINE
+bool WBRealEquals(double a, double b) { double __delta = a - b; return (__delta <= DBL_EPSILON && __delta >= -DBL_EPSILON); }
+WB_INLINE
+bool WBRealEqualsl(long double a, long double b)	{ long double __delta = a - b; return (__delta <= LDBL_EPSILON && __delta >= -LDBL_EPSILON); }
+
+#define WBRealEquals(x, y)          __TGMATH_REAL_2(x, y, WBRealEquals)
+
+#pragma mark Bitfields
+/* Bit manipulation macros */
+/* Bits are numbered from 31/63 on left to 0 on right */
+/* May or may not work if you use them on bitfields in types other than NSUInteger, bitfields the full width of a NSUInteger, or anything else for which they were not designed. */
+/* In the following, N1 and N2 specify an inclusive range N2..N1 with N1 >= N2 */
+#if __LP64__
+  #define WBBitfieldMask(N1, N2)	((((NSUInteger)~0UL) << (63UL - (N1) + (N2))) >> (63UL - N1))
+#else
+  #define WBBitfieldMask(N1, N2)	((((NSUInteger)~0UL) << (31UL - (N1) + (N2))) >> (31UL - N1))
+#endif
+#define WBBitfieldGetValue(V, N1, N2)	(((V) & WBBitfieldMask(N1, N2)) >> (N2))
+#define WBBitfieldSetValue(V, N1, N2, X)	((V) = ((V) & ~WBBitfieldMask(N1, N2)) | (((X) << (N2)) & WBBitfieldMask(N1, N2)))
+#define WBBitfieldMaxValue(N1, N2)	WBBitfieldGetValue(0xFFFFFFFFUL, (N1), (N2))
+
+#define WBBitSet(V, N)  ((V) |= (1UL << (N)))
+#define WBBitClear(V, N)  ((V) &= ~(1UL << (N)))
+#define WBBitIsSet(V, N)  (((V) & (1UL << (N))) != 0)
+
+/* Use to set a boolean value in a bitfield */
+#define WBFlagSet(field, value)		field = ((value) != 0) ? 1 : 0
+#define WBFlagTestAndSet(field, value)		({ bool set = field; field = ((value) != 0) ? 1 : 0; set; })
+
+#pragma mark Logging
+
+#if defined(DEBUG)
+
+#define DCLog(format, args...)  fprintf(stderr, format "\n", ## args)
+#define DCLogv(format, args)  vfprintf(stderr, format "\n", args)
+
+#define WBCLog(client, msg, level, format, args...) fprintf(stderr, "Log(" #level "): " format "\n", ## args)
+#define WBCLogv(client, msg, level, format, args)  vfprintf(stderr, "Log(" #level "): " format "\n", args)
+
+#define WBCTrace() { \
+  char *__file = strdup(__FILE__); \
+  fprintf(stderr, "[%s:%li]: %s()\n", __file ? basename(__file) : "", (long)__LINE__, __func__); \
+  if (__file) free(__file); \
+}
+
+#else
+
+#define DCLog(format, args...)
+#define DCLogv(format, args)
+
+#define WBCLog(client, msg, level, format, args...) asl_log(client, msg, level, format, ## args)
+WB_INLINE
+void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) { 
+  asl_vlog(client, msg, level, format, args); 
+}
+
+/*!
+ @defined WBCTrace
+ @abstract Print a string like: '[file:line]: function()'.
+ @discussion This Macro does nothing when DEBUG is not defined
+ */
+#define WBCTrace()
+
+#endif
+
+#define WBCLogWarning(format, args...) WBCLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
+#define WBCLogError(format, args...) WBCLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
+
+// Assert
+#if DEBUG_ASSERT_PRODUCTION_CODE
+	#define WBCAssert(assertion, message) do { } while (0)
+#else
+  #define WBCAssert(assertion, message) \
+  do { \
+    if (__builtin_expect(!(assertion), 0)) { \
+      DEBUG_ASSERT_MESSAGE( \
+        DEBUG_ASSERT_COMPONENT_NAME_STRING, \
+        #assertion, 0, message, __FILE__, __LINE__, 0); \
+    } \
+  } while (0)
+#endif /* DEBUG_ASSERT_PRODUCTION_CODE */
+
+// WBCompileAssert
+// WBCompileAssert is an assert that is meant to fire at compile time if you
+// want to check things at compile instead of runtime. For example if you
+// want to check that a wchar is 4 bytes instead of 2 you would use
+// WBCompileAssert(sizeof(wchar_t) == 4, wchar_t_is_4_bytes_on_OS_X)
+// Note that the second "arg" is not in quotes, and must be a valid processor
+// symbol in it's own right (no spaces, punctuation etc).
+
+// Wrapping this in an #ifndef allows external groups to define their own compile time assert scheme.
+// We got this technique from here:
+// http://unixjunkie.blogspot.com/2007/10/better-compile-time-asserts_29.html
+
+#define _WBCompileAssertSymbolInner(line, msg) WBCOMPILEASSERT ## line ## __ ## msg
+#define _WBCompileAssertSymbol(line, msg) _WBCompileAssertSymbolInner(line, msg)
+#define WBCompileAssert(test, msg) \
+		typedef char _WBCompileAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
+
+
+
+#pragma mark -
+#pragma mark Objective-C Macros
+#if defined (__WB_OBJC__)
+
+#if defined(DEBUG)
+
+#define DLog(format, args...)   NSLog(format, ## args)
+#define DLogv(format, args)		 NSLogv(format, args)
+
+#define WBLog(client, msg, level, format, args...) ({ \
+  NSString *__str = [[NSString alloc] initWithFormat:format, ## args]; \
+  if (__str) { \
+    fprintf(stderr, "Log(" #level "): %s\n", [__str UTF8String]); \
+    [__str release]; \
+  } \
+})
+
+#define WBLogv(client, msg, level, format, args) ({ \
+  NSString *__str = [[NSString alloc] initWithFormat:format arguments:args]; \
+  if (__str) { \
+    fprintf(stderr, "Log(" #level "): %s\n", [__str UTF8String]); \
+    [__str release]; \
+  } \
+})
+
+#define WBTrace() { \
+  char *__file = strdup(__FILE__); \
+  fprintf(stderr, "[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __func__); \
+  if (__file) free(__file); \
+}
+
+/* Dynamic trace */
+#define WBDTrace() { \
+  char *__file = strdup(__FILE__); \
+  NSLog(@"[%s:%li]: %c[%@ %@]", __file ? basename(__file) : "", (long)__LINE__, self == (id)[self class] ? '+' : '-', NSStringFromClass([self class]), NSStringFromSelector(_cmd)); \
+  if (__file) free(__file); \
+}
+
+#else /* Debug not defined */
+#pragma mark Production Macros
+/*!
+ @defined DLog
+ @abstract Debug Log. This function is just a NSLog Wrapper that can enabled or disabled by the Precompiler.
+ @discussion This Macro does nothing when DEBUG is not defined
+ @param str A String like in NSLog.
+ @param ... parameters.
+ */
+#define DLog(format, args...)
+#define DLogv(format, args)
+
+#define WBLog(client, msg, level, format, args...) ({ \
+  NSString *__str = [[NSString alloc] initWithFormat:format, ## args]; \
+  if (__str) { \
+    asl_log(client, msg, level, "%s", [__str UTF8String]); \
+    [__str release]; \
+  } \
+})
+
+WB_INLINE
+void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
+  NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
+  if (__str) {
+    asl_log(client, msg, level, "%s", [__str UTF8String]);
+    [__str release];
+  }
+}
+
+/*!
+ @defined WBTrace
+ @abstract Print a string like: '+/-[sender selector]'.
+ @discussion This Macro does nothing when DEBUG is not defined
+ */
+#define WBTrace()
+#define WBDTrace()
+
+#endif /* DEBUG */
+
+#pragma mark Generic Macros
+
+#define WBLogWarning(format, args...) WBLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
+#define WBLogError(format, args...) WBLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
+
+#define WBThrowException(name, format, args...) ({ \
+  @throw [NSException exceptionWithName:name reason:[NSString stringWithFormat:format, ## args] userInfo:nil]; \
+})
+
+#define WBThrowExceptionWithInfo(name, info, format, args...) ({ \
+  @throw [NSException exceptionWithName:name reason:[NSString stringWithFormat:format, ## args] userInfo:info]; \
+})
+
+/*!
+ @defined WBLogException
+ @abstract Log an exception with the method where it occured.
+ @discussion Use NSLog when DEBUG and asl in production.
+ @param exception An id representing the Exception to log.
+ */
+#define WBLogException(exception) { \
+  char *__file = strdup(__FILE__); \
+  WBLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s (%s:%li): %@", \
+        [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
+        __func__, __file ? basename(__file) : "", (long)__LINE__, exception); \
+  if (__file) free(__file); \
+}
+
+/*!
+ @defined WBCLogException
+ @abstract Log an exception with the function where it occured.
+ @discussion Use NSLog when DEBUG and asl in production.
+ @param exception An id representing the Exception to log.
+ */
+#define WBCLogException(exception)  { \
+  char *__file = strdup(__FILE__); \
+  WBLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s() [%s:%li]: %@", \
+        [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
+        __func__, __file ? basename(__file) : "", (long)__LINE__, exception); \
+  if (__file) free(__file); \
+}
+
+#pragma mark Assert
+// we directly invoke the NSAssert handler so we can pass on the varargs
+// (NSAssert doesn't have a macro we can use that takes varargs)
+#if !defined(NS_BLOCK_ASSERTIONS)
+#define WBAssert(condition, desc, args...) \
+do { \
+  if (__builtin_expect(!(condition), 0)) \
+    [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithCString:__func__] \
+                                                            file:[NSString stringWithCString:__FILE__] \
+                                                      lineNumber:__LINE__ \
+                                                     description:desc, ##args]; \
+  } while(0)
+#else // !defined(NS_BLOCK_ASSERTIONS)
+  #define WBAssert(condition, ...) do { } while (0)
+#endif // !defined(NS_BLOCK_ASSERTIONS)
+
+#pragma mark -
+#pragma mark Other Objective-C Macros
+/* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
+#define WBSetterRetain(ivar, var) { \
+  id __var = var; \
+  if (ivar != __var) { \
+    [__var retain]; \
+    [ivar release]; \
+    ivar = __var; \
+  } \
+}
+
+/* For safety we copy var before releasing ivar (ivar can contain the last reference on var). */
+#define WBSetterCopy(ivar, var) { \
+  id __var = var; \
+  if (ivar != __var) { \
+    __var = [__var copyWithZone:[self zone]]; \
+    [ivar release]; \
+    ivar = __var; \
+  } \
+}
+
+#define WBSetterMutableCopy(ivar, var) { \
+  id __var = var; \
+  if (ivar != __var) { \
+    __var = [__var mutableCopyWithZone:[self zone]]; \
+    [ivar release]; \
+    ivar = __var; \
+  } \
+}
+
+/*!
+ @defined WBDelegateHandle
+ @abstract Check if delegate implements a method
+ @param delegate The Delegate to register.
+ @param method	method name
+ */
+#define WBDelegateHandle(delegate, method)	({id __delegate = delegate; __delegate && [__delegate respondsToSelector:@selector(method)];})
+
+/*!
+ @defined WBDelegateRegisterNotification
+ @abstract   Used to register a delegate.
+ @param		obj	The Delegate to register.
+ @param		sel	The selector the notification need called.
+ @param		notif The notification name.
+ */
+#define WBDelegateRegisterNotification(obj, sel, notif)		if ([obj respondsToSelector:sel]) {	\
+  																[[NSNotificationCenter defaultCenter] addObserver:obj selector:sel name:notif object:self]; }
+
+#define WBDelegateUnregisterNotification(obj, sel, notif)	if ([obj respondsToSelector:sel]) {	\
+  																[[NSNotificationCenter defaultCenter] removeObserver:obj name:notif object:self];	}
+
+/*!
+ @defined WBClusterException
+ @abstract   Raise an invalig argument exception.
+ */
+#define WBClusterException() 		WBThrowException(NSInvalidArgumentException, \
+                                                 @"-%@ only defined for abstract class. Define -[%@ %@]!", \
+                                                 NSStringFromSelector(_cmd), NSStringFromClass([self class]), NSStringFromSelector(_cmd))
+
+/*!
+ @defined WBCurrentBundle
+ @result   Returns the bundle for the caller class.
+ */
+#define WBCurrentBundle()			[NSBundle bundleForClass:[self class]]
+/*!
+ @defined WBBundleForClass
+ @param	aClass wrapper on bundleForClass:
+ @result Returns the bundle for aClass.
+ */
+#define WBBundleForClass(aClass)	[NSBundle bundleForClass:[aClass class]]
+
+#pragma mark -
+#pragma mark Cocoa To Foundation converter
+WB_INLINE
+NSRange NSRangeFromCFRange(CFRange range) {
+  return NSMakeRange((NSUInteger)range.location, (NSUInteger)range.length);
+}
+WB_INLINE
+CFRange NSRangeToCFRange(NSRange range) {
+  return CFRangeMake((CFIndex)range.location, (CFIndex)range.length);
+}
+
+#pragma mark -
+#pragma mark NSNumber Wrapper
+/* Get NSNumber for a number */
+WB_INLINE
+NSNumber* WBBool(BOOL value) { return [NSNumber numberWithBool:value]; }
+WB_INLINE
+NSNumber* WBChar(char value) { return [NSNumber numberWithChar:value]; }
+WB_INLINE
+NSNumber* WBUChar(unsigned char value) { return [NSNumber numberWithUnsignedChar:value]; }
+
+WB_INLINE
+NSNumber* WBShort(short value) { return [NSNumber numberWithShort:value]; }
+WB_INLINE
+NSNumber* WBUShort(unsigned short value) { return [NSNumber numberWithUnsignedShort:value]; }
+
+WB_INLINE
+NSNumber* WBInt32(int32_t value) { return [NSNumber numberWithInt:value]; }
+WB_INLINE
+NSNumber* WBUInt32(uint32_t value) { return [NSNumber numberWithUnsignedInt:value]; }
+
+#if __LP64__
+WB_INLINE
+NSNumber* WBInt64(int64_t value) { return [NSNumber numberWithLong:value]; }
+WB_INLINE
+NSNumber* WBUInt64(uint64_t value) { return [NSNumber numberWithUnsignedLong:value]; }
+#else
+WB_INLINE
+NSNumber* WBInt64(int64_t value) { return [NSNumber numberWithLongLong:value]; }
+WB_INLINE
+NSNumber* WBUInt64(uint64_t value) { return [NSNumber numberWithUnsignedLongLong:value]; }
+#endif
+
+#if __LP64__
+WB_INLINE
+CGFloat WBRealValue(id value) { return value ? [value doubleValue] : 0; }
+WB_INLINE
+NSNumber* WBReal(CGFloat value) { return [NSNumber numberWithDouble:value]; }
+#else
+WB_INLINE
+CGFloat WBRealValue(id value) { return value ? [value floatValue] : 0; }
+WB_INLINE
+NSNumber* WBReal(CGFloat value) { return [NSNumber numberWithFloat:value]; }
+#endif
+
+WB_INLINE
+NSNumber* WBFloat(float value) { return [NSNumber numberWithFloat:value]; }
+WB_INLINE
+NSNumber* WBDouble(double value) { return [NSNumber numberWithDouble:value]; }
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+WB_INLINE
+NSNumber* WBInteger(NSInteger value) { return [NSNumber numberWithInt:value]; }
+WB_INLINE
+NSNumber* WBUInteger(NSUInteger value) { return [NSNumber numberWithUnsignedInt:value]; }
+#else
+WB_INLINE
+NSNumber* WBInteger(NSInteger value) { return [NSNumber numberWithInteger:value]; }
+WB_INLINE
+NSNumber* WBUInteger(NSUInteger value) { return [NSNumber numberWithUnsignedInteger:value]; }
+#endif
+
+/* Integer value compatibility */
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+WB_INLINE
+NSInteger WBIntegerValue(id object) { return [object intValue]; }
+WB_INLINE
+NSUInteger WBUIntegerValue(NSNumber *object) { return [object unsignedIntValue]; }
+WB_INLINE
+void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInt:value forKey:key]; }
+WB_INLINE
+NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntForKey:key]; }
+#else
+WB_INLINE
+NSInteger WBIntegerValue(id object) { return [object integerValue]; }
+WB_INLINE
+NSUInteger WBUIntegerValue(NSNumber *object) { return [object unsignedIntegerValue]; }
+WB_INLINE
+void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInteger:value forKey:key]; }
+WB_INLINE
+NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntegerForKey:key]; }
+#endif
+
+#endif /* __WB_OBJC__ */
+
+#pragma mark -
+#pragma mark Debugging & Profiling
+
+#define WBWaitDebugger() raise(SIGSTOP)
+
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+
+typedef uint64_t WBTimeUnit;
+
+WB_INLINE
+WBTimeUnit WBTimeGetCurrent(void) { return mach_absolute_time(); }
+
+WB_INLINE
+UInt64 WBTimeUnitToNano(WBTimeUnit delta) {
+  // Convert to nanoseconds.
+  Nanoseconds elapsedNano = AbsoluteToNanoseconds(UInt64ToUnsignedWide(delta));
+  return UnsignedWideToUInt64(elapsedNano);
+}
+
+WB_INLINE
+UInt64 WBTimeUnitToMicro(WBTimeUnit delta) { return llround(WBTimeUnitToNano(delta) / 1e3); }
+
+WB_INLINE
+UInt32 WBTimeUnitToMillis(WBTimeUnit delta) { return (UInt32)lround(WBTimeUnitToNano(delta) / 1.e6); }
+
+#endif /* __SHARED_PREFIX_H */
