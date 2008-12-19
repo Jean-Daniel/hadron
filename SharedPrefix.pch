@@ -169,12 +169,16 @@
   #define NSIntegerMapValueCallBacks NSIntMapValueCallBacks
 #endif
 
-/* Garbage collector */
-#if defined(__OBJC_GC__)
-#define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
+/* Garbage collector (required Mac OS 10.5) */
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+	#define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
+	#define WBAutoreleasePoolDrain(pool) [pool drain]
 #else
-#define WBMakeCollectable(ptr) (id)ptr
+	#define WBMakeCollectable(ptr) (id)ptr
+	#define WBAutoreleasePoolDrain(pool) [pool release]
 #endif
+
+#define WBCFAutorelease(cftype) [WBMakeCollectable(cftype) autorelease]
 
 #pragma mark -
 #pragma mark Misc C Macros
