@@ -436,32 +436,40 @@ do { \
 #pragma mark -
 #pragma mark Other Objective-C Macros
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
-#define WBSetterRetain(ivar, var) { \
-  id __var = var; \
-  if (ivar != __var) { \
-    [__var retain]; \
-    [ivar release]; \
-    ivar = __var; \
-  } \
+WB_INLINE
+BOOL WBSetterRetain(id *ivar, id var) {
+  if (*ivar != var) {
+    [var retain];
+    [*ivar release];
+    *ivar = var;
+    return YES;
+  }
+  return NO;
 }
 
 /* For safety we copy var before releasing ivar (ivar can contain the last reference on var). */
-#define WBSetterCopy(ivar, var) { \
-  id __var = var; \
-  if (ivar != __var) { \
-    __var = [__var copyWithZone:[self zone]]; \
-    [ivar release]; \
-    ivar = __var; \
-  } \
+#define WBSetterCopy(ivar, var) WBSetterCopyWithZone(ivar, var, [self zone])
+WB_INLINE
+BOOL WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
+  if (*ivar != var) {
+    var = [var copyWithZone:aZone];
+    [*ivar release];
+    *ivar = var;
+    return YES;
+  }
+  return NO;
 }
 
-#define WBSetterMutableCopy(ivar, var) { \
-  id __var = var; \
-  if (ivar != __var) { \
-    __var = [__var mutableCopyWithZone:[self zone]]; \
-    [ivar release]; \
-    ivar = __var; \
-  } \
+#define WBSetterMutableCopy(ivar, var) WBSetterMutableCopyWithZone(ivar, var, [self zone])
+WB_INLINE
+BOOL WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
+  if (*ivar != var) {
+    var = [var mutableCopyWithZone:aZone];
+    [*ivar release];
+    *ivar = var;
+    return YES;
+  }
+  return NO;
 }
 
 /*!
