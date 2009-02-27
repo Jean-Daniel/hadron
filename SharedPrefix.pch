@@ -424,8 +424,8 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 #define WBAssert(condition, desc, args...) \
 do { \
   if (__builtin_expect(!(condition), 0)) \
-    [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithCString:__func__] \
-                                                            file:[NSString stringWithCString:__FILE__] \
+    [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithUTF8String:__func__] \
+                                                            file:[NSString stringWithUTF8String:__FILE__ ] \
                                                       lineNumber:__LINE__ \
                                                      description:desc, ##args]; \
   } while(0)
