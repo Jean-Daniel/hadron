@@ -196,14 +196,25 @@
  @abstract Compare to float numbers.
  @discussion Because float are not exacts, we considere to float equals if difference is less than FLT_EPSILON.
  */
+#if defined(__clang__)
+// Clang TG Math support
+__attribute__((__overloadable__, __always_inline__))
+static bool __tg_WBRealEquals(float a, float b) { float __delta = a - b; return (__delta <= FLT_EPSILON && __delta >= -FLT_EPSILON); }
+__attribute__((__overloadable__, __always_inline__))
+static bool __tg_WBRealEquals(double a, double b) { double __delta = a - b; return (__delta <= DBL_EPSILON && __delta >= -DBL_EPSILON); }
+__attribute__((__overloadable__, __always_inline__))
+static bool __tg_WBRealEquals(long double a, long double b)	{ long double __delta = a - b; return (__delta <= LDBL_EPSILON && __delta >= -LDBL_EPSILON); }
+#define WBRealEquals(__x, __y) 		__tg_WBRealEquals(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
+#else
+// GCC TG Math support
 WB_INLINE
-bool WBRealEqualsf(float a, float b) { double __delta = a - b; return (__delta <= FLT_EPSILON && __delta >= -FLT_EPSILON); }
+bool __WBRealEqualsf(float a, float b) { double __delta = a - b; return (__delta <= FLT_EPSILON && __delta >= -FLT_EPSILON); }
 WB_INLINE
-bool WBRealEquals(double a, double b) { double __delta = a - b; return (__delta <= DBL_EPSILON && __delta >= -DBL_EPSILON); }
+bool __WBRealEquals(double a, double b) { double __delta = a - b; return (__delta <= DBL_EPSILON && __delta >= -DBL_EPSILON); }
 WB_INLINE
-bool WBRealEqualsl(long double a, long double b)	{ long double __delta = a - b; return (__delta <= LDBL_EPSILON && __delta >= -LDBL_EPSILON); }
-
-#define WBRealEquals(x, y)          __TGMATH_REAL_2(x, y, WBRealEquals)
+bool __WBRealEqualsl(long double a, long double b)	{ long double __delta = a - b; return (__delta <= LDBL_EPSILON && __delta >= -LDBL_EPSILON); }
+#define WBRealEquals(x, y)          __TGMATH_REAL_2(x, y, __WBRealEquals)
+#endif
 
 #pragma mark Bitfields
 /* Bit manipulation macros */
