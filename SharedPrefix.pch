@@ -236,7 +236,7 @@ bool __WBRealEqualsl(long double a, long double b)	{ long double __delta = a - b
 
 /* Use to set a boolean value in a bitfield */
 #define WBFlagSet(field, value)		field = ((value) != 0) ? 1 : 0
-#define WBFlagTestAndSet(field, value)		({ bool set = field; field = ((value) != 0) ? 1 : 0; set; })
+#define WBFlagTestAndSet(field, value)		({ bool __old = field; field = ((value) != 0) ? 1 : 0; __old; })
 
 #pragma mark Logging
 
