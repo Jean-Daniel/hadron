@@ -33,6 +33,10 @@
   #define MAC_OS_X_VERSION_10_5 1050
 #endif
 
+#if !defined(MAC_OS_X_VERSION_10_6)
+#define MAC_OS_X_VERSION_10_6 1060
+#endif
+
 /* Wonderbox build support */
 #if defined(WONDERBOX_FRAMEWORK)
   #if !defined(WONDERBOX_NAME)
