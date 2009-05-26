@@ -56,10 +56,11 @@ GCC_WARN_ABOUT_POINTER_SIGNEDNESS = YES
 GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES
 GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64] = YES
 
-WB_GENERAL_WARNING_CFLAGS = $(inherited) -Wmost -Wfloat-equal -Wwrite-strings -Wmissing-declarations -Wmissing-field-initializers -Wredundant-decls
+// -Wmissing-field-initializers
+WB_GENERAL_WARNING_CFLAGS = $(inherited) -Wmost -Wfloat-equal -Wwrite-strings -Wredundant-decls
 
 // C Only Warnings
-WB_GENERAL_OTHER_CFLAGS = -Wdiv-by-zero  -Wnested-externs -Wold-style-definition
+WB_GENERAL_OTHER_CFLAGS = -Wdiv-by-zero  -Wnested-externs -Wold-style-definition -Wmissing-declarations
 
 // C++ Only Warnings
 WB_GENERAL_OTHER_CPLUSPLUSFLAGS = -Wabi -Wctor-dtor-privacy -Wstrict-null-sentinel -Wsign-promo
