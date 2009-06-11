@@ -147,6 +147,23 @@
   #endif /* No inline */
 #endif
 
+#pragma mark Clang
+#ifndef NS_RETURNS_RETAINED
+  #if __clang__
+    #define NS_RETURNS_RETAINED __attribute__((ns_returns_retained))
+  #else
+    #define NS_RETURNS_RETAINED
+  #endif
+#endif
+
+#ifndef CF_RETURNS_RETAINED
+  #if __clang__
+    #define CF_RETURNS_RETAINED __attribute__((cf_returns_retained))
+  #else
+    #define CF_RETURNS_RETAINED
+  #endif
+#endif
+
 #pragma mark -
 #pragma mark Leopard
 #if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
@@ -449,6 +466,9 @@ do { \
 #endif // !defined(NS_BLOCK_ASSERTIONS)
 
 #pragma mark -
+WB_INLINE
+void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
+
 #pragma mark Other Objective-C Macros
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
 WB_INLINE
