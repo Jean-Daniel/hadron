@@ -148,8 +148,17 @@
 #endif
 
 #pragma mark Clang
+
+#ifndef __has_builtin         // Optional of course.
+  #define __has_builtin(x) 0  // Compatibility with non-clang compilers.
+#endif
+
+#ifndef __has_feature         // Optional of course.
+  #define __has_feature(x) 0  // Compatibility with non-clang compilers.
+#endif
+
 #ifndef NS_RETURNS_RETAINED
-  #if __clang__
+  #if __has_feature(attribute_ns_returns_retained)
     #define NS_RETURNS_RETAINED __attribute__((ns_returns_retained))
   #else
     #define NS_RETURNS_RETAINED
@@ -157,7 +166,7 @@
 #endif
 
 #ifndef CF_RETURNS_RETAINED
-  #if __clang__
+  #if __has_feature(attribute_cf_returns_retained)
     #define CF_RETURNS_RETAINED __attribute__((cf_returns_retained))
   #else
     #define CF_RETURNS_RETAINED
