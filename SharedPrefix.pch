@@ -338,8 +338,6 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 #define WBCompileAssert(test, msg) \
 		typedef char _WBCompileAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
 
-
-
 #pragma mark -
 #pragma mark Objective-C Macros
 #if defined (__WB_OBJC__)
@@ -390,14 +388,6 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 #define DLog(format, args...)
 #define DLogv(format, args)
 
-#define WBLog(client, msg, level, format, args...) ({ \
-  NSString *__str = [[NSString alloc] initWithFormat:format, ## args]; \
-  if (__str) { \
-    asl_log(client, msg, level, "%s", [__str UTF8String]); \
-    [__str release]; \
-  } \
-})
-
 WB_INLINE
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
   NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
@@ -405,6 +395,14 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
     asl_log(client, msg, level, "%s", [__str UTF8String]);
     [__str release];
   }
+}
+
+WB_INLINE
+void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) {
+  va_list args;
+  va_start(args, fmt);
+  WBLogv(client msg, level, format, args);
+  va_end(args);
 }
 
 /*!
@@ -422,13 +420,25 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 #define WBLogWarning(format, args...) WBLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
 #define WBLogError(format, args...) WBLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
 
-#define WBThrowException(name, format, args...) ({ \
-  @throw [NSException exceptionWithName:name reason:[NSString stringWithFormat:format, ## args] userInfo:nil]; \
-})
+WB_INLINE __attribute__((__noreturn__))
+void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
+  NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
+  @throw [NSException exceptionWithName:name reason:[str autorelease] userInfo:userInfo];
+}
 
-#define WBThrowExceptionWithInfo(name, info, format, args...) ({ \
-  @throw [NSException exceptionWithName:name reason:[NSString stringWithFormat:format, ## args] userInfo:info]; \
-})
+WB_INLINE __attribute__((__noreturn__))
+void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  WBThrowExceptionWithInfov(name, userInfo, fmt, args);
+}
+
+WB_INLINE __attribute__((__noreturn__))
+void WBThrowException(NSString *name, NSString *fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  WBThrowExceptionWithInfov(name, nil, fmt, args);
+}
 
 /*!
  @defined WBLogException
@@ -549,7 +559,7 @@ BOOL WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
  @defined WBCurrentBundle
  @result   Returns the bundle for the caller class.
  */
-#define WBCurrentBundle()			[NSBundle bundleForClass:[self class]]
+#define WBCurrentBundle()					[NSBundle bundleForClass:[self class]]
 /*!
  @defined WBBundleForClass
  @param	aClass wrapper on bundleForClass:
