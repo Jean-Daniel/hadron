@@ -265,8 +265,8 @@ bool __WBRealEqualsl(long double a, long double b)	{ long double __delta = a - b
 #define WBBitIsSet(V, N)  (((V) & (1UL << (N))) != 0)
 
 /* Use to set a boolean value in a bitfield */
-#define WBFlagSet(field, value)		field = ((value) != 0) ? 1 : 0
-#define WBFlagTestAndSet(field, value)		({ bool __old = field; field = ((value) != 0) ? 1 : 0; __old; })
+#define WBFlagSet(field, value)	do { field = ((value) != 0) ? 1 : 0; } while (0)
+#define WBFlagTestAndSet(field, value) do { bool __old = field; field = ((value) != 0) ? 1 : 0; __old; } while(0)
 
 #pragma mark Logging
 
@@ -278,11 +278,11 @@ bool __WBRealEqualsl(long double a, long double b)	{ long double __delta = a - b
 #define WBCLog(client, msg, level, format, args...) fprintf(stderr, "Log(" #level "): " format "\n", ## args)
 #define WBCLogv(client, msg, level, format, args)  vfprintf(stderr, "Log(" #level "): " format "\n", args)
 
-#define WBCTrace() { \
+#define WBCTrace() do { \
   char *__file = strdup(__FILE__); \
   fprintf(stderr, "[%s:%li]: %s()\n", __file ? basename(__file) : "", (long)__LINE__, __func__); \
   if (__file) free(__file); \
-}
+} while(0)
 
 #else
 
@@ -347,34 +347,34 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 #define DLog(format, args...)   NSLog(format, ## args)
 #define DLogv(format, args)		 NSLogv(format, args)
 
-#define WBLog(client, msg, level, format, args...) ({ \
+#define WBLog(client, msg, level, format, args...) do { \
   NSString *__str = [[NSString alloc] initWithFormat:format, ## args]; \
   if (__str) { \
     fprintf(stderr, "Log(" #level "): %s\n", [__str UTF8String]); \
     [__str release]; \
   } \
-})
+} while(0)
 
-#define WBLogv(client, msg, level, format, args) ({ \
+#define WBLogv(client, msg, level, format, args) do { \
   NSString *__str = [[NSString alloc] initWithFormat:format arguments:args]; \
   if (__str) { \
     fprintf(stderr, "Log(" #level "): %s\n", [__str UTF8String]); \
     [__str release]; \
   } \
-})
+} while (0)
 
-#define WBTrace() { \
+#define WBTrace() do { \
   char *__file = strdup(__FILE__); \
   fprintf(stderr, "[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __func__); \
   if (__file) free(__file); \
-}
+} while(0)
 
 /* Dynamic trace */
-#define WBDTrace() { \
+#define WBDTrace() do { \
   char *__file = strdup(__FILE__); \
   NSLog(@"[%s:%li]: %c[%@ %@]", __file ? basename(__file) : "", (long)__LINE__, self == (id)[self class] ? '+' : '-', NSStringFromClass([self class]), NSStringFromSelector(_cmd)); \
   if (__file) free(__file); \
-}
+} while(0)
 
 #else /* Debug not defined */
 #pragma mark Production Macros
@@ -390,20 +390,21 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 
 WB_INLINE
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
-  NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
-  if (__str) {
-    asl_log(client, msg, level, "%s", [__str UTF8String]);
-    [__str release];
-  }
+	NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
+	if (__str) {
+  	asl_log(client, msg, level, "%s", [__str UTF8String]);
+  	[__str release];
+	}
 }
 
-WB_INLINE
-void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) {
-  va_list args;
-  va_start(args, fmt);
-  WBLogv(client msg, level, format, args);
-  va_end(args);
-}
+//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...)
+#define WBLog(client, msg, level, format, args...) do { \
+	NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
+	if (__str) { \
+  	asl_log(client, msg, level, "%s", [__str UTF8String]); \
+  	[__str release]; \
+	} \
+} while (0) \
 
 /*!
  @defined WBTrace
@@ -426,19 +427,16 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
   @throw [NSException exceptionWithName:name reason:[str autorelease] userInfo:userInfo];
 }
 
-WB_INLINE __attribute__((__noreturn__))
-void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...) {
-  va_list args;
-  va_start(args, fmt);
-  WBThrowExceptionWithInfov(name, userInfo, fmt, args);
-}
+//WB_INLINE __attribute__((__noreturn__))
+//void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
+#define WBThrowExceptionWithInfo(name, info, fmt, args...) do { \
+	NSString *str = [[NSString alloc] initWithFormat:fmt, ##args]; \
+	@throw [NSException exceptionWithName:name reason:[str autorelease] userInfo:info]; \
+} while (0)
 
-WB_INLINE __attribute__((__noreturn__))
-void WBThrowException(NSString *name, NSString *fmt, ...) {
-  va_list args;
-  va_start(args, fmt);
-  WBThrowExceptionWithInfov(name, nil, fmt, args);
-}
+//WB_INLINE __attribute__((__noreturn__))
+//void WBThrowException(NSString *name, NSString *fmt, ...)
+#define WBThrowException(name, fmt, args...) WBThrowExceptionWithInfo(name, nil, fmt, ##args)
 
 /*!
  @defined WBLogException
@@ -446,13 +444,13 @@ void WBThrowException(NSString *name, NSString *fmt, ...) {
  @discussion Use NSLog when DEBUG and asl in production.
  @param exception An id representing the Exception to log.
  */
-#define WBLogException(exception) { \
+#define WBLogException(exception) do { \
   char *__file = strdup(__FILE__); \
   WBLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s (%s:%li): %@", \
         [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
         __func__, __file ? basename(__file) : "", (long)__LINE__, exception); \
   if (__file) free(__file); \
-}
+} while(0)
 
 /*!
  @defined WBCLogException
@@ -460,13 +458,13 @@ void WBThrowException(NSString *name, NSString *fmt, ...) {
  @discussion Use NSLog when DEBUG and asl in production.
  @param exception An id representing the Exception to log.
  */
-#define WBCLogException(exception)  { \
+#define WBCLogException(exception) do { \
   char *__file = strdup(__FILE__); \
   WBLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s() [%s:%li]: %@", \
         [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
         __func__, __file ? basename(__file) : "", (long)__LINE__, exception); \
   if (__file) free(__file); \
-}
+} while(0)
 
 #pragma mark Assert
 // we directly invoke the NSAssert handler so we can pass on the varargs
@@ -532,7 +530,7 @@ BOOL WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
  @param delegate The Delegate to register.
  @param method	method name
  */
-#define WBDelegateHandle(delegate, method)	({id __delegate = delegate; __delegate && [__delegate respondsToSelector:@selector(method)];})
+#define WBDelegateHandle(delegate, method)	do {id __delegate = delegate; __delegate && [__delegate respondsToSelector:@selector(method)]; } while (0)
 
 /*!
  @defined WBDelegateRegisterNotification
