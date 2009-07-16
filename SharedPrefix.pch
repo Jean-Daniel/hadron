@@ -266,7 +266,7 @@ bool __WBRealEqualsl(long double a, long double b)	{ long double __delta = a - b
 
 /* Use to set a boolean value in a bitfield */
 #define WBFlagSet(field, value)	do { field = ((value) != 0) ? 1 : 0; } while (0)
-#define WBFlagTestAndSet(field, value) do { bool __old = field; field = ((value) != 0) ? 1 : 0; __old; } while(0)
+#define WBFlagTestAndSet(field, value) ({ bool __old = field; field = ((value) != 0) ? 1 : 0; __old; })
 
 #pragma mark Logging
 
@@ -530,7 +530,8 @@ BOOL WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
  @param delegate The Delegate to register.
  @param method	method name
  */
-#define WBDelegateHandle(delegate, method)	do {id __delegate = delegate; __delegate && [__delegate respondsToSelector:@selector(method)]; } while (0)
+WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
+#define WBDelegateHandle(delegate, method) __WBDelegateHandle(delegate, @selector(method))
 
 /*!
  @defined WBDelegateRegisterNotification
