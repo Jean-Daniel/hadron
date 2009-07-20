@@ -582,15 +582,21 @@ CFRange NSRangeToCFRange(NSRange range) {
 /* Get NSNumber for a number */
 WB_INLINE
 NSNumber* WBBool(BOOL value) { return [NSNumber numberWithBool:value]; }
-WB_INLINE
-NSNumber* WBChar(char value) { return [NSNumber numberWithChar:value]; }
-WB_INLINE
-NSNumber* WBUChar(unsigned char value) { return [NSNumber numberWithUnsignedChar:value]; }
+
+#define WBChar WBInt8
+#define WBUChar WBUInt8
+#define WBShort WBInt16
+#define WBUShort WBUInt16
 
 WB_INLINE
-NSNumber* WBShort(short value) { return [NSNumber numberWithShort:value]; }
+NSNumber* WBInt8(int8_t value) { return [NSNumber numberWithChar:value]; }
 WB_INLINE
-NSNumber* WBUShort(unsigned short value) { return [NSNumber numberWithUnsignedShort:value]; }
+NSNumber* WBUInt8(uint8_t value) { return [NSNumber numberWithUnsignedChar:value]; }
+
+WB_INLINE
+NSNumber* WBInt16(int16_t value) { return [NSNumber numberWithShort:value]; }
+WB_INLINE
+NSNumber* WBUInt16(uint16_t value) { return [NSNumber numberWithUnsignedShort:value]; }
 
 WB_INLINE
 NSNumber* WBInt32(int32_t value) { return [NSNumber numberWithInt:value]; }
