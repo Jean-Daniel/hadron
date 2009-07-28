@@ -566,6 +566,14 @@ WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && 
  */
 #define WBBundleForClass(aClass)	[NSBundle bundleForClass:[aClass class]]
 
+/*
+ Usage: 
+ WBIndexesIterator(idx, (NSIndexSet *)indexes) { 
+ 	
+ }
+ */
+#define WBIndexesIterator(var, indexes) for (NSUInteger var = [indexes firstIndex]; indexes != nil && var != NSNotFound; var = [indexes indexGreaterThanIndex:var])
+
 #pragma mark -
 #pragma mark Cocoa To Foundation converter
 WB_INLINE
