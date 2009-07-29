@@ -228,12 +228,12 @@
  */
 #if defined(__clang__)
 // Clang TG Math support
-__attribute__((__overloadable__, __always_inline__))
-static bool __tg_WBRealEquals(float a, float b) { float __delta = a - b; return (__delta <= FLT_EPSILON && __delta >= -FLT_EPSILON); }
-__attribute__((__overloadable__, __always_inline__))
-static bool __tg_WBRealEquals(double a, double b) { double __delta = a - b; return (__delta <= DBL_EPSILON && __delta >= -DBL_EPSILON); }
-__attribute__((__overloadable__, __always_inline__))
-static bool __tg_WBRealEquals(long double a, long double b)	{ long double __delta = a - b; return (__delta <= LDBL_EPSILON && __delta >= -LDBL_EPSILON); }
+static bool __attribute__((__overloadable__, __always_inline__))
+__tg_WBRealEquals(float a, float b) { float __delta = a - b; return (__delta <= FLT_EPSILON && __delta >= -FLT_EPSILON); }
+static bool __attribute__((__overloadable__, __always_inline__))
+__tg_WBRealEquals(double a, double b) { double __delta = a - b; return (__delta <= DBL_EPSILON && __delta >= -DBL_EPSILON); }
+static bool __attribute__((__overloadable__, __always_inline__))
+__tg_WBRealEquals(long double a, long double b)	{ long double __delta = a - b; return (__delta <= LDBL_EPSILON && __delta >= -LDBL_EPSILON); }
 #define WBRealEquals(__x, __y) 		__tg_WBRealEquals(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
 #else
 // GCC TG Math support
@@ -573,6 +573,11 @@ WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && 
  }
  */
 #define WBIndexesIterator(var, indexes) for (NSUInteger var = [indexes firstIndex]; indexes != nil && var != NSNotFound; var = [indexes indexGreaterThanIndex:var])
+
+WB_INLINE
+NSIndexSet *WBIndexesForCount(NSUInteger count) { return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)]; }
+WB_INLINE
+NSIndexSet *WBIndexesForArray(NSArray *anArray) { return WBIndexesForCount([anArray count]); }
 
 #pragma mark -
 #pragma mark Cocoa To Foundation converter
