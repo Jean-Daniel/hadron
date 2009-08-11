@@ -701,9 +701,9 @@ UInt64 WBTimeUnitToNano(WBTimeUnit delta) {
 }
 
 WB_INLINE
-UInt64 WBTimeUnitToMicro(WBTimeUnit delta) { return llround(WBTimeUnitToNano(delta) / 1e3); }
+UInt64 WBTimeUnitToMicro(WBTimeUnit delta) { return llround((double)WBTimeUnitToNano(delta) / 1e3); }
 
 WB_INLINE
-UInt32 WBTimeUnitToMillis(WBTimeUnit delta) { return (UInt32)lround(WBTimeUnitToNano(delta) / 1.e6); }
+UInt32 WBTimeUnitToMillis(WBTimeUnit delta) { return (UInt32)lround((double)WBTimeUnitToNano(delta) / 1e6); }
 
 #endif /* __SHARED_PREFIX_H */
