@@ -1,6 +1,6 @@
 
-// System configuration Min: 10.5, Max: 10.6
-MACOSX_DEPLOYMENT_TARGET = 10.5
+// System configuration Min: 10.6, Max: 10.6
+MACOSX_DEPLOYMENT_TARGET = 10.6
 
 INFOPLIST_OUTPUT_FORMAT = binary
 PLIST_FILE_OUTPUT_FORMAT = binary
