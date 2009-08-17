@@ -373,6 +373,10 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 		typedef char _WBCompileAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
 
 #pragma mark -
+
+WB_INLINE
+void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
+
 #pragma mark Objective-C Macros
 #if defined (__WB_OBJC__)
 
@@ -464,8 +468,8 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 //WB_INLINE __attribute__((__noreturn__))
 //void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
 #define WBThrowExceptionWithInfo(name, info, fmt, args...) do { \
-	NSString *str = [[NSString alloc] initWithFormat:fmt, ##args]; \
-	@throw [NSException exceptionWithName:name reason:[str autorelease] userInfo:info]; \
+	NSString *__str = [[NSString alloc] initWithFormat:fmt, ##args]; \
+	@throw [NSException exceptionWithName:name reason:[__str autorelease] userInfo:info]; \
 } while (0)
 
 //WB_INLINE __attribute__((__noreturn__))
@@ -515,10 +519,6 @@ do { \
 #else // !defined(NS_BLOCK_ASSERTIONS)
   #define WBAssert(condition, ...) do { } while (0)
 #endif // !defined(NS_BLOCK_ASSERTIONS)
-
-#pragma mark -
-WB_INLINE
-void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
 #pragma mark Other Objective-C Macros
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
