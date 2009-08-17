@@ -722,22 +722,24 @@ NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decode
 #include <mach/mach.h>
 #include <mach/mach_time.h>
 
-typedef uint64_t WBTimeUnit;
+typedef uint64_t WBHostTime;
 
 WB_INLINE
-WBTimeUnit WBTimeGetCurrent(void) { return mach_absolute_time(); }
+WBHostTime WBHostTimeGetCurrent(void) { return mach_absolute_time(); }
 
 WB_INLINE
-UInt64 WBTimeUnitToNano(WBTimeUnit delta) {
+UInt64 WBHostTimeToNano(WBHostTime delta) {
   // Convert to nanoseconds.
-  Nanoseconds elapsedNano = AbsoluteToNanoseconds(UInt64ToUnsignedWide(delta));
-  return UnsignedWideToUInt64(elapsedNano);
+  return UnsignedWideToUInt64(AbsoluteToNanoseconds(UInt64ToUnsignedWide(delta)));
 }
 
 WB_INLINE
-UInt64 WBTimeUnitToMicro(WBTimeUnit delta) { return llround((double)WBTimeUnitToNano(delta) / 1e3); }
+UInt64 WBHostTimeToMicro(WBHostTime delta) { return llround((double)WBHostTimeToNano(delta) / 1e3); }
 
 WB_INLINE
-UInt32 WBTimeUnitToMillis(WBTimeUnit delta) { return (UInt32)lround((double)WBTimeUnitToNano(delta) / 1e6); }
+UInt32 WBHostTimeToMillis(WBHostTime delta) { return (UInt32)lround((double)WBHostTimeToNano(delta) / 1e6); }
+
+WB_INLINE
+CFTimeInterval WBHostTimeToTimeInterval(WBHostTime delta) { return (CFTimeInterval)WBHostTimeToNano(delta) / 1e9; }
 
 #endif /* __SHARED_PREFIX_H */
