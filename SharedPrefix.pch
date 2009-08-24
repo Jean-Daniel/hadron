@@ -231,21 +231,37 @@
 #if defined(__clang__)
 #define __WB_CLANG_TG_ATTRS __attribute__((__overloadable__, __always_inline__))
 // Clang TG Math support
-static inline bool __WB_CLANG_TG_ATTRS __tg_fequal(float a, float b) { float delta = a - b; return (delta <= FLT_EPSILON && delta >= -FLT_EPSILON); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fequal(double a, double b) { double delta = a - b; return (delta <= DBL_EPSILON && delta >= -DBL_EPSILON); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fequal(long double a, long double b) { long double delta = a - b; return (delta <= LDBL_EPSILON && delta >= -LDBL_EPSILON); }
+static bool __WB_CLANG_TG_ATTRS __tg_fequal(float a, float b);
+static bool __WB_CLANG_TG_ATTRS __tg_fequal(double a, double b);
+static bool __WB_CLANG_TG_ATTRS __tg_fequal(long double a, long double b);
 
-static inline bool __WB_CLANG_TG_ATTRS __tg_fnotequal(float a, float b) { return !__tg_fequal(a, b); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fnotequal(double a, double b) { return !__tg_fequal(a, b); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fnotequal(long double a, long double b) { return !__tg_fequal(a, b); }
+static bool __WB_CLANG_TG_ATTRS __tg_fequal(float a, float b) { float delta = a - b; return (delta <= FLT_EPSILON && delta >= -FLT_EPSILON); }
+static bool __WB_CLANG_TG_ATTRS __tg_fequal(double a, double b) { double delta = a - b; return (delta <= DBL_EPSILON && delta >= -DBL_EPSILON); }
+static bool __WB_CLANG_TG_ATTRS __tg_fequal(long double a, long double b) { long double delta = a - b; return (delta <= LDBL_EPSILON && delta >= -LDBL_EPSILON); }
 
-static inline bool __WB_CLANG_TG_ATTRS __tg_fiszero(float f) { return __tg_fequal(f, (float)0); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fiszero(double f) { return __tg_fequal(f, (double)0); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fiszero(long double f) { return __tg_fequal(f, (long double)0); }
+static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(float a, float b);
+static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(double a, double b);
+static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(long double a, long double b);
 
-static inline bool __WB_CLANG_TG_ATTRS __tg_fnonzero(float f) { return !__tg_fiszero(f); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fnonzero(double f) { return !__tg_fiszero(f); }
-static inline bool __WB_CLANG_TG_ATTRS __tg_fnonzero(long double f) { return !__tg_fiszero(f); }
+static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(float a, float b) { return !__tg_fequal(a, b); }
+static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(double a, double b) { return !__tg_fequal(a, b); }
+static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(long double a, long double b) { return !__tg_fequal(a, b); }
+
+static bool __WB_CLANG_TG_ATTRS __tg_fiszero(float f);
+static bool __WB_CLANG_TG_ATTRS __tg_fiszero(double f);
+static bool __WB_CLANG_TG_ATTRS __tg_fiszero(long double f);
+
+static bool __WB_CLANG_TG_ATTRS __tg_fiszero(float f) { return __tg_fequal(f, (float)0); }
+static bool __WB_CLANG_TG_ATTRS __tg_fiszero(double f) { return __tg_fequal(f, (double)0); }
+static bool __WB_CLANG_TG_ATTRS __tg_fiszero(long double f) { return __tg_fequal(f, (long double)0); }
+
+static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(float f);
+static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(double f);
+static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(long double f);
+
+static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(float f) { return !__tg_fiszero(f); }
+static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(double f) { return !__tg_fiszero(f); }
+static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(long double f) { return !__tg_fiszero(f); }
 
 #define fiszero(__x)         __tg_fiszero(__tg_promote1((__x))(__x))
 #define fnonzero(__x)        __tg_fnonzero(__tg_promote1((__x))(__x))
