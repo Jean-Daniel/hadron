@@ -680,14 +680,14 @@ NSNumber* WBUInt64(uint64_t value) { return [NSNumber numberWithUnsignedLongLong
 
 #if __LP64__
 WB_INLINE
-CGFloat WBRealValue(id value) { return value ? [value doubleValue] : 0; }
+CGFloat WBCGFloatValue(id value) { return value ? [value doubleValue] : 0; }
 WB_INLINE
-NSNumber* WBReal(CGFloat value) { return [NSNumber numberWithDouble:value]; }
+NSNumber* WBCGFloat(CGFloat value) { return [NSNumber numberWithDouble:value]; }
 #else
 WB_INLINE
-CGFloat WBRealValue(id value) { return value ? [value floatValue] : 0; }
+CGFloat WBCGFloatValue(id value) { return value ? [value floatValue] : 0; }
 WB_INLINE
-NSNumber* WBReal(CGFloat value) { return [NSNumber numberWithFloat:value]; }
+NSNumber* WBCGFloat(CGFloat value) { return [NSNumber numberWithFloat:value]; }
 #endif
 
 WB_INLINE
