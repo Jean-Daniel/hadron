@@ -221,54 +221,63 @@
 #define AVG(A, B)	({ (A + B) / 2; })
 #endif
 
-/*!
- @defined WBFloatEquals
- @abstract Compare to float numbers.
- @discussion Because float are not exacts, we considere to float equals if difference is less than FLT_EPSILON.
- */
-#if !defined(__cplusplus)
+// MARK: Math Macros
+#if defined(__clang__) || defined(__cplusplus)
+// Clang use a special attribute to make a function overloadable (like C++), 
+// so we can merge C++ definitions with clang C definitions.
 
-#if defined(__clang__)
-#define __WB_CLANG_TG_ATTRS __attribute__((__overloadable__, __always_inline__))
+#if defined(__cplusplus)
+  #define __WB_CLANG_TG_DECL(type) static inline type __attribute__((__always_inline__))
+#else
+  #define __WB_CLANG_TG_DECL(type) static __inline__ type __attribute__((__overloadable__, __always_inline__))
+#endif
+
 // Clang TG Math support
-static bool __WB_CLANG_TG_ATTRS __tg_fequal(float a, float b);
-static bool __WB_CLANG_TG_ATTRS __tg_fequal(double a, double b);
-static bool __WB_CLANG_TG_ATTRS __tg_fequal(long double a, long double b);
+__WB_CLANG_TG_DECL(bool) __tg_fequal(float a, float b);
+__WB_CLANG_TG_DECL(bool) __tg_fequal(double a, double b);
+__WB_CLANG_TG_DECL(bool) __tg_fequal(long double a, long double b);
 
-static bool __WB_CLANG_TG_ATTRS __tg_fequal(float a, float b) { float delta = a - b; return (delta <= FLT_EPSILON && delta >= -FLT_EPSILON); }
-static bool __WB_CLANG_TG_ATTRS __tg_fequal(double a, double b) { double delta = a - b; return (delta <= DBL_EPSILON && delta >= -DBL_EPSILON); }
-static bool __WB_CLANG_TG_ATTRS __tg_fequal(long double a, long double b) { long double delta = a - b; return (delta <= LDBL_EPSILON && delta >= -LDBL_EPSILON); }
+__WB_CLANG_TG_DECL(bool) __tg_fequal(float a, float b) { float delta = a - b; return (delta <= FLT_EPSILON && delta >= -FLT_EPSILON); }
+__WB_CLANG_TG_DECL(bool) __tg_fequal(double a, double b) { double delta = a - b; return (delta <= DBL_EPSILON && delta >= -DBL_EPSILON); }
+__WB_CLANG_TG_DECL(bool) __tg_fequal(long double a, long double b) { long double delta = a - b; return (delta <= LDBL_EPSILON && delta >= -LDBL_EPSILON); }
 
-static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(float a, float b);
-static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(double a, double b);
-static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(long double a, long double b);
+__WB_CLANG_TG_DECL(bool) __tg_fnotequal(float a, float b);
+__WB_CLANG_TG_DECL(bool) __tg_fnotequal(double a, double b);
+__WB_CLANG_TG_DECL(bool) __tg_fnotequal(long double a, long double b);
 
-static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(float a, float b) { return !__tg_fequal(a, b); }
-static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(double a, double b) { return !__tg_fequal(a, b); }
-static bool __WB_CLANG_TG_ATTRS __tg_fnotequal(long double a, long double b) { return !__tg_fequal(a, b); }
+__WB_CLANG_TG_DECL(bool) __tg_fnotequal(float a, float b) { return !__tg_fequal(a, b); }
+__WB_CLANG_TG_DECL(bool) __tg_fnotequal(double a, double b) { return !__tg_fequal(a, b); }
+__WB_CLANG_TG_DECL(bool) __tg_fnotequal(long double a, long double b) { return !__tg_fequal(a, b); }
 
-static bool __WB_CLANG_TG_ATTRS __tg_fiszero(float f);
-static bool __WB_CLANG_TG_ATTRS __tg_fiszero(double f);
-static bool __WB_CLANG_TG_ATTRS __tg_fiszero(long double f);
+__WB_CLANG_TG_DECL(bool) __tg_fiszero(float f);
+__WB_CLANG_TG_DECL(bool) __tg_fiszero(double f);
+__WB_CLANG_TG_DECL(bool) __tg_fiszero(long double f);
 
-static bool __WB_CLANG_TG_ATTRS __tg_fiszero(float f) { return __tg_fequal(f, (float)0); }
-static bool __WB_CLANG_TG_ATTRS __tg_fiszero(double f) { return __tg_fequal(f, (double)0); }
-static bool __WB_CLANG_TG_ATTRS __tg_fiszero(long double f) { return __tg_fequal(f, (long double)0); }
+__WB_CLANG_TG_DECL(bool) __tg_fiszero(float f) { return __tg_fequal(f, (float)0); }
+__WB_CLANG_TG_DECL(bool) __tg_fiszero(double f) { return __tg_fequal(f, (double)0); }
+__WB_CLANG_TG_DECL(bool) __tg_fiszero(long double f) { return __tg_fequal(f, (long double)0); }
 
-static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(float f);
-static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(double f);
-static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(long double f);
+__WB_CLANG_TG_DECL(bool) __tg_fnonzero(float f);
+__WB_CLANG_TG_DECL(bool) __tg_fnonzero(double f);
+__WB_CLANG_TG_DECL(bool) __tg_fnonzero(long double f);
 
-static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(float f) { return !__tg_fiszero(f); }
-static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(double f) { return !__tg_fiszero(f); }
-static bool __WB_CLANG_TG_ATTRS __tg_fnonzero(long double f) { return !__tg_fiszero(f); }
+__WB_CLANG_TG_DECL(bool) __tg_fnonzero(float f) { return !__tg_fiszero(f); }
+__WB_CLANG_TG_DECL(bool) __tg_fnonzero(double f) { return !__tg_fiszero(f); }
+__WB_CLANG_TG_DECL(bool) __tg_fnonzero(long double f) { return !__tg_fiszero(f); }
 
-#define fiszero(__x)         __tg_fiszero(__tg_promote1((__x))(__x))
-#define fnonzero(__x)        __tg_fnonzero(__tg_promote1((__x))(__x))
-#define fequal(__x, __y)     __tg_fequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
-#define fnotequal(__x, __y)  __tg_fnotequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
+#if defined(__cplusplus)
+  #define fiszero(__x)         __tg_fiszero(__x)
+  #define fnonzero(__x)        __tg_fnonzero(__x)
+  #define fequal(__x, __y)     __tg_fequal(__x, __y)
+  #define fnotequal(__x, __y)  __tg_fnotequal(__x, __y)
+#else
+  #define fiszero(__x)         __tg_fiszero(__tg_promote1((__x))(__x))
+  #define fnonzero(__x)        __tg_fnonzero(__tg_promote1((__x))(__x))
+  #define fequal(__x, __y)     __tg_fequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
+  #define fnotequal(__x, __y)  __tg_fnotequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
+#endif
 
-#undef __WB_CLANG_TG_ATTRS
+#undef __WB_CLANG_TG_DECL
 #else
 // GCC TG Math support
 WB_INLINE bool __tg_fequalf(float a, float b) { float delta = a - b; return (delta <= FLT_EPSILON && delta >= -FLT_EPSILON); }
@@ -293,8 +302,6 @@ WB_INLINE bool __tg_fnonzerol(long double f) { return !__tg_fiszerol(f); }
 #define fnotequal(x, y)   __TGMATH_REAL_2(x, y, __tg_fnotequal)
 
 #endif // clang/gcc
-
-#endif /* __cplusplus */
 
 #pragma mark Bitfields
 /* Bit manipulation macros */
