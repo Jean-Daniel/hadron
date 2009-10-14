@@ -5,9 +5,6 @@
 // Tiger or later
 #include "../subconfig/LeopardOrLater.xcconfig"
 
-// 32 bits
-#include "../subconfig/Arch32+64.xcconfig"
-
 // Debug settings
 #include "../subconfig/Release.xcconfig"
 

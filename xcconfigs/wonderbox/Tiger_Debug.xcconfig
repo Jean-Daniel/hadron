@@ -1,4 +1,4 @@
 
 #include "../subconfig/WonderBox.xcconfig"
 // Pull in the general settings
-#include "../generic/ReleaseLeopard32+64.xcconfig"
+#include "../generic/Tiger_Debug.xcconfig"

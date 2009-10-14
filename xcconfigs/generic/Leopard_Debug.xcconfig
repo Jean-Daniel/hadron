@@ -3,13 +3,10 @@
 #include "../subconfig/General.xcconfig"
 
 // Tiger or later
-#include "../subconfig/TigerOrLater.xcconfig"
-
-// 32 bits
-#include "../subconfig/Arch32.xcconfig"
+#include "../subconfig/LeopardOrLater.xcconfig"
 
 // Debug settings
-#include "../subconfig/Release.xcconfig"
+#include "../subconfig/Debug.xcconfig"
 
 // Merge settings
 #include "../subconfig/WBMerge.xcconfig"
