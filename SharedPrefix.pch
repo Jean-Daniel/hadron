@@ -63,6 +63,14 @@
   #define WB_HIDDEN __attribute__((visibility("hidden")))
 #endif
 
+#if !defined(WB_EXTERN)
+  #if defined(__cplusplus)
+    #define WB_EXTERN extern "C" 
+  #else
+    #define WB_EXTERN extern
+  #endif
+#endif
+
 #if !defined(WB_OBSOLETE)
   #define WB_OBSOLETE __attribute__((deprecated))
 #endif
@@ -96,23 +104,15 @@
 
 #if defined(__cplusplus)
   #define __inline__ inline
-  #define WB_PRIVATE extern "C" WB_HIDDEN
-	#define WB_PLUGIN_EXPORT extern "C" WB_VISIBLE
+#endif
 
-  #if defined(WONDERBOX_FRAMEWORK)
-    #define WB_EXPORT extern "C" WB_VISIBLE
-  #else
-    #define WB_EXPORT extern "C" WB_HIDDEN
-  #endif
+#define WB_PRIVATE WB_EXTERN WB_HIDDEN
+#define WB_PLUGIN_EXPORT WB_EXTERN WB_VISIBLE
+
+#if defined(WONDERBOX_FRAMEWORK)
+  #define WB_EXPORT WB_EXTERN WB_VISIBLE
 #else
-  #define WB_PRIVATE extern WB_HIDDEN
-  #define WB_PLUGIN_EXPORT WB_VISIBLE
-
-  #if defined(WONDERBOX_FRAMEWORK)
-    #define WB_EXPORT extern WB_VISIBLE
-  #else
-    #define WB_EXPORT extern WB_HIDDEN
-  #endif /* Framework */
+  #define WB_EXPORT WB_EXTERN WB_HIDDEN
 #endif
 
 /*!
@@ -545,8 +545,9 @@ do { \
 
 #pragma mark Other Objective-C Macros
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
+#define WBSetterRetain(ivar, var) _WBSetterRetain(&ivar, var)
 WB_INLINE
-BOOL WBSetterRetain(id *ivar, id var) {
+BOOL _WBSetterRetain(id *ivar, id var) {
   if (*ivar != var) {
     [var retain];
     [*ivar release];
@@ -557,9 +558,10 @@ BOOL WBSetterRetain(id *ivar, id var) {
 }
 
 /* For safety we copy var before releasing ivar (ivar can contain the last reference on var). */
-#define WBSetterCopy(ivar, var) WBSetterCopyWithZone(ivar, var, [self zone])
+#define WBSetterCopy(ivar, var) _WBSetterCopyWithZone(&ivar, var, [self zone])
+#define WBSetterCopyWithZone(ivar, var, aZone) _WBSetterCopyWithZone(&ivar, var, aZone)
 WB_INLINE
-BOOL WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
+BOOL _WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
   if (*ivar != var) {
     var = [var copyWithZone:aZone];
     [*ivar release];
@@ -569,9 +571,10 @@ BOOL WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
   return NO;
 }
 
-#define WBSetterMutableCopy(ivar, var) WBSetterMutableCopyWithZone(ivar, var, [self zone])
+#define WBSetterMutableCopy(ivar, var) _WBSetterMutableCopyWithZone(&ivar, var, [self zone])
+#define WBSetterMutableCopyWithZone(ivar, var, aZone) _WBSetterMutableCopyWithZone(&ivar, var, aZone)
 WB_INLINE
-BOOL WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
+BOOL _WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
   if (*ivar != var) {
     var = [var mutableCopyWithZone:aZone];
     [*ivar release];
@@ -580,6 +583,24 @@ BOOL WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
   }
   return NO;
 }
+
+// MARK: Atomic Variants
+//extern id objc_getProperty(id self, SEL _cmd, ptrdiff_t offset, BOOL atomic);
+//extern void objc_copyStruct(void *dest, const void *src, ptrdiff_t size, BOOL atomic, BOOL hasStrong);
+WB_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue, BOOL atomic, BOOL shouldCopy);
+
+#define WBSetterCopyAtomic(ivar, var) do { \
+	objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 1); \
+} while (0)
+
+// Hack, see runtime source (use OBJC_PROPERTY_MUTABLECOPY as shouldCopy arg)
+#define WBSetterMutableCopyAtomic(ivar, var) do { \
+	objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 2); \
+} while (0)
+
+#define WBSetterRetainAtomic(ivar, var) do { \
+	objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, NO); \
+} while (0)
 
 /*!
  @defined WBDelegateHandle
