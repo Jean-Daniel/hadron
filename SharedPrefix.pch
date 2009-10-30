@@ -446,8 +446,8 @@ void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
  @param str A String like in NSLog.
  @param ... parameters.
  */
-#define DLog(format, args...)
-#define DLogv(format, args)
+#define DLog(format, args...) do {} while (0)
+#define DLogv(format, args) do {} while (0)
 
 WB_INLINE
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
@@ -472,8 +472,8 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
  @abstract Print a string like: '+/-[sender selector]'.
  @discussion This Macro does nothing when DEBUG is not defined
  */
-#define WBTrace()
-#define WBDTrace()
+#define WBTrace() do {} while (0)
+#define WBDTrace() do {} while (0)
 
 #endif /* DEBUG */
 
