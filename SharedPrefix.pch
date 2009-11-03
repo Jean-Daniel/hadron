@@ -327,7 +327,7 @@ WB_INLINE bool __tg_fnonzerol(long double f) { return !__tg_fiszerol(f); }
 
 #pragma mark Logging
 
-#if defined(DEBUG)
+#if DEBUG
 
 #define DCLog(format, args...)  fprintf(stderr, format "\n", ## args)
 #define DCLogv(format, args)  vfprintf(stderr, format "\n", args)
@@ -401,9 +401,10 @@ WB_INLINE
 void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
 #pragma mark Objective-C Macros
+
 #if defined (__WB_OBJC__)
 
-#if defined(DEBUG)
+#if DEBUG
 
 #define DLog(format, args...)   NSLog(format, ## args)
 #define DLogv(format, args)		 NSLogv(format, args)
@@ -436,6 +437,9 @@ void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
   NSLog(@"[%s:%li]: %c[%@ %@]", __file ? basename(__file) : "", (long)__LINE__, self == (id)[self class] ? '+' : '-', NSStringFromClass([self class]), NSStringFromSelector(_cmd)); \
   if (__file) free(__file); \
 } while(0)
+
+// Property Accessor checking
+#define WBProperty(propName)    NSStringFromSelector(@selector(propName))
 
 #else /* Debug not defined */
 #pragma mark Production Macros
@@ -474,6 +478,9 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
  */
 #define WBTrace() do {} while (0)
 #define WBDTrace() do {} while (0)
+
+// Property Accessor checking
+#define WBProperty(propName)    @#propName
 
 #endif /* DEBUG */
 
