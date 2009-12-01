@@ -68,8 +68,7 @@ GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64] = YES
 // Invalid ooption for static libs
 //WB_GENERAL_OTHER_LDFLAGS = -Wl,-weak_reference_mismatches,error
 
-// -Wmissing-field-initializers
-WB_GENERAL_WARNING_CFLAGS = $(inherited) -Wmost -Wfloat-equal -Wwrite-strings -Wredundant-decls
+WB_GENERAL_WARNING_CFLAGS = $(inherited) -Wmost -Wfloat-equal -Wwrite-strings -Wredundant-decls -Wmissing-field-initializers
 
 // C Only Warnings
 WB_GENERAL_OTHER_CFLAGS = -Wdiv-by-zero  -Wnested-externs -Wold-style-definition -Wmissing-declarations

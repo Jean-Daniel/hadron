@@ -24,7 +24,9 @@ DEBUG_INFORMATION_FORMAT = dwarf
 GCC_ENABLE_SYMBOL_SEPARATION = NO
 GCC_GENERATE_DEBUGGING_SYMBOLS = YES
 
-WB_CONFIGURATION_WARNING_CFLAGS = -Wunreachable-code
+// C Flags only
+WB_CONFIGURATION_OTHER_CFLAGS = -Wunreachable-code
+//WB_CONFIGURATION_WARNING_CFLAGS = -Wunreachable-code
 
 // Turn off warnings about uninitialized autos
 // can only be done when GCC_OPTIMIZATION_LEVEL is actually optimizing
