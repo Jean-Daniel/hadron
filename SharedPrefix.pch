@@ -344,13 +344,35 @@ WB_INLINE bool __tg_fnonzerol(long double f) { return !__tg_fiszerol(f); }
 
 #pragma mark Logging
 
+WB_INLINE
+const char *__WBASLLevelString(int level) {
+  switch (level) {
+    case ASL_LEVEL_EMERG: return ASL_STRING_EMERG;
+      case ASL_LEVEL_ALERT: return ASL_STRING_ALERT;
+      case ASL_LEVEL_CRIT: return ASL_STRING_CRIT;
+      case ASL_LEVEL_ERR: return ASL_STRING_ERR;
+      case ASL_LEVEL_WARNING: return ASL_STRING_WARNING;
+      case ASL_LEVEL_NOTICE: return ASL_STRING_NOTICE;
+      case ASL_LEVEL_INFO: return ASL_STRING_INFO;
+      case ASL_LEVEL_DEBUG: return ASL_STRING_DEBUG;
+  }
+  return "????";
+}
+
 #if DEBUG
 
 #define DCLog(format, args...)  fprintf(stderr, format "\n", ## args)
 #define DCLogv(format, args)  vfprintf(stderr, format "\n", args)
 
-#define WBCLog(client, msg, level, format, args...) fprintf(stderr, "Log(" #level "): " format "\n", ## args)
-#define WBCLogv(client, msg, level, format, args)  vfprintf(stderr, "Log(" #level "): " format "\n", args)
+#define WBCLog(client, msg, level, format, args...) fprintf(stderr, "Log(%s): " format "\n", __WBASLLevelString(level), ## args)
+WB_INLINE
+void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
+  char *str;
+  if (vasprintf(&str, format, args) >= 0 && str) {
+    fprintf(stderr, "Log(%s): %s", __WBASLLevelString(level), str);
+    free(str);
+  }
+}
 
 #define WBCTrace() do { \
   char *__file = strdup(__FILE__); \
