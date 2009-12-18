@@ -382,8 +382,8 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 
 #else
 
-#define DCLog(format, args...)
-#define DCLogv(format, args)
+#define DCLog(format, args...) do {} while (0)
+#define DCLogv(format, args) do {} while (0)
 
 #define WBCLog(client, msg, level, format, args...) asl_log(client, msg, level, format, ## args)
 WB_INLINE
@@ -396,7 +396,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
  @abstract Print a string like: '[file:line]: function()'.
  @discussion This Macro does nothing when DEBUG is not defined
  */
-#define WBCTrace()
+#define WBCTrace() do {} while (0)
 
 #endif
 
