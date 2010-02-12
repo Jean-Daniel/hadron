@@ -806,15 +806,14 @@ NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decode
 
 // 64 bits to 32 bits safe casts
 WB_INLINE
-SInt32 WBIntegerTrunk(SInt64 value) {
-  WBCAssert(value >= INT32_MIN && value <= INT32_MAX, "Integer overflow");
-  return (SInt32)value;
+int32_t WBInt64To32(int64_t value) {
+  assert(value >= INT32_MIN && value <= INT32_MAX && "Integer overflow");
+  return (int32_t)value;
 }
-
 WB_INLINE
-UInt32 WBUIntegerTrunk(UInt64 value) {
-  WBCAssert(value <= UINT32_MAX, "Integer overflow");
-  return (UInt32)value;
+uint32_t WBUInt64To32(uint64_t value) {
+  assert(value <= UINT32_MAX && "Integer overflow");
+  return (uint32_t)value;
 }
 
 #pragma mark -
