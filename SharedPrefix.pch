@@ -454,20 +454,23 @@ void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 #if DEBUG
 
 #define DLog(format, args...)   NSLog(format, ## args)
-#define DLogv(format, args)		 NSLogv(format, args)
+#define DLogv(format, args)		  NSLogv(format, args)
 
+WB_INLINE 
+void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
+  NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
+  if (__str) {
+    fprintf(stderr, "Log(%s): %s\n", __WBASLLevelString(level), [__str UTF8String]);
+    [__str release];
+  }
+}
+
+//WB_INLINE 
+//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
 #define WBLog(client, msg, level, format, args...) do { \
-  NSString *__str = [[NSString alloc] initWithFormat:format, ## args]; \
+  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
   if (__str) { \
-    fprintf(stderr, "Log(" #level "): %s\n", [__str UTF8String]); \
-    [__str release]; \
-  } \
-} while(0)
-
-#define WBLogv(client, msg, level, format, args) do { \
-  NSString *__str = [[NSString alloc] initWithFormat:format arguments:args]; \
-  if (__str) { \
-    fprintf(stderr, "Log(" #level "): %s\n", [__str UTF8String]); \
+    fprintf(stderr, "Log(%s): %s\n", __WBASLLevelString(level), [__str UTF8String]); \
     [__str release]; \
   } \
 } while (0)
@@ -509,14 +512,15 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 	}
 }
 
-//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...)
+//WB_INLINE 
+//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
 #define WBLog(client, msg, level, format, args...) do { \
-	NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
-	if (__str) { \
+  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
+  if (__str) { \
   	asl_log(client, msg, level, "%s", [__str UTF8String]); \
-  	[__str release]; \
-	} \
-} while (0) \
+	  [__str release]; \
+  } \
+} while (0)
 
 /*!
  @defined WBTrace
