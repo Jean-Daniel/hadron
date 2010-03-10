@@ -368,6 +368,8 @@ const char *__WBASLLevelString(int level) {
 }
 
 #if DEBUG
+// MARK: -
+// MARK: =================== Debugging Configuration ===================
 
 #define DCLog(format, args...)  fprintf(stderr, format "\n", ## args)
 #define DCLogv(format, args)  vfprintf(stderr, format "\n", args)
@@ -375,7 +377,7 @@ const char *__WBASLLevelString(int level) {
 #define WBCLog(client, msg, level, format, args...) fprintf(stderr, "Log(%s): " format "\n", __WBASLLevelString(level), ## args)
 WB_INLINE
 void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
-  char *str;
+  char *str = NULL;
   if (vasprintf(&str, format, args) >= 0 && str) {
     fprintf(stderr, "Log(%s): %s", __WBASLLevelString(level), str);
     free(str);
@@ -384,11 +386,107 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 
 #define WBCTrace() do { \
   char *__file = strdup(__FILE__); \
-  fprintf(stderr, "[%s:%li]: %s()\n", __file ? basename(__file) : "", (long)__LINE__, __func__); \
+  fprintf(stderr, "[%s:%li]: %s()\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
   if (__file) free(__file); \
 } while(0)
 
+#define WBTrace() do { \
+	char *__file = strdup(__FILE__); \
+	fprintf(stderr, "[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
+	if (__file) free(__file); \
+} while(0)
+
+// Adding a static method here is not desired, but this is for debug build only.
+static __attribute__((unused))
+void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
+  const char *cstr = NULL;
+  if (!aString) 
+    cstr = "(null)";
+  else
+    cstr = CFStringGetCStringPtr(aString, kCFStringEncodingUTF8);
+    
+  if (cstr) {
+    fwrite(cstr, 1, strlen(cstr), f);
+  } else {
+    // Fallback to slow path
+    CFRange range = CFRangeMake(0, CFStringGetLength(aString));
+    while (range.length > 0) {
+      CFIndex length;
+      uint8_t buffer[128];
+      CFIndex done = CFStringGetBytes(aString, range, kCFStringEncodingUTF8, '?', false, buffer, 128, &length);
+      if (done > 0) {
+        fwrite(buffer, 1, done, stderr);
+        range.location += done;
+        range.length -= done;
+      } else {
+        // abort convertion
+        range.length = 0;
+      }
+    }
+  }
+  if (eol)
+    fwrite("\n", 1, 1, f);
+}
+
+#if defined (__WB_OBJC__)
+// MARK: ============= Objective-C =============
+#define DLog(format, args...)   do { \
+	CFStringRef __str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, (CFStringRef)format, ##args); \
+	if (__str) { \
+  	__WBLogPrintString(__str, true, stderr); \
+		CFRelease(__str); \
+	} \
+} while(0)
+
+WB_INLINE 
+void DLogv(NSString *format, va_list args) {
+  CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
+  if (__str) {
+    __WBLogPrintString(__str, true, stderr);
+    CFRelease(__str);
+  }
+}
+
+WB_INLINE 
+void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
+  CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
+  if (__str) {
+    fprintf(stderr, "Log(%s): ", __WBASLLevelString(level));
+    __WBLogPrintString(__str, true, stderr);
+    CFRelease(__str);
+  }
+}
+
+//WB_INLINE 
+//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
+#define WBLog(client, msg, level, format, args...) do { \
+  CFStringRef __str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, (CFStringRef)format, ##args); \
+  if (__str) { \
+    fprintf(stderr, "Log(%s): ", __WBASLLevelString(level)); \
+    __WBLogPrintString(__str, true, stderr); \
+    CFRelease(__str); \
+  } \
+} while (0)
+
+/* Dynamic trace */
+extern const char * class_getName(Class cls);
+WB_INLINE
+void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
+  char *__file = strdup(filename);
+  fprintf(stderr, "[%s:%li]: %c[%s %s]\n", __file ? basename(__file) : "", line, self == (id)[self class] ? '+' : '-', class_getName([self class]), sel_getName(_cmd));
+  if (__file) free(__file);
+}
+
+#define WBDTrace() __WBDTrace(self, _cmd, __FILE__, __LINE__)
+
+// Property Accessor checking
+#define WBProperty(propName)    NSStringFromSelector(@selector(propName))
+
+#endif /* __WB_OBJC__ */
+
 #else
+// MARK: -
+// MARK: =================== Release Configuration ===================
 
 #define DCLog(format, args...) do {} while (0)
 #define DCLogv(format, args) do {} while (0)
@@ -406,10 +504,61 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
  */
 #define WBCTrace() do {} while (0)
 
+#if defined (__WB_OBJC__)
+// MARK: ============= Objective-C =============
+/*!
+ @defined DLog
+ @abstract Debug Log. This function is just a NSLog Wrapper that can enabled or disabled by the Precompiler.
+ @discussion This Macro does nothing when DEBUG is not defined
+ @param str A String like in NSLog.
+ @param ... parameters.
+ */
+#define DLog(format, args...) do {} while (0)
+#define DLogv(format, args) do {} while (0)
+
+WB_INLINE
+void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
+	NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
+	if (__str) {
+  	asl_log(client, msg, level, "%s", [__str UTF8String]);
+  	[__str release];
+	}
+}
+
+//WB_INLINE 
+//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
+#define WBLog(client, msg, level, format, args...) do { \
+  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
+  if (__str) { \
+  	asl_log(client, msg, level, "%s", [__str UTF8String]); \
+	  [__str release]; \
+  } \
+} while (0)
+
+/*!
+ @defined WBTrace
+ @abstract Print a string like: '+/-[sender selector]'.
+ @discussion This Macro does nothing when DEBUG is not defined
+ */
+#define WBTrace() do {} while (0)
+#define WBDTrace() do {} while (0)
+
+// Property Accessor checking
+#define WBProperty(propName)    @#propName
+
+#endif /* __WB_OBJC__ */
+
 #endif
 
+
+/* =================== Common =================== */
 #define WBCLogWarning(format, args...) WBCLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
 #define WBCLogError(format, args...) WBCLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
+
+#if defined (__WB_OBJC__)
+#define WBLogWarning(format, args...) WBLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
+#define WBLogError(format, args...) WBLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
+#endif
 
 // Assert
 #if DEBUG_ASSERT_PRODUCTION_CODE
@@ -451,94 +600,7 @@ void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
 #if defined (__WB_OBJC__)
 
-#if DEBUG
-
-#define DLog(format, args...)   NSLog(format, ## args)
-#define DLogv(format, args)		  NSLogv(format, args)
-
-WB_INLINE 
-void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
-  NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
-  if (__str) {
-    fprintf(stderr, "Log(%s): %s\n", __WBASLLevelString(level), [__str UTF8String]);
-    [__str release];
-  }
-}
-
-//WB_INLINE 
-//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
-#define WBLog(client, msg, level, format, args...) do { \
-  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
-  if (__str) { \
-    fprintf(stderr, "Log(%s): %s\n", __WBASLLevelString(level), [__str UTF8String]); \
-    [__str release]; \
-  } \
-} while (0)
-
-#define WBTrace() do { \
-  char *__file = strdup(__FILE__); \
-  fprintf(stderr, "[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __func__); \
-  if (__file) free(__file); \
-} while(0)
-
-/* Dynamic trace */
-#define WBDTrace() do { \
-  char *__file = strdup(__FILE__); \
-  NSLog(@"[%s:%li]: %c[%@ %@]", __file ? basename(__file) : "", (long)__LINE__, self == (id)[self class] ? '+' : '-', NSStringFromClass([self class]), NSStringFromSelector(_cmd)); \
-  if (__file) free(__file); \
-} while(0)
-
-// Property Accessor checking
-#define WBProperty(propName)    NSStringFromSelector(@selector(propName))
-
-#else /* Debug not defined */
-#pragma mark Production Macros
-/*!
- @defined DLog
- @abstract Debug Log. This function is just a NSLog Wrapper that can enabled or disabled by the Precompiler.
- @discussion This Macro does nothing when DEBUG is not defined
- @param str A String like in NSLog.
- @param ... parameters.
- */
-#define DLog(format, args...) do {} while (0)
-#define DLogv(format, args) do {} while (0)
-
-WB_INLINE
-void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
-	NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
-	if (__str) {
-  	asl_log(client, msg, level, "%s", [__str UTF8String]);
-  	[__str release];
-	}
-}
-
-//WB_INLINE 
-//void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
-#define WBLog(client, msg, level, format, args...) do { \
-  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
-  if (__str) { \
-  	asl_log(client, msg, level, "%s", [__str UTF8String]); \
-	  [__str release]; \
-  } \
-} while (0)
-
-/*!
- @defined WBTrace
- @abstract Print a string like: '+/-[sender selector]'.
- @discussion This Macro does nothing when DEBUG is not defined
- */
-#define WBTrace() do {} while (0)
-#define WBDTrace() do {} while (0)
-
-// Property Accessor checking
-#define WBProperty(propName)    @#propName
-
-#endif /* DEBUG */
-
 #pragma mark Generic Macros
-
-#define WBLogWarning(format, args...) WBLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
-#define WBLogError(format, args...) WBLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
 
 WB_INLINE __attribute__((__noreturn__))
 void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
