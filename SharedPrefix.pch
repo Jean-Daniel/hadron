@@ -18,10 +18,13 @@
 
 /* allows compilation of some file without dependences on Foundation */
 #if !defined(WB_NO_OBJC) && (defined(__OBJC__) || defined(__OBJC2__))
-	#define __WB_OBJC__ 1
+  #define __WB_OBJC__ 1
 #endif
 
 #include <tgmath.h>
+
+#include <unistd.h>
+#include <sys/time.h>
 
 #if defined(__WB_OBJC__)
 #import <Cocoa/Cocoa.h>
@@ -143,13 +146,13 @@
  */
 #if !defined(WB_CLASS_EXPORT)
   #if __LP64__
-		#define WB_CLASS_PRIVATE WB_HIDDEN
+    #define WB_CLASS_PRIVATE WB_HIDDEN
 
-		#if defined(WONDERBOX_FRAMEWORK)
-    	#define WB_CLASS_EXPORT WB_VISIBLE
-		#else
+    #if defined(WONDERBOX_FRAMEWORK)
+      #define WB_CLASS_EXPORT WB_VISIBLE
+    #else
       #define WB_CLASS_EXPORT WB_CLASS_PRIVATE      
-		#endif
+    #endif
   #else
     #define WB_CLASS_EXPORT
     #define WB_CLASS_PRIVATE    
@@ -175,11 +178,11 @@
 #endif
 
 #ifndef UNUSED_IVAR
-	#if __has_feature(attribute_objc_ivar_unused)
-		#define UNUSED_IVAR __attribute__((unused))
-	#else
-		#define UNUSED_IVAR
-	#endif
+  #if __has_feature(attribute_objc_ivar_unused)
+    #define UNUSED_IVAR __attribute__((unused))
+  #else
+    #define UNUSED_IVAR
+  #endif
 #endif
 
 #ifndef NS_RETURNS_RETAINED
@@ -226,11 +229,11 @@
 
 /* Garbage collector (required Mac OS 10.5) */
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-	#define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
-	#define WBAutoreleasePoolDrain(pool) [pool drain]
+  #define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
+  #define WBAutoreleasePoolDrain(pool) [pool drain]
 #else
-	#define WBMakeCollectable(ptr) (id)ptr
-	#define WBAutoreleasePoolDrain(pool) [pool release]
+  #define WBMakeCollectable(ptr) (id)ptr
+  #define WBAutoreleasePoolDrain(pool) [pool release]
 #endif
 
 #define WBCFAutorelease(cftype) [WBMakeCollectable(cftype) autorelease]
@@ -371,40 +374,30 @@ const char *__WBASLLevelString(int level) {
 // MARK: -
 // MARK: =================== Debugging Configuration ===================
 
-#define DCLog(format, args...)  fprintf(stderr, format "\n", ## args)
-#define DCLogv(format, args)  vfprintf(stderr, format "\n", args)
-
-#define WBCLog(client, msg, level, format, args...) fprintf(stderr, "Log(%s): " format "\n", __WBASLLevelString(level), ## args)
+// Adding a static method here is not desired, but this is for debug build only.
 WB_INLINE
-void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
-  char *str = NULL;
-  if (vasprintf(&str, format, args) >= 0 && str) {
-    fprintf(stderr, "Log(%s): %s", __WBASLLevelString(level), str);
-    free(str);
-  }
+void __WBLogPrintLinePrefix(FILE *f) {
+  /* Print date first */
+  char dtime[32];
+  struct timeval nows;
+  gettimeofday(&nows, NULL);
+  struct tm now;
+  localtime_r(&nows.tv_sec, &now);
+  
+  strftime(dtime, 32, "%F %T.", &now);
+  fwrite(dtime, 1, strlen(dtime), f);
+  fprintf(f, "%.3u %s[%u:%x] ", nows.tv_usec / 1000, getprogname(), getpid(), mach_thread_self());
 }
 
-#define WBCTrace() do { \
-  char *__file = strdup(__FILE__); \
-  fprintf(stderr, "[%s:%li]: %s()\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
-  if (__file) free(__file); \
-} while(0)
-
-#define WBTrace() do { \
-	char *__file = strdup(__FILE__); \
-	fprintf(stderr, "[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
-	if (__file) free(__file); \
-} while(0)
-
-// Adding a static method here is not desired, but this is for debug build only.
 static __attribute__((unused))
 void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
+  // Print message
   const char *cstr = NULL;
   if (!aString) 
     cstr = "(null)";
   else
     cstr = CFStringGetCStringPtr(aString, kCFStringEncodingUTF8);
-    
+  
   if (cstr) {
     fwrite(cstr, 1, strlen(cstr), f);
   } else {
@@ -428,20 +421,61 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
     fwrite("\n", 1, 1, f);
 }
 
+#define DCLog(format, args...)  do { \
+  __WBLogPrintLinePrefix(stderr); \
+  fprintf(stderr, format "\n", ## args); \
+} while (0)
+
+#define DCLogv(format, args)  do { \
+  __WBLogPrintLinePrefix(stderr); \
+  vfprintf(stderr, format "\n", args); \
+while (0)
+
+#define WBCLog(client, msg, level, format, args...) do { \
+  __WBLogPrintLinePrefix(stderr); \
+  fprintf(stderr, "Log(%s): " format "\n", __WBASLLevelString(level), ## args); \
+} while (0)
+
+WB_INLINE
+void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
+  char *str = NULL;
+  if (vasprintf(&str, format, args) >= 0 && str) {
+    __WBLogPrintLinePrefix(stderr);
+    fprintf(stderr, "Log(%s): %s\n", __WBASLLevelString(level), str);
+    free(str);
+  }
+}
+
+#define WBCTrace() do { \
+  __WBLogPrintLinePrefix(stderr); \
+  char *__file = strdup(__FILE__); \
+  fprintf(stderr, "[%s:%li]: %s()\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
+  if (__file) free(__file); \
+} while(0)
+
+#define WBTrace() do { \
+  __WBLogPrintLinePrefix(stderr); \
+  char *__file = strdup(__FILE__); \
+  fprintf(stderr, "[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
+  if (__file) free(__file); \
+} while(0)
+
 #if defined (__WB_OBJC__)
 // MARK: ============= Objective-C =============
 #define DLog(format, args...)   do { \
-	CFStringRef __str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, (CFStringRef)format, ##args); \
-	if (__str) { \
-  	__WBLogPrintString(__str, true, stderr); \
-		CFRelease(__str); \
-	} \
+  CFStringRef __str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, (CFStringRef)format, ##args); \
+  if (__str) { \
+    __WBLogPrintLinePrefix(stderr); \
+    __WBLogPrintString(__str, true, stderr); \
+    CFRelease(__str); \
+  } \
 } while(0)
 
 WB_INLINE 
 void DLogv(NSString *format, va_list args) {
   CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
   if (__str) {
+    __WBLogPrintLinePrefix(stderr);
     __WBLogPrintString(__str, true, stderr);
     CFRelease(__str);
   }
@@ -451,6 +485,7 @@ WB_INLINE
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
   CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
   if (__str) {
+    __WBLogPrintLinePrefix(stderr);
     fprintf(stderr, "Log(%s): ", __WBASLLevelString(level));
     __WBLogPrintString(__str, true, stderr);
     CFRelease(__str);
@@ -462,6 +497,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 #define WBLog(client, msg, level, format, args...) do { \
   CFStringRef __str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, (CFStringRef)format, ##args); \
   if (__str) { \
+    __WBLogPrintLinePrefix(stderr); \
     fprintf(stderr, "Log(%s): ", __WBASLLevelString(level)); \
     __WBLogPrintString(__str, true, stderr); \
     CFRelease(__str); \
@@ -472,6 +508,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 extern const char * class_getName(Class cls);
 WB_INLINE
 void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
+  __WBLogPrintLinePrefix(stderr);
   char *__file = strdup(filename);
   fprintf(stderr, "[%s:%li]: %c[%s %s]\n", __file ? basename(__file) : "", line, self == (id)[self class] ? '+' : '-', class_getName([self class]), sel_getName(_cmd));
   if (__file) free(__file);
@@ -493,8 +530,8 @@ void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
 
 #define WBCLog(client, msg, level, format, args...) asl_log(client, msg, level, format, ## args)
 WB_INLINE
-void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) { 
-  asl_vlog(client, msg, level, format, args); 
+void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
+  asl_vlog(client, msg, level, format, args);
 }
 
 /*!
@@ -518,11 +555,11 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 
 WB_INLINE
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
-	NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
-	if (__str) {
-  	asl_log(client, msg, level, "%s", [__str UTF8String]);
-  	[__str release];
-	}
+  NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
+  if (__str) {
+    asl_log(client, msg, level, "%s", [__str UTF8String]);
+    [__str release];
+  }
 }
 
 //WB_INLINE 
@@ -530,8 +567,8 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 #define WBLog(client, msg, level, format, args...) do { \
   NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
   if (__str) { \
-  	asl_log(client, msg, level, "%s", [__str UTF8String]); \
-	  [__str release]; \
+    asl_log(client, msg, level, "%s", [__str UTF8String]); \
+    [__str release]; \
   } \
 } while (0)
 
@@ -562,7 +599,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 
 // Assert
 #if DEBUG_ASSERT_PRODUCTION_CODE
-	#define WBCAssert(assertion, message) do { } while (0)
+  #define WBCAssert(assertion, message) do { } while (0)
 #else
   #define WBCAssert(assertion, message) \
   do { \
@@ -589,7 +626,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 #define _WBCompileAssertSymbolInner(line, msg) WBCOMPILEASSERT ## line ## __ ## msg
 #define _WBCompileAssertSymbol(line, msg) _WBCompileAssertSymbolInner(line, msg)
 #define WBCompileAssert(test, msg) \
-		typedef char _WBCompileAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
+    typedef char _WBCompileAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
 
 #pragma mark -
 
@@ -611,8 +648,8 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 //WB_INLINE __attribute__((__noreturn__))
 //void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
 #define WBThrowExceptionWithInfo(name, info, fmt, args...) do { \
-	NSString *__str = [[NSString alloc] initWithFormat:fmt, ##args]; \
-	@throw [NSException exceptionWithName:name reason:[__str autorelease] userInfo:info]; \
+  NSString *__str = [[NSString alloc] initWithFormat:fmt, ##args]; \
+  @throw [NSException exceptionWithName:name reason:[__str autorelease] userInfo:info]; \
 } while (0)
 
 //WB_INLINE __attribute__((__noreturn__))
@@ -710,16 +747,16 @@ BOOL _WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
 WB_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue, BOOL atomic, BOOL shouldCopy);
 
 #define WBSetterCopyAtomic(ivar, var) do { \
-	objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 1); \
+  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 1); \
 } while (0)
 
 // Hack, see runtime source (use OBJC_PROPERTY_MUTABLECOPY as shouldCopy arg)
 #define WBSetterMutableCopyAtomic(ivar, var) do { \
-	objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 2); \
+  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 2); \
 } while (0)
 
 #define WBSetterRetainAtomic(ivar, var) do { \
-	objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, NO); \
+  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, NO); \
 } while (0)
 
 /*!
@@ -748,7 +785,7 @@ WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && 
  @defined WBClusterException
  @abstract   Raise an invalig argument exception.
  */
-#define WBClusterException() 		WBThrowException(NSInvalidArgumentException, \
+#define WBClusterException()    WBThrowException(NSInvalidArgumentException, \
                                                  @"-%@ only defined for abstract class. Define -[%@ %@]!", \
                                                  NSStringFromSelector(_cmd), NSStringFromClass([self class]), NSStringFromSelector(_cmd))
 
@@ -756,18 +793,17 @@ WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && 
  @defined WBCurrentBundle
  @result   Returns the bundle for the caller class.
  */
-#define WBCurrentBundle()					[NSBundle bundleForClass:[self class]]
+#define WBCurrentBundle()         [NSBundle bundleForClass:[self class]]
 /*!
  @defined WBBundleForClass
  @param	aClass wrapper on bundleForClass:
  @result Returns the bundle for aClass.
  */
-#define WBBundleForClass(aClass)	[NSBundle bundleForClass:[aClass class]]
+#define WBBundleForClass(aClass)  [NSBundle bundleForClass:[aClass class]]
 
 /*
  Usage: 
- WBIndexesIterator(idx, (NSIndexSet *)indexes) { 
- 	
+ WBIndexesIterator(idx, (NSIndexSet *)indexes) {
  }
  */
 #define WBIndexesIterator(var, indexes) for (NSUInteger var = [indexes firstIndex]; indexes != nil && var != NSNotFound; var = [indexes indexGreaterThanIndex:var])
