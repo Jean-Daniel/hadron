@@ -23,9 +23,6 @@
 
 #include <tgmath.h>
 
-#include <unistd.h>
-#include <sys/time.h>
-
 #if defined(__WB_OBJC__)
 #import <Cocoa/Cocoa.h>
 #else
@@ -359,13 +356,13 @@ WB_INLINE
 const char *__WBASLLevelString(int level) {
   switch (level) {
     case ASL_LEVEL_EMERG: return ASL_STRING_EMERG;
-      case ASL_LEVEL_ALERT: return ASL_STRING_ALERT;
-      case ASL_LEVEL_CRIT: return ASL_STRING_CRIT;
-      case ASL_LEVEL_ERR: return ASL_STRING_ERR;
-      case ASL_LEVEL_WARNING: return ASL_STRING_WARNING;
-      case ASL_LEVEL_NOTICE: return ASL_STRING_NOTICE;
-      case ASL_LEVEL_INFO: return ASL_STRING_INFO;
-      case ASL_LEVEL_DEBUG: return ASL_STRING_DEBUG;
+    case ASL_LEVEL_ALERT: return ASL_STRING_ALERT;
+    case ASL_LEVEL_CRIT: return ASL_STRING_CRIT;
+    case ASL_LEVEL_ERR: return ASL_STRING_ERR;
+    case ASL_LEVEL_WARNING: return ASL_STRING_WARNING;
+    case ASL_LEVEL_NOTICE: return ASL_STRING_NOTICE;
+    case ASL_LEVEL_INFO: return ASL_STRING_INFO;
+    case ASL_LEVEL_DEBUG: return ASL_STRING_DEBUG;
   }
   return "????";
 }
@@ -375,18 +372,39 @@ const char *__WBASLLevelString(int level) {
 // MARK: =================== Debugging Configuration ===================
 
 // Adding a static method here is not desired, but this is for debug build only.
-WB_INLINE
+// And we really don't want to use NSLog as it clutters the Console
+
+#include <unistd.h>
+#include <pthread.h>
+#include <sys/time.h>
+
+// .hack from CoreFoundation, see comment below
+WB_EXTERN
+void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
+
+static
 void __WBLogPrintLinePrefix(FILE *f) {
+  // This hacky call is from CoreFoundation. 
+  // This is the way CoreFoundation (and so NSLog) determines if it should log in stderr
+  // As we only use stderr (and not asl like CF does), we use this same hack to prevent duplicate
+  // prefix in Console output when not running in Xcode (lauchd already append a prefix).
+  // if it could be a pipe back to launchd, ignore
+  int64_t val = 0;
+  // assumes val is not written to on error
+  vproc_swap_integer(NULL, 5 /* VPROC_GSK_IS_MANAGED */, NULL, &val);
+  if (val) return;
+
   /* Print date first */
   char dtime[32];
   struct timeval nows;
   gettimeofday(&nows, NULL);
+  
   struct tm now;
   localtime_r(&nows.tv_sec, &now);
-  
   strftime(dtime, 32, "%F %T.", &now);
   fwrite(dtime, 1, strlen(dtime), f);
-  fprintf(f, "%.3u %s[%u:%x] ", nows.tv_usec / 1000, getprogname(), getpid(), mach_thread_self());
+  
+  fprintf(f, "%.3u %s[%u:%x] ", nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
 }
 
 static __attribute__((unused))
