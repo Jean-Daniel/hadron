@@ -200,7 +200,7 @@
 
 #pragma mark -
 #pragma mark Leopard
-#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
+#if defined(__OBJC__) && MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5
   #if !__LP64__
     typedef int NSInteger;
     typedef unsigned int NSUInteger;
@@ -211,10 +211,15 @@
   #else
     #error 64 bits no supported for deployement version < MAC_OS_X_VERSION_10_5.
   #endif
+#elif !defined(__OBJC__) // for C and C++
+	typedef long NSInteger;
+	typedef unsigned long NSUInteger;
+#endif
 
-  #define NSIntegerMax    LONG_MAX
-  #define NSIntegerMin    LONG_MIN
-  #define NSUIntegerMax   ULONG_MAX
+#if !defined(NSIntegerMax)
+	#define NSIntegerMax    LONG_MAX
+	#define NSIntegerMin    LONG_MIN
+	#define NSUIntegerMax   ULONG_MAX
 #endif
 
 /* Tiger only */
