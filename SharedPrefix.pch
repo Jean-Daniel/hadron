@@ -711,6 +711,14 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 
 #pragma mark -
 
+#if defined(__cplusplus)
+template<typename T>
+inline T WBRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
+#else
+WB_INLINE
+CFTypeRef WBRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
+#endif
+
 WB_INLINE
 void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
