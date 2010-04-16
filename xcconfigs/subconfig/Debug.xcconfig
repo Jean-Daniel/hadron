@@ -6,8 +6,8 @@ ONLY_ACTIVE_ARCH = YES
 GCC_OPTIMIZATION_LEVEL = 0
 //GCC_ENABLE_FIX_AND_CONTINUE = YES
 
-INFOPLIST_OUTPUT_FORMAT = same-as-input
-PLIST_FILE_OUTPUT_FORMAT = same-as-input
+// INFOPLIST_OUTPUT_FORMAT = same-as-input
+// PLIST_FILE_OUTPUT_FORMAT = same-as-input
 STRINGS_FILE_OUTPUT_ENCODING = UTF-16
 
 // Deployment postprocessing is what triggers Xcode to strip, turn it off
@@ -25,8 +25,8 @@ GCC_ENABLE_SYMBOL_SEPARATION = NO
 GCC_GENERATE_DEBUGGING_SYMBOLS = YES
 
 // C Flags only
-WB_CONFIGURATION_OTHER_CFLAGS = -Wunreachable-code
-//WB_CONFIGURATION_WARNING_CFLAGS = -Wunreachable-code
+// WB_CONFIGURATION_OTHER_CFLAGS = -Wunreachable-code
+// WB_CONFIGURATION_WARNING_CFLAGS = -Wunreachable-code
 
 // Turn off warnings about uninitialized autos
 // can only be done when GCC_OPTIMIZATION_LEVEL is actually optimizing

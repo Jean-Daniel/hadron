@@ -355,7 +355,7 @@ uint64_t WBBitfieldGetValue64(uint64_t bitfield, uint32_t n1, uint32_t n2) {
 }
 WB_INLINE
 uint32_t WBBitfieldGetValue32(uint32_t bitfield, uint32_t n1, uint32_t n2) {
-  return (bitfield & WBBitfieldMask32(n1, n2)) >> n2;
+  return (uint32_t)((bitfield & WBBitfieldMask32(n1, n2)) >> n2);
 }
 
 WB_INLINE
@@ -373,7 +373,7 @@ uint64_t WBBitfieldSetMaxValue64(uint64_t *bitfield, uint64_t value, uint32_t n1
 }
 WB_INLINE
 uint32_t WBBitfieldSetMaxValue32(uint32_t *bitfield, uint32_t value, uint32_t n1, uint32_t n2) {
-  return *bitfield = (*bitfield & ~WBBitfieldMask32(n1, n2)) | ((value << n2) & WBBitfieldMask32(n1, n2));
+  return *bitfield = (uint32_t)((*bitfield & ~WBBitfieldMask32(n1, n2)) | ((value << n2) & WBBitfieldMask32(n1, n2)));
 }
 
 WB_INLINE
