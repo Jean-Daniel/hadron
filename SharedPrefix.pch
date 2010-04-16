@@ -16,15 +16,15 @@
 #include "wbc/wonderbox.h" // FIXME: must be first but should be optional
 #include "wbc/core.h" // must be before all others
 
+#if defined(__OBJC__)
+#include "wbc/objc.h"
+#include "wbc/cfbridge.h"
+#endif
+
 #include "wbc/math.h"
 #include "wbc/assert.h"
 #include "wbc/profile.h"
 #include "wbc/logging.h"
 #include "wbc/bitfield.h"
-
-#if defined(__OBJC__)
-	#include "wbc/objc.h"
-	#include "wbc/cfbridge.h"
-#endif
 
 #endif /* __SHARED_PREFIX_H */

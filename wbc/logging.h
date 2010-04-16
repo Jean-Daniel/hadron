@@ -16,6 +16,18 @@
 #if !defined(__WBC_LOGGING_H__)
 #define __WBC_LOGGING_H__ 1
 
+#if defined(__clang__)
+	#define __nsloglike(i, j) __attribute__((format(NSString, i, j)))
+  #ifndef __printflike
+    #define __printflike(i, j) __attribute__((format(printf, i, j)))
+  #endif
+#else
+	#define __nsloglike(i, j)
+  #ifndef __printflike
+  	#define __printflike(fmtarg, firstvararg) __attribute__((__format__ (__printf__, fmtarg, firstvararg)))
+  #endif
+#endif
+
 #pragma mark Logging
 
 WB_INLINE
@@ -121,6 +133,7 @@ while (0)
 } while (0)
 
 WB_INLINE
+__printflike(4, 0)
 void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
   char *str = NULL;
   if (vasprintf(&str, format, args) >= 0 && str) {
@@ -145,17 +158,19 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 } while(0)
 
 #if defined (__OBJC__)
+
 // MARK: ============= Objective-C =============
 #define DLog(format, args...)   do { \
-  CFStringRef __str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, (CFStringRef)format, ##args); \
+  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
   if (__str) { \
     __WBLogPrintLinePrefix(stderr); \
-    __WBLogPrintString(__str, true, stderr); \
-    CFRelease(__str); \
+    __WBLogPrintString(WBNSToCFString(__str), true, stderr); \
+    [__str release]; \
   } \
 } while(0)
 
-WB_INLINE 
+WB_INLINE
+__nsloglike(1, 0)
 void DLogv(NSString *format, va_list args) {
   CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
   if (__str) {
@@ -165,7 +180,8 @@ void DLogv(NSString *format, va_list args) {
   }
 }
 
-WB_INLINE 
+WB_INLINE
+__nsloglike(4, 0)
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
   CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
   if (__str) {
@@ -179,12 +195,12 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 //WB_INLINE 
 //void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
 #define WBLog(client, msg, level, format, args...) do { \
-  CFStringRef __str = CFStringCreateWithFormat(kCFAllocatorDefault, NULL, (CFStringRef)format, ##args); \
+  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
   if (__str) { \
     __WBLogPrintLinePrefix(stderr); \
     fprintf(stderr, "Log(%s): ", __WBASLLevelString(level)); \
-    __WBLogPrintString(__str, true, stderr); \
-    CFRelease(__str); \
+    __WBLogPrintString(WBNSToCFString(__str), true, stderr); \
+    [__str release]; \
   } \
 } while (0)
 
@@ -213,7 +229,7 @@ void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
 
 #define WBCLog(client, msg, level, format, args...) asl_log(client, msg, level, format, ## args)
 WB_INLINE
-void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
+void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) __printflike(4, 5) {
   asl_vlog(client, msg, level, format, args);
 }
 
