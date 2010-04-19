@@ -7,14 +7,23 @@
  */
 /*!
 @header SharedPrefix
- @abstract WonderBox Prefix Header.
- @discussion A bunch of macros and inline functions usefull everywhere.
- Some of them are affected by the DEBUG precompiler macros.
- It can safely be include in C and Obj-C files.
+ @abstract Floating point comparison + some other math functions.
 */
 
 #if !defined(__WBC_MATH_H__)
 #define __WBC_MATH_H__ 1
+
+WB_INLINE
+bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
+
+WB_INLINE
+int32_t WBIntSaturate(double x) {
+  return x <= -0x1p31f ? (int32_t)-0x80000000 : 0x1p31f <= x ? (int32_t)0x7fffffff : (int32_t)x;
+}
+WB_INLINE
+Fixed WBFloatToFixed(double aFloat) { return WBIntSaturate(aFloat * fixed1); }
+WB_INLINE
+double WBFixedToFloat(Fixed aValue) { return (double)aValue / fixed1; }
 
 // 64 bits to 32 bits safe casts
 WB_INLINE

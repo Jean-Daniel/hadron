@@ -7,10 +7,7 @@
  */
 /*!
 @header SharedPrefix
- @abstract WonderBox Prefix Header.
- @discussion A bunch of macros and inline functions usefull everywhere.
- Some of them are affected by the DEBUG precompiler macros.
- It can safely be include in C and Obj-C files.
+ @abstract Logging functions. noop or use asl(3) in release mode, and console in debug mode.
 */
 
 #if !defined(__WBC_LOGGING_H__)

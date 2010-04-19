@@ -7,10 +7,7 @@
  */
 /*!
 @header SharedPrefix
- @abstract WonderBox Prefix Header.
- @discussion A bunch of macros and inline functions usefull everywhere.
- Some of them are affected by the DEBUG precompiler macros.
- It can safely be include in C and Obj-C files.
+ @abstract Visibility macros + basics functions
 */
 
 #if !defined(__WBC_CORE_H__)
@@ -185,16 +182,6 @@
 #endif
 
 // MARK: -
-// MARK: Misc C Macros
-
-#if !defined(XOR)
-	#define XOR(A, B)	({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); (__a || __b) && !(__a && __b); })
-#endif
-
-#if !defined(AVG)
-	#define AVG(A, B)	({ (A + B) / 2; })
-#endif
-
 // MARK: Core Foundation
 #if defined(__cplusplus)
 template<typename T>
