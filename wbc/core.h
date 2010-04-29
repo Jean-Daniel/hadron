@@ -185,13 +185,15 @@
 // MARK: Core Foundation
 #if defined(__cplusplus)
 template<typename T>
-inline T WBRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
+inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
+template<typename T>
+inline T WBCFMakeCollectable(T aValue) { return aValue ? (T)CFMakeCollectable(aValue) : (T)NULL; }
 #else
 WB_INLINE
-CFTypeRef WBRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
+CFTypeRef WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
 #endif
 
 WB_INLINE
-void WBRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
+void WBCFRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
 #endif /* __WBC_CORE_H__ */

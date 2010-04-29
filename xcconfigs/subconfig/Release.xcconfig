@@ -18,7 +18,7 @@ STRIP_STYLE = non-global
 DEAD_CODE_STRIPPING = YES
 PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES
 
-GCC_WARN_UNUSED_VARIABLE = YES
+GCC_WARN_UNINITIALIZED_AUTOS = YES
 // init-self can only be turned on when optimizations are on
 WB_CONFIGURATION_WARNING_CFLAGS = -Winit-self -Wno-extra
 
