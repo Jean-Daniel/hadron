@@ -161,6 +161,22 @@
   #endif
 #endif
 
+#ifndef NS_RETURNS_NOT_RETAINED
+	#if __has_feature(attribute_ns_returns_not_retained)
+		#define NS_RETURNS_NOT_RETAINED __attribute__((ns_returns_not_retained))
+	#else
+		#define NS_RETURNS_NOT_RETAINED
+	#endif
+#endif
+
+#ifndef CF_RETURNS_NOT_RETAINED
+	#if __has_feature(attribute_cf_returns_not_retained)
+		#define CF_RETURNS_NOT_RETAINED __attribute__((cf_returns_not_retained))
+	#else
+		#define CF_RETURNS_NOT_RETAINED
+	#endif
+#endif
+
 // MARK: -
 // MARK: Tiger Compatibility
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
