@@ -218,7 +218,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 } while (0)
 
 /* Dynamic trace */
-extern const char * class_getName(Class cls);
+OBJC_EXPORT const char * class_getName(Class cls);
 WB_INLINE
 void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
   __WBLogPrintLinePrefix(stderr);
