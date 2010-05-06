@@ -14,11 +14,13 @@
 #define __WBC_LOGGING_H__ 1
 
 #if defined(__clang__)
+	#define __cfloglike(i, j) __attribute__((format(CFString, i, j)))
 	#define __nsloglike(i, j) __attribute__((format(NSString, i, j)))
   #ifndef __printflike
     #define __printflike(i, j) __attribute__((format(printf, i, j)))
   #endif
 #else
+	#define __cfloglike(i, j)
 	#define __nsloglike(i, j)
   #ifndef __printflike
   	#define __printflike(fmtarg, firstvararg) __attribute__((__format__ (__printf__, fmtarg, firstvararg)))
@@ -27,42 +29,26 @@
 
 #pragma mark Logging
 
-WB_INLINE
-const char *__WBASLLevelString(int level) {
-  switch (level) {
-    case ASL_LEVEL_EMERG: return ASL_STRING_EMERG;
-    case ASL_LEVEL_ALERT: return ASL_STRING_ALERT;
-    case ASL_LEVEL_CRIT: return ASL_STRING_CRIT;
-    case ASL_LEVEL_ERR: return ASL_STRING_ERR;
-    case ASL_LEVEL_WARNING: return ASL_STRING_WARNING;
-    case ASL_LEVEL_NOTICE: return ASL_STRING_NOTICE;
-    case ASL_LEVEL_INFO: return ASL_STRING_INFO;
-    case ASL_LEVEL_DEBUG: return ASL_STRING_DEBUG;
-  }
-  return "????";
-}
-
 #if DEBUG
 // MARK: -
 // MARK: =================== Debugging Configuration ===================
-
-// Adding a static method here is not desired, but this is for debug build only.
-// And we really don't want to use NSLog as it clutters the Console
 
 #include <unistd.h>
 #include <pthread.h>
 #include <sys/time.h>
 
-// .hack from CoreFoundation, see comment below
+// .hack from CoreFoundation, see comment in __WBLogPrintLinePrefix
 WB_EXTERN
 void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
 
+// Adding a static method here is not desired, but this is for debug build only.
+// And we really don't want to use NSLog as it clutters the Console
 static
 void __WBLogPrintLinePrefix(FILE *f) {
   // This hacky call is from CoreFoundation. 
   // This is the way CoreFoundation (and so NSLog) determines if it should log in stderr
   // As we only use stderr (and not asl like CF does), we use this same hack to prevent duplicate
-  // prefix in Console output when not running in Xcode (lauchd already append a prefix).
+  // prefix in Console output when not running in Xcode (launchd already append a prefix).
   // if it could be a pipe back to launchd, ignore
   int64_t val = 0;
   // assumes val is not written to on error
@@ -80,6 +66,21 @@ void __WBLogPrintLinePrefix(FILE *f) {
   fwrite(dtime, 1, strlen(dtime), f);
   
   fprintf(f, "%.3u %s[%u:%x] ", nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
+}
+
+WB_INLINE
+const char *__WBASLLevelString(int level) {
+  switch (level) {
+    case ASL_LEVEL_EMERG: return ASL_STRING_EMERG;
+    case ASL_LEVEL_ALERT: return ASL_STRING_ALERT;
+    case ASL_LEVEL_CRIT: return ASL_STRING_CRIT;
+    case ASL_LEVEL_ERR: return ASL_STRING_ERR;
+    case ASL_LEVEL_WARNING: return ASL_STRING_WARNING;
+    case ASL_LEVEL_NOTICE: return ASL_STRING_NOTICE;
+    case ASL_LEVEL_INFO: return ASL_STRING_INFO;
+    case ASL_LEVEL_DEBUG: return ASL_STRING_DEBUG;
+  }
+  return "????";
 }
 
 static __attribute__((unused))
@@ -154,11 +155,26 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
   if (__file) free(__file); \
 } while(0)
 
+// MARK: ============= Objective-C =============
 #if defined (__OBJC__)
 
-// MARK: ============= Objective-C =============
+static __attribute__((unused)) 
+__nsloglike(1, 2) NS_RETURNS_RETAINED
+NSString *__WBNSStringCreateWithFormat(NSString *fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
+  va_end(args);
+  return str;
+}
+
+WB_INLINE __cfloglike(1, 0)
+CFStringRef __WBCFStringCreateWithFormatAndArguments(CFStringRef fmt, va_list args) {
+  return CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, fmt, args);
+}
+
 #define DLog(format, args...)   do { \
-  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
+  NSString *__str = __WBNSStringCreateWithFormat(format, ##args); \
   if (__str) { \
     __WBLogPrintLinePrefix(stderr); \
     __WBLogPrintString(WBNSToCFString(__str), true, stderr); \
@@ -192,7 +208,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 //WB_INLINE 
 //void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
 #define WBLog(client, msg, level, format, args...) do { \
-  NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
+  NSString *__str = __WBNSStringCreateWithFormat(format, ##args); \
   if (__str) { \
     __WBLogPrintLinePrefix(stderr); \
     fprintf(stderr, "Log(%s): ", __WBASLLevelString(level)); \
@@ -207,7 +223,8 @@ WB_INLINE
 void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
   __WBLogPrintLinePrefix(stderr);
   char *__file = strdup(filename);
-  fprintf(stderr, "[%s:%li]: %c[%s %s]\n", __file ? basename(__file) : "", line, self == (id)[self class] ? '+' : '-', class_getName([self class]), sel_getName(_cmd));
+  Class cls = [self class];
+  fprintf(stderr, "[%s:%li]: %c[%s %s]\n", __file ? basename(__file) : "", line, self == (id)cls ? '+' : '-', class_getName(cls), sel_getName(_cmd));
   if (__file) free(__file);
 }
 
