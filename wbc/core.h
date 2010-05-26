@@ -13,7 +13,7 @@
 #if !defined(__WBC_CORE_H__)
 #define __WBC_CORE_H__ 1
 
-#include <tgmath.h>
+#include <tgmath.h> // MUST be first
 
 #if defined(__OBJC__)
 #import <Cocoa/Cocoa.h>
@@ -24,6 +24,7 @@
 // Misc useful includes
 #include <asl.h>
 #include <libgen.h>
+#include <uuid/uuid.h> // already included in 10.6 but not in 10.5
 #include <libkern/OSAtomic.h>
 
 #if !defined(MAC_OS_X_VERSION_10_5)
@@ -190,6 +191,12 @@
 	#define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
 	#define WBAutoreleasePoolDrain(pool) [pool drain]
 #endif
+
+// For Mac OS 10.5 SDK
+#ifndef _UUID_STRING_T
+	#define _UUID_STRING_T
+	typedef char	uuid_string_t[37];
+#endif /* _UUID_STRING_T */
 
 // MARK: Convenient types
 #if !defined(__OBJC__) // for C and C++
