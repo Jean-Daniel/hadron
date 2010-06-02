@@ -45,7 +45,7 @@ void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
 // And we really don't want to use NSLog as it clutters the Console
 static
 void __WBLogPrintLinePrefix(FILE *f) {
-  // This hacky call is from CoreFoundation. 
+  // This hacky call is from CoreFoundation.
   // This is the way CoreFoundation (and so NSLog) determines if it should log in stderr
   // As we only use stderr (and not asl like CF does), we use this same hack to prevent duplicate
   // prefix in Console output when not running in Xcode (launchd already append a prefix).
@@ -59,12 +59,12 @@ void __WBLogPrintLinePrefix(FILE *f) {
   char dtime[32];
   struct timeval nows;
   gettimeofday(&nows, NULL);
-  
+
   struct tm now;
   localtime_r(&nows.tv_sec, &now);
   strftime(dtime, 32, "%F %T.", &now);
   fwrite(dtime, 1, strlen(dtime), f);
-  
+
   fprintf(f, "%.3u %s[%u:%x] ", nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
 }
 
@@ -87,11 +87,11 @@ static __attribute__((unused))
 void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
   // Print message
   const char *cstr = NULL;
-  if (!aString) 
+  if (!aString)
     cstr = "(null)";
   else
     cstr = CFStringGetCStringPtr(aString, kCFStringEncodingUTF8);
-  
+
   if (cstr) {
     fwrite(cstr, 1, strlen(cstr), f);
   } else {
@@ -158,7 +158,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 // MARK: ============= Objective-C =============
 #if defined (__OBJC__)
 
-static __attribute__((unused)) 
+static __attribute__((unused))
 __nsloglike(1, 2) NS_RETURNS_RETAINED
 NSString *__WBNSStringCreateWithFormat(NSString *fmt, ...) {
   va_list args;
@@ -205,7 +205,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
   }
 }
 
-//WB_INLINE 
+//WB_INLINE
 //void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
 #define WBLog(client, msg, level, format, args...) do { \
   NSString *__str = __WBNSStringCreateWithFormat(format, ##args); \
@@ -277,7 +277,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
   }
 }
 
-//WB_INLINE 
+//WB_INLINE
 //void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
 #define WBLog(client, msg, level, format, args...) do { \
   NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \

@@ -64,7 +64,7 @@
 
 #if !defined(WB_EXTERN)
   #if defined(__cplusplus)
-    #define WB_EXTERN extern "C" 
+    #define WB_EXTERN extern "C"
   #else
     #define WB_EXTERN extern
   #endif
@@ -113,11 +113,11 @@
     #if defined(WONDERBOX_FRAMEWORK)
       #define WB_CLASS_EXPORT WB_VISIBLE
     #else
-      #define WB_CLASS_EXPORT WB_CLASS_PRIVATE      
+      #define WB_CLASS_EXPORT WB_CLASS_PRIVATE
     #endif
   #else
     #define WB_CLASS_EXPORT
-    #define WB_CLASS_PRIVATE    
+    #define WB_CLASS_PRIVATE
   #endif /* Framework && 64 bits runtime */
 #endif
 

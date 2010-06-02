@@ -39,7 +39,7 @@ uint32_t WBUInt64To32(uint64_t value) {
 
 // MARK: Math Macros
 #if defined(__clang__) || defined(__cplusplus)
-// Clang use a special attribute to make a function overloadable (like C++), 
+// Clang use a special attribute to make a function overloadable (like C++),
 // so we can merge C++ definitions with clang C definitions.
 
 #if defined(__cplusplus)

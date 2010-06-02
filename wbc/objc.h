@@ -119,7 +119,7 @@ WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && 
 
 // MARK: NSIndexSet
 /*
- Usage: 
+ Usage:
  WBIndexesIterator(idx, (NSIndexSet *)indexes) {
  }
  */
