@@ -192,6 +192,17 @@
 	#define WBAutoreleasePoolDrain(pool) [pool drain]
 #endif
 
+// We need a compile time constant for byte order
+enum {
+#if defined(__LITTLE_ENDIAN__)
+  kOSHostByteOrder = OSLittleEndian
+#elif defined(__BIG_ENDIAN__)
+  kOSHostByteOrder = OSBigEndian,
+#else
+	#error undefined byte order
+#endif
+};
+
 // For Mac OS 10.5 SDK
 #ifndef _UUID_STRING_T
 	#define _UUID_STRING_T
