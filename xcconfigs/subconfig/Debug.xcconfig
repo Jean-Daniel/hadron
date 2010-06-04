@@ -39,4 +39,4 @@ WB_CONFIGURATION_GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1
 // Turns on stack protection on debug builds for Leopard and above
 WB_CONFIGURATION_OTHER_CFLAGS = -fstack-protector-all
 // Stack protection doesn't exist on Tiger
-WB_CONFIGURATION_OTHER_CFLAGS[sdk=macosx10.4*] =  
+WB_CONFIGURATION_OTHER_CFLAGS[sdk=macosx10.4*] =

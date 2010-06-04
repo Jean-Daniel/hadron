@@ -5,9 +5,9 @@
 
 // Xcode doesn't allow you to "inherit" settings with includes so you always
 // end up overriding settings accidentally. To avoid this, we instead
-// allow you to define settings at different levels 
+// allow you to define settings at different levels
 // (GENERAL, PLATFORM (iPhone/Mac), CONFIGURATION (Release/Debug) and we merge
-// those together here. 
+// those together here.
 // We DO NOT inherit OTHER_CPLUSPLUSFLAGS because OTHER_CPLUSPLUSFLAGS by default
 // takes on OTHER_CFLAGS settings, and we don't want those applied to our
 // C++ files. OTHER_CFLAGS is the only way to set C specific settings on our
