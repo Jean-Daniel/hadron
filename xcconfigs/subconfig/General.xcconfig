@@ -2,8 +2,8 @@
 // Default architextures
 ARCHS = $(ARCHS_STANDARD_32_BIT)
 
-// defaults compiler to GCC 4.2
-GCC_VERSION = 4.2
+// defaults compiler to LLVM-GCC 4.2
+GCC_VERSION = com.apple.compilers.llvmgcc42
 
 // Always use the latest SDK
 SDKROOT = macosx10.6
