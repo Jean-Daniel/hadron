@@ -62,10 +62,9 @@ void __WBLogPrintLinePrefix(FILE *f) {
 
   struct tm now;
   localtime_r(&nows.tv_sec, &now);
-  strftime(dtime, 32, "%F %T.", &now);
-  fwrite(dtime, 1, strlen(dtime), f);
+  strftime(dtime, 32, "%F %T", &now);
 
-  fprintf(f, "%.3u %s[%u:%x] ", nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
+  fprintf(f, "%s.%.3u %s[%u:%x] ", dtime, nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
 }
 
 WB_INLINE
