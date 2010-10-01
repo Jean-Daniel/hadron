@@ -49,20 +49,20 @@
 
 #pragma mark Generic Macros
 
-WB_INLINE __attribute__((__noreturn__))
+SC_INLINE __attribute__((__noreturn__))
 void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
   NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
   @throw [NSException exceptionWithName:name reason:[str autorelease] userInfo:userInfo];
 }
 
-//WB_INLINE __attribute__((__noreturn__))
+//SC_INLINE __attribute__((__noreturn__))
 //void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
 #define WBThrowExceptionWithInfo(name, info, fmt, args...) do { \
   NSString *__str = [[NSString alloc] initWithFormat:fmt, ##args]; \
   @throw [NSException exceptionWithName:name reason:[__str autorelease] userInfo:info]; \
 } while (0)
 
-//WB_INLINE __attribute__((__noreturn__))
+//SC_INLINE __attribute__((__noreturn__))
 //void WBThrowException(NSString *name, NSString *fmt, ...)
 #define WBThrowException(name, fmt, args...) WBThrowExceptionWithInfo(name, nil, fmt, ##args)
 

@@ -13,7 +13,6 @@
 #if !defined(__SHARED_PREFIX_H)
 #define __SHARED_PREFIX_H 1
 
-#include "wbc/wonderbox.h" // FIXME: must be first but should be optional
 #include "wbc/core.h" // must be before all others
 
 #if defined(__OBJC__)
@@ -30,5 +29,7 @@
 #include "wbc/profile.h"
 #include "wbc/logging.h"
 #include "wbc/bitfield.h"
+
+#include "wbc/wonderbox.h" // FIXME: Should be optional
 
 #endif /* __SHARED_PREFIX_H */

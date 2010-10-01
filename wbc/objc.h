@@ -24,7 +24,7 @@
 // MARK: Accessors
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
 #define WBSetterRetain(ivar, var) _WBSetterRetain(&ivar, var)
-WB_INLINE
+SC_INLINE
 BOOL _WBSetterRetain(id *ivar, id var) {
   if (*ivar != var) {
     [var retain];
@@ -38,7 +38,7 @@ BOOL _WBSetterRetain(id *ivar, id var) {
 /* For safety we copy var before releasing ivar (ivar can contain the last reference on var). */
 #define WBSetterCopy(ivar, var) _WBSetterCopyWithZone(&ivar, var, [self zone])
 #define WBSetterCopyWithZone(ivar, var, aZone) _WBSetterCopyWithZone(&ivar, var, aZone)
-WB_INLINE
+SC_INLINE
 BOOL _WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
   if (*ivar != var) {
     var = [var copyWithZone:aZone];
@@ -51,7 +51,7 @@ BOOL _WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
 
 #define WBSetterMutableCopy(ivar, var) _WBSetterMutableCopyWithZone(&ivar, var, [self zone])
 #define WBSetterMutableCopyWithZone(ivar, var, aZone) _WBSetterMutableCopyWithZone(&ivar, var, aZone)
-WB_INLINE
+SC_INLINE
 BOOL _WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
   if (*ivar != var) {
     var = [var mutableCopyWithZone:aZone];
@@ -65,7 +65,7 @@ BOOL _WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
 // MARK: Atomic Variants
 //extern id objc_getProperty(id self, SEL _cmd, ptrdiff_t offset, BOOL atomic);
 //extern void objc_copyStruct(void *dest, const void *src, ptrdiff_t size, BOOL atomic, BOOL hasStrong);
-WB_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue, BOOL atomic, BOOL shouldCopy);
+SC_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue, BOOL atomic, BOOL shouldCopy);
 
 #define WBSetterCopyAtomic(ivar, var) do { \
   objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 1); \
@@ -87,7 +87,7 @@ WB_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue
  @param delegate The Delegate to register.
  @param method	method name
  */
-WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
+SC_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
 #define WBDelegateHandle(delegate, method) __WBDelegateHandle(delegate, @selector(method))
 
 /*!
@@ -127,13 +127,13 @@ WB_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && 
 
 #define WBIndexesReverseIterator(var, indexes) for (NSUInteger var = [indexes lastIndex]; indexes != nil && var != NSNotFound; var = [indexes indexLessThanIndex:var])
 
-WB_INLINE
+SC_INLINE
 NSIndexSet *WBIndexesForCount(NSUInteger count) { return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)]; }
-WB_INLINE
+SC_INLINE
 NSIndexSet *WBIndexesForArray(NSArray *anArray) { return WBIndexesForCount([anArray count]); }
 
 // MARK: NSNumber
-WB_INLINE
+SC_INLINE
 NSNumber* WBBool(BOOL value) { return [NSNumber numberWithBool:value]; }
 
 #define WBChar WBInt8
@@ -141,80 +141,80 @@ NSNumber* WBBool(BOOL value) { return [NSNumber numberWithBool:value]; }
 #define WBShort WBInt16
 #define WBUShort WBUInt16
 
-WB_INLINE
+SC_INLINE
 NSNumber* WBInt8(int8_t value) { return [NSNumber numberWithChar:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBUInt8(uint8_t value) { return [NSNumber numberWithUnsignedChar:value]; }
 
-WB_INLINE
+SC_INLINE
 NSNumber* WBInt16(int16_t value) { return [NSNumber numberWithShort:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBUInt16(uint16_t value) { return [NSNumber numberWithUnsignedShort:value]; }
 
-WB_INLINE
+SC_INLINE
 NSNumber* WBInt32(int32_t value) { return [NSNumber numberWithInt:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBUInt32(uint32_t value) { return [NSNumber numberWithUnsignedInt:value]; }
 
 #if __LP64__
-WB_INLINE
+SC_INLINE
 NSNumber* WBInt64(int64_t value) { return [NSNumber numberWithLong:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBUInt64(uint64_t value) { return [NSNumber numberWithUnsignedLong:value]; }
 #else
-WB_INLINE
+SC_INLINE
 NSNumber* WBInt64(int64_t value) { return [NSNumber numberWithLongLong:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBUInt64(uint64_t value) { return [NSNumber numberWithUnsignedLongLong:value]; }
 #endif
 
 #if __LP64__
-WB_INLINE
+SC_INLINE
 CGFloat WBCGFloatValue(id value) { return value ? [value doubleValue] : 0; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBCGFloat(CGFloat value) { return [NSNumber numberWithDouble:value]; }
 #else
-WB_INLINE
+SC_INLINE
 CGFloat WBCGFloatValue(id value) { return value ? [value floatValue] : 0; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBCGFloat(CGFloat value) { return [NSNumber numberWithFloat:value]; }
 #endif
 
-WB_INLINE
+SC_INLINE
 NSNumber* WBFloat(float value) { return [NSNumber numberWithFloat:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBDouble(double value) { return [NSNumber numberWithDouble:value]; }
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-WB_INLINE
+SC_INLINE
 NSNumber* WBInteger(NSInteger value) { return [NSNumber numberWithInt:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBUInteger(NSUInteger value) { return [NSNumber numberWithUnsignedInt:value]; }
 #else
-WB_INLINE
+SC_INLINE
 NSNumber* WBInteger(NSInteger value) { return [NSNumber numberWithInteger:value]; }
-WB_INLINE
+SC_INLINE
 NSNumber* WBUInteger(NSUInteger value) { return [NSNumber numberWithUnsignedInteger:value]; }
 #endif
 
 /* Integer value compatibility */
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-WB_INLINE
+SC_INLINE
 NSInteger WBIntegerValue(id object) { return [object intValue]; }
-WB_INLINE
+SC_INLINE
 NSUInteger WBUIntegerValue(NSNumber *object) { return [object unsignedIntValue]; }
-WB_INLINE
+SC_INLINE
 void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInt:value forKey:key]; }
-WB_INLINE
+SC_INLINE
 NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntForKey:key]; }
 #else
-WB_INLINE
+SC_INLINE
 NSInteger WBIntegerValue(id object) { return [object integerValue]; }
-WB_INLINE
+SC_INLINE
 NSUInteger WBUIntegerValue(NSNumber *object) { return [object unsignedIntegerValue]; }
-WB_INLINE
+SC_INLINE
 void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInteger:value forKey:key]; }
-WB_INLINE
+SC_INLINE
 NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntegerForKey:key]; }
 #endif
 

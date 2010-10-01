@@ -16,9 +16,9 @@
 #include <tgmath.h> // MUST be first
 
 #if defined(__OBJC__)
-#import <Cocoa/Cocoa.h>
+  #import <Cocoa/Cocoa.h>
 #else
-#include <CoreServices/CoreServices.h>
+  #include <CoreServices/CoreServices.h>
 #endif
 
 // Misc useful includes
@@ -36,96 +36,79 @@
 #endif
 
 // MARK: Attributes
-#if !defined(WB_OBSOLETE)
-  #define WB_OBSOLETE __attribute__((deprecated))
+#if !defined(SC_OBSOLETE)
+  #define SC_OBSOLETE __attribute__((deprecated))
 #endif
 
-#if !defined(WB_REQUIRES_NIL_TERMINATION)
+#if !defined(SC_REQUIRES_NIL_TERMINATION)
   #if defined(__APPLE_CC__) && (__APPLE_CC__ >= 5549)
-    #define WB_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
+    #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
   #else
-    #define WB_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
+    #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
   #endif
 #endif
 
-#if !defined(WB_REQUIRED_ARGS)
-  #define WB_REQUIRED_ARGS(idx, args...) __attribute__((nonnull(idx, ##args)))
+#if !defined(SC_REQUIRED_ARGS)
+  #define SC_REQUIRED_ARGS(idx, args...) __attribute__((nonnull(idx, ##args)))
 #endif
 
 #pragma mark Visibility
 
-#if !defined(WB_VISIBLE)
-  #define WB_VISIBLE __attribute__((visibility("default")))
+#if !defined(SC_VISIBLE)
+  #define SC_VISIBLE __attribute__((visibility("default")))
 #endif
 
-#if !defined(WB_HIDDEN)
-  #define WB_HIDDEN __attribute__((visibility("hidden")))
+#if !defined(SC_HIDDEN)
+  #define SC_HIDDEN __attribute__((visibility("hidden")))
 #endif
 
-#if !defined(WB_EXTERN)
+#if !defined(SC_EXTERN)
   #if defined(__cplusplus)
-    #define WB_EXTERN extern "C"
+    #define SC_EXTERN extern "C"
   #else
-    #define WB_EXTERN extern
+    #define SC_EXTERN extern
   #endif
 #endif
 
 /*!
- @defined WB_PRIVATE
+ @defined SC_PRIVATE
  @abstract Private extern symbol.
  */
 /*!
- @defined WB_EXPORT
+ @defined SC_EXPORT
  @abstract Exported Wonderbox Function.
- @discussion If WONDERBOX_FRAMEWORK is not defined, WB_EXPORT is the same than WB_PRIVATE
- */
-/*!
- @defined WB_PLUGIN_EXPORT
- @abstract Use for plugin entry point. Always export even if WONDERBOX_FRAMEWORK is not defined.
  */
 
 #if defined(__cplusplus)
   #define __inline__ inline
 #endif
 
-#define WB_PRIVATE WB_EXTERN WB_HIDDEN
-#define WB_PLUGIN_EXPORT WB_EXTERN WB_VISIBLE
-
-#if defined(WONDERBOX_FRAMEWORK)
-  #define WB_EXPORT WB_EXTERN WB_VISIBLE
-#else
-  #define WB_EXPORT WB_EXTERN WB_HIDDEN
-#endif
+#define SC_PRIVATE SC_EXTERN SC_HIDDEN
+#define SC_EXPORT SC_EXTERN SC_VISIBLE
 
 /*!
- @defined WB_CLASS_EXPORT
+ @defined SC_CLASS_EXPORT
  @abstract Public class. (64 bits only)
- @discussion If WONDERBOX_FRAMEWORK is not defined, WB_CLASS_EXPORT is the same than WB_CLASS_PRIVATE
  */
 /*!
- @defined WB_CLASS_PRIVATE
+ @defined SC_CLASS_PRIVATE
  @abstract Internal class. (64 bits only)
  */
-#if !defined(WB_CLASS_EXPORT)
+#if !defined(SC_CLASS_EXPORT)
   #if __LP64__
-    #define WB_CLASS_PRIVATE WB_HIDDEN
-
-    #if defined(WONDERBOX_FRAMEWORK)
-      #define WB_CLASS_EXPORT WB_VISIBLE
-    #else
-      #define WB_CLASS_EXPORT WB_CLASS_PRIVATE
-    #endif
+    #define SC_CLASS_PRIVATE SC_HIDDEN
+    #define SC_CLASS_EXPORT SC_VISIBLE
   #else
-    #define WB_CLASS_EXPORT
-    #define WB_CLASS_PRIVATE
+    #define SC_CLASS_EXPORT
+    #define SC_CLASS_PRIVATE
   #endif /* Framework && 64 bits runtime */
 #endif
 
-#if !defined(WB_INLINE)
+#if !defined(SC_INLINE)
   #if !defined(__NO_INLINE__)
-    #define WB_INLINE static __inline__ __attribute__((always_inline))
+    #define SC_INLINE static __inline__ __attribute__((always_inline))
   #else
-    #define WB_INLINE static __inline__
+    #define SC_INLINE static __inline__
   #endif /* No inline */
 #endif
 
@@ -223,11 +206,11 @@ inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
 template<typename T>
 inline T WBCFMakeCollectable(T aValue) { return aValue ? (T)CFMakeCollectable(aValue) : (T)NULL; }
 #else
-WB_INLINE
+SC_INLINE
 CFTypeRef WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
 #endif
 
-WB_INLINE
+SC_INLINE
 void WBCFRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
 #endif /* __WBC_CORE_H__ */

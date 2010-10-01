@@ -22,27 +22,27 @@
 
 typedef uint64_t WBHostTime;
 
-WB_INLINE
+SC_INLINE
 WBHostTime WBHostTimeGetCurrent(void) { return mach_absolute_time(); }
 
-WB_INLINE
+SC_INLINE
 WBHostTime WBNanoToHostTime(UInt64 nano) {
   return UnsignedWideToUInt64(NanosecondsToAbsolute(UInt64ToUnsignedWide(nano)));
 }
 
-WB_INLINE
+SC_INLINE
 UInt64 WBHostTimeToNano(WBHostTime delta) {
   // Convert to nanoseconds.
   return UnsignedWideToUInt64(AbsoluteToNanoseconds(UInt64ToUnsignedWide(delta)));
 }
 
-WB_INLINE
+SC_INLINE
 UInt64 WBHostTimeToMicro(WBHostTime delta) { return llround((double)WBHostTimeToNano(delta) / 1e3); }
 
-WB_INLINE
+SC_INLINE
 UInt32 WBHostTimeToMillis(WBHostTime delta) { return (UInt32)lround((double)WBHostTimeToNano(delta) / 1e6); }
 
-WB_INLINE
+SC_INLINE
 CFTimeInterval WBHostTimeToTimeInterval(WBHostTime delta) { return (CFTimeInterval)WBHostTimeToNano(delta) / 1e9; }
 
 #endif /* __WBC_PROFILE_H__ */
