@@ -15,7 +15,11 @@
 
 #pragma mark Debugging & Profiling
 
-#define WBWaitDebugger() raise(SIGSTOP)
+#if defined(__x86_64__) || defined(__i386__)
+  #define WBWaitDebugger() asm("int3")
+#elif (__ppc__)
+  #define WBWaitDebugger() asm("trap") // TODO: check if it works
+#endif
 
 #include <mach/mach.h>
 #include <mach/mach_time.h>
