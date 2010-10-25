@@ -16,10 +16,11 @@
 #pragma mark Debugging & Profiling
 
 #if defined(__x86_64__) || defined(__i386__)
-  #define WBWaitDebugger() asm("int3")
-#elif (__ppc__)
-  #define WBWaitDebugger() asm("trap") // TODO: check if it works
+  #define WBWaitDebugger() __asm("int3")
+#elif (__ppc__) || defined(__arm__)
+  #define WBWaitDebugger() __asm("trap") // TODO: check if it works
 #endif
+// TODO: maybe fallback to pthread_kill(pthread_self(), SIG_INT) for other archs
 
 #include <mach/mach.h>
 #include <mach/mach_time.h>
