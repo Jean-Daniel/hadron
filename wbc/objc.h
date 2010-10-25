@@ -15,6 +15,16 @@
 
 #if defined (__OBJC__)
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+  #define NSIntegerHashCallBacks NSIntHashCallBacks
+  #define NSIntegerMapKeyCallBacks NSIntMapKeyCallBacks
+  #define NSIntegerMapValueCallBacks NSIntMapValueCallBacks
+
+  #define WBAutoreleasePoolDrain(pool) [pool release]
+#else
+  #define WBAutoreleasePoolDrain(pool) [pool drain]
+#endif
+
 #if DEBUG
 #define WBProperty(propName)    NSStringFromSelector(@selector(propName))
 #else

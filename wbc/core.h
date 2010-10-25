@@ -162,19 +162,6 @@
 #endif
 
 // MARK: -
-// MARK: Tiger Compatibility
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-	#define NSIntegerHashCallBacks NSIntHashCallBacks
-	#define NSIntegerMapKeyCallBacks NSIntMapKeyCallBacks
-	#define NSIntegerMapValueCallBacks NSIntMapValueCallBacks
-
-	#define WBMakeCollectable(ptr) (id)ptr
-	#define WBAutoreleasePoolDrain(pool) [pool release]
-#else
-	#define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
-	#define WBAutoreleasePoolDrain(pool) [pool drain]
-#endif
-
 // We need a compile time constant for byte order
 enum {
 #if defined(__LITTLE_ENDIAN__)

@@ -17,7 +17,14 @@
 
 #if defined(__OBJC__)
 
-#define WBCFAutorelease(cftype) [WBMakeCollectable(cftype) autorelease]
+// MARK: Tiger Compatibility
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
+  #define WBMakeCollectable(ptr) (id)ptr
+  #define WBCFAutorelease(cftype) [(id)cftype autorelease]
+#else
+  #define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
+  #define WBCFAutorelease(cftype) [NSMakeCollectable(cftype) autorelease]
+#endif
 
 SC_INLINE
 NSRange NSRangeFromCFRange(CFRange range) {
