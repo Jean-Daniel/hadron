@@ -173,28 +173,34 @@ enum {
 #endif
 };
 
-// For Mac OS 10.5 SDK
-#ifndef _UUID_STRING_T
-	#define _UUID_STRING_T
-	typedef char	uuid_string_t[37];
-#endif /* _UUID_STRING_T */
-
 // MARK: Convenient types
 #if !defined(__OBJC__) // for C and C++
 	typedef long NSInteger;
+  #define NSIntegerMax LONG_MAX
+  #define NSIntegerMin LONG_MIN
+
 	typedef unsigned long NSUInteger;
+  #define NSUIntegerMAX ULONG_MAX
 #endif
 
 // MARK: -
 // MARK: Core Foundation
+#if !defined(CFIndexMax)
+  #define CFIndexMax LONG_MAX
+#endif
+
+#if !defined(CFIndexMin)
+  #define CFIndexMin LONG_MIN
+#endif
+
 #if defined(__cplusplus)
-template<typename T>
-inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
-template<typename T>
-inline T WBCFMakeCollectable(T aValue) { return aValue ? (T)CFMakeCollectable(aValue) : (T)NULL; }
+  template<typename T>
+  inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
+  template<typename T>
+  inline T WBCFMakeCollectable(T aValue) { return aValue ? (T)CFMakeCollectable(aValue) : (T)NULL; }
 #else
-SC_INLINE
-CFTypeRef WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
+  SC_INLINE
+  CFTypeRef WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
 #endif
 
 SC_INLINE
