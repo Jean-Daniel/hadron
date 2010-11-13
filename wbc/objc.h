@@ -216,7 +216,7 @@ NSUInteger WBUIntegerValue(NSNumber *object) { return [object unsignedIntValue];
 SC_INLINE
 void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInt:value forKey:key]; }
 SC_INLINE
-NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntForKey:key]; }
+NSInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntForKey:key]; }
 #else
 SC_INLINE
 NSInteger WBIntegerValue(id object) { return [object integerValue]; }
@@ -225,7 +225,7 @@ NSUInteger WBUIntegerValue(NSNumber *object) { return [object unsignedIntegerVal
 SC_INLINE
 void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInteger:value forKey:key]; }
 SC_INLINE
-NSUInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntegerForKey:key]; }
+NSInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntegerForKey:key]; }
 #endif
 
 #endif /* __OBJC__ */

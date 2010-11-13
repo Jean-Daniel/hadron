@@ -99,7 +99,7 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
     while (range.length > 0) {
       CFIndex length;
       uint8_t buffer[128];
-      CFIndex done = CFStringGetBytes(aString, range, kCFStringEncodingUTF8, '?', false, buffer, 128, &length);
+      size_t done = (size_t)CFStringGetBytes(aString, range, kCFStringEncodingUTF8, '?', false, buffer, 128, &length);
       if (done > 0) {
         fwrite(buffer, 1, done, stderr);
         range.location += done;
