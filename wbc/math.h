@@ -51,9 +51,9 @@ uint32_t WBUInt64To32(uint64_t value) {
   #define __SC_TG_DOUBLE(fct)        fct
   #define __SC_TG_LONG_DOUBLE(fct)   fct
 #else
-  #define __SC_TG_FLOAT(fct)         fct#f
+  #define __SC_TG_FLOAT(fct)         fct##f
   #define __SC_TG_DOUBLE(fct)        fct
-  #define __SC_TG_LONG_DOUBLE(fct)   fct#l
+  #define __SC_TG_LONG_DOUBLE(fct)   fct##l
 #endif
 
 // Unsigned round
