@@ -128,15 +128,6 @@ SC_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && 
 #define WBBundleForClass(aClass)  [NSBundle bundleForClass:[aClass class]]
 
 // MARK: NSIndexSet
-/*
- Usage:
- WBIndexesIterator(idx, (NSIndexSet *)indexes) {
- }
- */
-#define WBIndexesIterator(var, indexes) for (NSUInteger var = [indexes firstIndex]; indexes != nil && var != NSNotFound; var = [indexes indexGreaterThanIndex:var])
-
-#define WBIndexesReverseIterator(var, indexes) for (NSUInteger var = [indexes lastIndex]; indexes != nil && var != NSNotFound; var = [indexes indexLessThanIndex:var])
-
 SC_INLINE
 NSIndexSet *WBIndexesForCount(NSUInteger count) { return [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)]; }
 SC_INLINE

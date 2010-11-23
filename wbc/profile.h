@@ -45,7 +45,7 @@ SC_INLINE
 UInt64 WBHostTimeToMicro(WBHostTime delta) { return ullround((double)WBHostTimeToNano(delta) / 1e3); }
 
 SC_INLINE
-UInt32 WBHostTimeToMillis(WBHostTime delta) { return ulround((double)WBHostTimeToNano(delta) / 1e6); }
+UInt32 WBHostTimeToMillis(WBHostTime delta) { return (UInt32)ulround((double)WBHostTimeToNano(delta) / 1e6); }
 
 SC_INLINE
 CFTimeInterval WBHostTimeToTimeInterval(WBHostTime delta) { return (CFTimeInterval)WBHostTimeToNano(delta) / 1e9; }
