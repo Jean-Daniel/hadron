@@ -101,7 +101,7 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
       uint8_t buffer[128];
       size_t done = (size_t)CFStringGetBytes(aString, range, kCFStringEncodingUTF8, '?', false, buffer, 128, &length);
       if (done > 0) {
-        fwrite(buffer, 1, done, stderr);
+        fwrite(buffer, 1, length, stderr); // lenght may be ≠ done when generating multibytes chars
         range.location += done;
         range.length -= done;
       } else {
