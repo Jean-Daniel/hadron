@@ -86,24 +86,6 @@
 #define SC_PRIVATE SC_EXTERN SC_HIDDEN
 #define SC_EXPORT SC_EXTERN SC_VISIBLE
 
-/*!
- @defined SC_CLASS_EXPORT
- @abstract Public class. (64 bits only)
- */
-/*!
- @defined SC_CLASS_PRIVATE
- @abstract Internal class. (64 bits only)
- */
-#if !defined(SC_CLASS_EXPORT)
-  #if __LP64__
-    #define SC_CLASS_PRIVATE SC_HIDDEN
-    #define SC_CLASS_EXPORT SC_VISIBLE
-  #else
-    #define SC_CLASS_EXPORT
-    #define SC_CLASS_PRIVATE
-  #endif /* Framework && 64 bits runtime */
-#endif
-
 #if !defined(SC_INLINE)
   #if !defined(__NO_INLINE__)
     #define SC_INLINE static __inline__ __attribute__((always_inline))
