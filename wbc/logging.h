@@ -140,13 +140,6 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
   }
 }
 
-#define WBCTrace() do { \
-  __WBLogPrintLinePrefix(stderr); \
-  char *__file = strdup(__FILE__); \
-  fprintf(stderr, "[%s:%li]: %s()\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
-  if (__file) free(__file); \
-} while(0)
-
 #define WBTrace() do { \
   __WBLogPrintLinePrefix(stderr); \
   char *__file = strdup(__FILE__); \
