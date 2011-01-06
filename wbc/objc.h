@@ -97,7 +97,7 @@ SC_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue
  @param delegate The Delegate to register.
  @param method	method name
  */
-SC_INLINE bool __WBDelegateHandle(id delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
+SC_INLINE bool __WBDelegateHandle(id<NSObject> delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
 #define WBDelegateHandle(delegate, method) __WBDelegateHandle(delegate, @selector(method))
 
 /*!
