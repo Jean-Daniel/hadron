@@ -57,15 +57,13 @@ uint32_t WBUInt64To32(uint64_t value) {
 #endif
 
 // Unsigned round
-#define __sc_ulround(a) ({ \
+#define __sc_ulround(a) \
   if (a < 0 || a > ULONG_MAX) { feraiseexcept(FE_INVALID); return 0; } \
-  return (unsigned long int)a; \
-}) \
+  return (unsigned long int)a
 
-#define __sc_ullround(a) ({ \
+#define __sc_ullround(a) \
   if (a < 0 || a > ULLONG_MAX) { feraiseexcept(FE_INVALID); return 0; } \
-  return (unsigned long long int)a; \
-}) \
+  return (unsigned long long int)a
 
 __SC_TG_DECL(unsigned long int) __SC_TG_FLOAT(__tg_ulround)(float a) { __sc_ulround(roundf(a)); }
 __SC_TG_DECL(unsigned long int) __SC_TG_DOUBLE(__tg_ulround)(double a) { __sc_ulround(round(a)); }
