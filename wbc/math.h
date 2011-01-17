@@ -23,7 +23,11 @@ int32_t WBIntSaturate(double x) {
 SC_INLINE
 Fixed WBFloatToFixed(double aFloat) { return WBIntSaturate(aFloat * fixed1); }
 SC_INLINE
-double WBFixedToFloat(Fixed aValue) { return (double)aValue / fixed1; }
+double WBFixedToFloat(Fixed aValue) {
+  if (positiveInfinity == aValue) return INFINITY;
+	if (negativeInfinity == aValue) return -INFINITY;
+  return (double)aValue / fixed1;
+}
 
 // 64 bits to 32 bits safe casts
 SC_INLINE
