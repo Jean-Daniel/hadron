@@ -18,7 +18,7 @@ bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
 
 SC_INLINE
 int32_t WBIntSaturate(double x) {
-  return x <= -0x1p31f ? (int32_t)-0x80000000 : 0x1p31f <= x ? (int32_t)0x7fffffff : (int32_t)x;
+  return x <= (double)INT32_MIN ? INT32_MIN : (double)INT32_MAX <= x ? (int32_t)INT32_MAX : (int32_t)x;
 }
 SC_INLINE
 Fixed WBFloatToFixed(double aFloat) { return WBIntSaturate(aFloat * fixed1); }
