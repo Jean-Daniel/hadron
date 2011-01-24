@@ -25,7 +25,7 @@
 // We got this technique from here:
 // http://unixjunkie.blogspot.com/2007/10/better-compile-time-asserts_29.html
 #if __has_feature(cxx_static_assert)
-  #define WBStaticAssert(test, msg)  static_assert(test, msg)
+  #define WBStaticAssert(test, msg)  static_assert(test, #msg)
 #else
   #define _WBStaticAssertSymbolInner(line, msg) WBSTATICASSERT ## line ## __ ## msg
   #define _WBStaticAssertSymbol(line, msg) _WBStaticAssertSymbolInner(line, msg)
