@@ -13,22 +13,26 @@
 #if !defined(__WBC_ASSERT_H__)
 #define __WBC_ASSERT_H__ 1
 
-// WBCompileAssert
-// WBCompileAssert is an assert that is meant to fire at compile time if you
-// want to check things at compile instead of runtime. For example if you
+// WBStaticAssert
+// WBStaticAssert is an assert that is meant to fire at Static time if you
+// want to check things at Static instead of runtime. For example if you
 // want to check that a wchar is 4 bytes instead of 2 you would use
-// WBCompileAssert(sizeof(wchar_t) == 4, wchar_t_is_4_bytes_on_OS_X)
+// WBStaticAssert(sizeof(wchar_t) == 4, wchar_t_is_4_bytes_on_OS_X)
 // Note that the second "arg" is not in quotes, and must be a valid processor
 // symbol in it's own right (no spaces, punctuation etc).
 
-// Wrapping this in an #ifndef allows external groups to define their own compile time assert scheme.
+// Wrapping this in an #ifndef allows external groups to define their own Static time assert scheme.
 // We got this technique from here:
 // http://unixjunkie.blogspot.com/2007/10/better-compile-time-asserts_29.html
+#if __has_feature(cxx_static_assert)
+  #define WBStaticAssert(test, msg)  static_assert(test, msg)
+#else
+  #define _WBStaticAssertSymbolInner(line, msg) WBSTATICASSERT ## line ## __ ## msg
+  #define _WBStaticAssertSymbol(line, msg) _WBStaticAssertSymbolInner(line, msg)
 
-#define _WBCompileAssertSymbolInner(line, msg) WBCOMPILEASSERT ## line ## __ ## msg
-#define _WBCompileAssertSymbol(line, msg) _WBCompileAssertSymbolInner(line, msg)
-#define WBCompileAssert(test, msg) \
-    typedef char _WBCompileAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
+  #define WBStaticAssert(test, msg) typedef char _WBStaticAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
+#endif
+
 
 
 // Assert
