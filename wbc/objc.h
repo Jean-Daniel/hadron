@@ -46,12 +46,11 @@ BOOL _WBSetterRetain(id *ivar, id var) {
 }
 
 /* For safety we copy var before releasing ivar (ivar can contain the last reference on var). */
-#define WBSetterCopy(ivar, var) _WBSetterCopyWithZone(&ivar, var, [self zone])
-#define WBSetterCopyWithZone(ivar, var, aZone) _WBSetterCopyWithZone(&ivar, var, aZone)
+#define WBSetterCopy(ivar, var) _WBSetterCopy(&ivar, var)
 SC_INLINE
-BOOL _WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
+BOOL _WBSetterCopy(id *ivar, id var) {
   if (*ivar != var) {
-    var = [var copyWithZone:aZone];
+    var = [var copyWithZone:nil];
     [*ivar release];
     *ivar = var;
     return YES;
@@ -59,12 +58,11 @@ BOOL _WBSetterCopyWithZone(id *ivar, id var, NSZone *aZone) {
   return NO;
 }
 
-#define WBSetterMutableCopy(ivar, var) _WBSetterMutableCopyWithZone(&ivar, var, [self zone])
-#define WBSetterMutableCopyWithZone(ivar, var, aZone) _WBSetterMutableCopyWithZone(&ivar, var, aZone)
+#define WBSetterMutableCopy(ivar, var) _WBSetterMutableCopy(&ivar, var)
 SC_INLINE
-BOOL _WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
+BOOL _WBSetterMutableCopy(id *ivar, id var) {
   if (*ivar != var) {
-    var = [var mutableCopyWithZone:aZone];
+    var = [var mutableCopyWithZone:nil];
     [*ivar release];
     *ivar = var;
     return YES;
@@ -77,18 +75,15 @@ BOOL _WBSetterMutableCopyWithZone(id *ivar, id var, NSZone *aZone) {
 //extern void objc_copyStruct(void *dest, const void *src, ptrdiff_t size, BOOL atomic, BOOL hasStrong);
 SC_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue, BOOL atomic, BOOL shouldCopy);
 
-#define WBSetterCopyAtomic(ivar, var) do { \
-  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 1); \
-} while (0)
+#define WBSetterCopyAtomic(ivar, var) \
+  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 1)
 
 // Hack, see runtime source (use OBJC_PROPERTY_MUTABLECOPY as shouldCopy arg)
-#define WBSetterMutableCopyAtomic(ivar, var) do { \
-  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 2); \
-} while (0)
+#define WBSetterMutableCopyAtomic(ivar, var) \
+  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, 2)
 
-#define WBSetterRetainAtomic(ivar, var) do { \
-  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, NO); \
-} while (0)
+#define WBSetterRetainAtomic(ivar, var) \
+  objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, NO)
 
 // MARK: Delegate
 /*!
@@ -107,12 +102,15 @@ SC_INLINE bool __WBDelegateHandle(id<NSObject> delegate, SEL method) { return de
  @param		sel	The selector the notification need called.
  @param		notif The notification name.
  */
-#define WBDelegateRegisterNotification(obj, sel, notif)		if ([obj respondsToSelector:sel]) {	\
-  																[[NSNotificationCenter defaultCenter] addObserver:obj selector:sel name:notif object:self]; }
+#define WBDelegateRegisterNotification(obj, sel, notif) do { \
+  if ([obj respondsToSelector:sel])	\
+    [[NSNotificationCenter defaultCenter] addObserver:obj selector:sel name:notif object:self]; \
+} while (0)
 
-#define WBDelegateUnregisterNotification(obj, sel, notif)	if ([obj respondsToSelector:sel]) {	\
-  																[[NSNotificationCenter defaultCenter] removeObserver:obj name:notif object:self];	}
-
+#define WBDelegateUnregisterNotification(obj, sel, notif)	do { \
+  if ([obj respondsToSelector:sel]) \
+    [[NSNotificationCenter defaultCenter] removeObserver:obj name:notif object:self]; \
+} while (0)
 
 // MARK: NSBundle
 /*!
