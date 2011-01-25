@@ -26,9 +26,9 @@
 #endif
 
 #if DEBUG
-#define WBProperty(propName)    NSStringFromSelector(@selector(propName))
+  #define WBProperty(propName)    NSStringFromSelector(@selector(propName))
 #else
-#define WBProperty(propName)    @#propName
+  #define WBProperty(propName)    @#propName
 #endif
 
 // MARK: Accessors

@@ -231,7 +231,7 @@ void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
 // MARK: =================== Release Configuration ===================
 
 #define DCLog(format, args...) do {} while (0)
-#define DCLogv(format, args) do {} while (0)
+#define DCLogv(format, args)   do {} while (0)
 
 #define WBCLog(client, msg, level, format, args...) asl_log(client, msg, level, format, ## args)
 SC_INLINE
@@ -257,7 +257,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
  @param ... parameters.
  */
 #define DLog(format, args...) do {} while (0)
-#define DLogv(format, args) do {} while (0)
+#define DLogv(format, args)   do {} while (0)
 
 SC_INLINE
 __nsloglike(4, 0)
@@ -284,7 +284,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
  @abstract Print a string like: '+/-[sender selector]'.
  @discussion This Macro does nothing when DEBUG is not defined
  */
-#define WBTrace() do {} while (0)
+#define WBTrace()  do {} while (0)
 #define WBDTrace() do {} while (0)
 
 #endif /* __OBJC__ */
@@ -293,12 +293,12 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 
 /* =================== Common =================== */
 #define WBCLogWarning(format, args...) WBCLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
-#define WBCLogError(format, args...) WBCLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
+#define WBCLogError(format, args...)   WBCLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
 
 #if defined (__OBJC__)
 
 #define WBLogWarning(format, args...) WBLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
-#define WBLogError(format, args...) WBLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
+#define WBLogError(format, args...)   WBLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
 
 /*!
  @defined WBLogException
