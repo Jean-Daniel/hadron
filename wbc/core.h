@@ -103,6 +103,10 @@
   #define __has_feature(x) 0  // Compatibility with non-clang compilers.
 #endif
 
+#ifndef __has_attribute         // Optional of course.
+  #define __has_attribute(x) 0  // Compatibility with non-clang compilers.
+#endif
+
 #ifndef UNUSED_IVAR
   #if __has_feature(attribute_objc_ivar_unused)
     #define UNUSED_IVAR __attribute__((unused))
@@ -112,7 +116,7 @@
 #endif
 
 #ifndef NS_RETURNS_RETAINED
-  #if __has_feature(attribute_ns_returns_retained)
+  #if __has_attribute(ns_returns_retained)
     #define NS_RETURNS_RETAINED __attribute__((ns_returns_retained))
   #else
     #define NS_RETURNS_RETAINED
@@ -120,7 +124,7 @@
 #endif
 
 #ifndef CF_RETURNS_RETAINED
-  #if __has_feature(attribute_cf_returns_retained)
+  #if __has_attribute(cf_returns_retained)
     #define CF_RETURNS_RETAINED __attribute__((cf_returns_retained))
   #else
     #define CF_RETURNS_RETAINED
@@ -128,7 +132,7 @@
 #endif
 
 #ifndef NS_RETURNS_NOT_RETAINED
-	#if __has_feature(attribute_ns_returns_not_retained)
+	#if __has_attribute(ns_returns_not_retained)
 		#define NS_RETURNS_NOT_RETAINED __attribute__((ns_returns_not_retained))
 	#else
 		#define NS_RETURNS_NOT_RETAINED
@@ -136,11 +140,35 @@
 #endif
 
 #ifndef CF_RETURNS_NOT_RETAINED
-	#if __has_feature(attribute_cf_returns_not_retained)
+	#if __has_attribute(cf_returns_not_retained)
 		#define CF_RETURNS_NOT_RETAINED __attribute__((cf_returns_not_retained))
 	#else
 		#define CF_RETURNS_NOT_RETAINED
 	#endif
+#endif
+
+#ifndef NS_CONSUMED
+  #if __has_attribute(ns_consumed)
+    #define NS_CONSUMED __attribute__((ns_consumed))
+  #else
+    #define NS_CONSUMED
+  #endif
+#endif
+
+#ifndef CF_CONSUMED
+  #if __has_attribute(cf_consumed)
+    #define CF_CONSUMED __attribute__((cf_consumed))
+  #else
+    #define CF_CONSUMED
+  #endif
+#endif
+
+#ifndef NS_CONSUMES_SELF
+  #if __has_attribute(ns_consumes_self)
+    #define NS_CONSUMED_SELF __attribute__((ns_consumes_self))
+  #else
+    #define NS_CONSUMED_SELF
+  #endif
 #endif
 
 // MARK: -
@@ -176,16 +204,16 @@ enum {
 #endif
 
 #if defined(__cplusplus)
-  template<typename T>
+  template<typename T> // CF_RETURNS_RETAINED (buggy with template)
   inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
   template<typename T>
   inline T WBCFMakeCollectable(T aValue) { return aValue ? (T)CFMakeCollectable(aValue) : (T)NULL; }
 #else
-  SC_INLINE
+  SC_INLINE CF_RETURNS_RETAINED
   CFTypeRef WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
 #endif
 
 SC_INLINE
-void WBCFRelease(CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
+void WBCFRelease(CF_CONSUMED CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
 #endif /* __WBC_CORE_H__ */
