@@ -182,6 +182,11 @@
     #endif
   #endif
 
+  // MARK: Extension
+  // NS_INIT_METHOD: Use to tell the static analyzer that a specified method has init semantic, ie it consumes self, and returns a retained object.
+  #ifndef NS_INIT_METHOD
+    #define NS_INIT_METHOD NS_CONSUMES_SELF NS_RETURNS_RETAINED
+  #endif
 #endif
 
 // MARK: -
