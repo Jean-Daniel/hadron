@@ -152,9 +152,9 @@
 
   #ifndef NS_CONSUMES_SELF
     #if __has_attribute(ns_consumes_self)
-      #define NS_CONSUMED_SELF __attribute__((ns_consumes_self))
+      #define NS_CONSUMES_SELF __attribute__((ns_consumes_self))
     #else
-      #define NS_CONSUMED_SELF
+      #define NS_CONSUMES_SELF
     #endif
   #endif
 
