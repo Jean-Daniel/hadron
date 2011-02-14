@@ -41,6 +41,7 @@ uint32_t WBUInt64To32(uint64_t value) {
   return (uint32_t)value;
 }
 
+// MARK: -
 // MARK: Math Macros
 #if defined(__clang__) && !defined(__cplusplus)
   // Clang use a special attribute to make a function overloadable (like C++),
@@ -60,14 +61,16 @@ uint32_t WBUInt64To32(uint64_t value) {
   #define __SC_TG_LONG_DOUBLE(fct)   fct##l
 #endif
 
-// Unsigned round
+// MARK: Unsigned round
 #define __sc_ulround(a) \
-  if (a < 0 || a > ULONG_MAX) { feraiseexcept(FE_INVALID); return 0; } \
-  return (unsigned long int)a
+  __typeof__(a) __result = a; \
+  if (__result < 0 || __result > ULONG_MAX) { feraiseexcept(FE_INVALID); return 0; } \
+  return (unsigned long int)__result
 
 #define __sc_ullround(a) \
-  if (a < 0 || a > ULLONG_MAX) { feraiseexcept(FE_INVALID); return 0; } \
-  return (unsigned long long int)a
+  __typeof__(a) __result = a; \
+  if (__result < 0 || __result > ULLONG_MAX) { feraiseexcept(FE_INVALID); return 0; } \
+  return (unsigned long long int)__result
 
 __SC_TG_DECL(unsigned long int) __SC_TG_FLOAT(__tg_ulround)(float a) { __sc_ulround(roundf(a)); }
 __SC_TG_DECL(unsigned long int) __SC_TG_DOUBLE(__tg_ulround)(double a) { __sc_ulround(round(a)); }
@@ -91,7 +94,70 @@ __SC_TG_DECL(unsigned long long int) __SC_TG_LONG_DOUBLE(__tg_ullround)(long dou
   #define ullround(__x)       __TGMATH_REAL(__x, __tg_ullround)
 #endif
 
-// Float comparisons
+// MARK: Saturate rounding
+#define __sc_slround(a) \
+  __typeof__(a) __result = a; \
+  if (__result <= LONG_MIN) return LONG_MIN; \
+  if (__result >= LONG_MAX) return LONG_MAX; \
+  return (long int)__result
+
+#define __sc_sllround(a) \
+  __typeof__(a) __result = a; \
+  if (__result <= LLONG_MIN) return LLONG_MIN; \
+  if (__result >= LLONG_MAX) return LLONG_MAX; \
+  return (long long int)__result
+
+__SC_TG_DECL(unsigned long int) __SC_TG_FLOAT(__tg_slround)(float a) { __sc_slround(roundf(a)); }
+__SC_TG_DECL(unsigned long int) __SC_TG_DOUBLE(__tg_slround)(double a) { __sc_slround(round(a)); }
+__SC_TG_DECL(unsigned long int) __SC_TG_LONG_DOUBLE(__tg_slround)(long double a) { __sc_slround(roundl(a)); }
+
+__SC_TG_DECL(unsigned long long int) __SC_TG_FLOAT(__tg_sllround)(float a) { __sc_sllround(roundf(a)); }
+__SC_TG_DECL(unsigned long long int) __SC_TG_DOUBLE(__tg_sllround)(double a) { __sc_sllround(round(a)); }
+__SC_TG_DECL(unsigned long long int) __SC_TG_LONG_DOUBLE(__tg_sllround)(long double a) { __sc_sllround(roundl(a)); }
+
+#define __sc_sulround(a) \
+  __typeof__(a) __result = a; \
+  if (__result <= 0) return 0; \
+  if (__result >= ULONG_MAX) return ULONG_MAX; \
+  return (unsigned long int)__result
+
+#define __sc_sullround(a) \
+  __typeof__(a) __result = a; \
+  if (__result <= 0) return 0; \
+  if (__result >= ULLONG_MAX) return ULLONG_MAX; \
+  return (unsigned long long int)__result
+
+__SC_TG_DECL(unsigned long int) __SC_TG_FLOAT(__tg_sulround)(float a) { __sc_sulround(roundf(a)); }
+__SC_TG_DECL(unsigned long int) __SC_TG_DOUBLE(__tg_sulround)(double a) { __sc_sulround(round(a)); }
+__SC_TG_DECL(unsigned long int) __SC_TG_LONG_DOUBLE(__tg_sulround)(long double a) { __sc_sulround(roundl(a)); }
+
+__SC_TG_DECL(unsigned long long int) __SC_TG_FLOAT(__tg_sullround)(float a) { __sc_sullround(roundf(a)); }
+__SC_TG_DECL(unsigned long long int) __SC_TG_DOUBLE(__tg_sullround)(double a) { __sc_sullround(round(a)); }
+__SC_TG_DECL(unsigned long long int) __SC_TG_LONG_DOUBLE(__tg_sullround)(long double a) { __sc_sullround(roundl(a)); }
+
+#undef __sc_sullround
+#undef __sc_sulround
+#undef __sc_sllround
+#undef __sc_slround
+
+#if defined(__cplusplus)
+  #define slround(__x)        __tg_slround(__x)
+  #define sllround(__x)       __tg_sllround(__x)
+  #define sulround(__x)       __tg_sulround(__x)
+  #define sullround(__x)      __tg_sullround(__x)
+#elif defined(__clang__)
+  #define slround(__x)        __tg_slround(__tg_promote1((__x))(__x))
+  #define sllround(__x)       __tg_sllround(__tg_promote1((__x))(__x))
+  #define sulround(__x)       __tg_sulround(__tg_promote1((__x))(__x))
+  #define sullround(__x)      __tg_sullround(__tg_promote1((__x))(__x))
+#else
+  #define slround(__x)        __TGMATH_REAL(__x, __tg_slround)
+  #define sllround(__x)       __TGMATH_REAL(__x, __tg_sllround)
+  #define sulround(__x)       __TGMATH_REAL(__x, __tg_sulround)
+  #define sullround(__x)      __TGMATH_REAL(__x, __tg_sullround)
+#endif
+
+// MARK: Float comparisons
 __SC_TG_DECL(bool) __SC_TG_FLOAT(__tg_fequal)(float a, float b) { float delta = a - b; return (delta <= FLT_EPSILON && delta >= -FLT_EPSILON); }
 __SC_TG_DECL(bool) __SC_TG_DOUBLE(__tg_fequal)(double a, double b) { double delta = a - b; return (delta <= DBL_EPSILON && delta >= -DBL_EPSILON); }
 __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fequal)(long double a, long double b) { long double delta = a - b; return (delta <= LDBL_EPSILON && delta >= -LDBL_EPSILON); }
@@ -107,11 +173,6 @@ __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fiszero)(long double f) { return __S
 __SC_TG_DECL(bool) __SC_TG_FLOAT(__tg_fnonzero)(float f) { return !__SC_TG_FLOAT(__tg_fiszero)(f); }
 __SC_TG_DECL(bool) __SC_TG_DOUBLE(__tg_fnonzero)(double f) { return !__SC_TG_DOUBLE(__tg_fiszero)(f); }
 __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !__SC_TG_LONG_DOUBLE(__tg_fiszero)(f); }
-
-#undef __SC_TG_LONG_DOUBLE
-#undef __SC_TG_DOUBLE
-#undef __SC_TG_FLOAT
-#undef __SC_TG_DECL
 
 #if defined(__cplusplus)
   #define fiszero(__x)         __tg_fiszero(__x)
@@ -131,5 +192,10 @@ __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !_
   #define fequal(__x, __y)    __TGMATH_REAL_2(__x, __y, __tg_fequal)
   #define fnotequal(__x, __y) __TGMATH_REAL_2(__x, __y, __tg_fnotequal)
 #endif // clang/gcc
+
+#undef __SC_TG_LONG_DOUBLE
+#undef __SC_TG_DOUBLE
+#undef __SC_TG_FLOAT
+#undef __SC_TG_DECL
 
 #endif /* __WBC_MATH_H__ */
