@@ -90,7 +90,7 @@ bool WBBitIsSet32(uint32_t value, uint32_t n) {
 }
 
 /* Use to set a boolean value in a bitfield */
-#define WBFlagSet(field, value)	do { field = ((value) != 0) ? 1 : 0; } while (0)
+#define WBFlagSet(field, value)	field = ((value) != 0) ? 1 : 0;
 #define WBFlagTestAndSet(field, value) ({ bool __old = field; field = ((value) != 0) ? 1 : 0; __old; })
 
 #endif /* __WBC_BITFIELDS_H__ */
