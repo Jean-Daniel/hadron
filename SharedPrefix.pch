@@ -6,7 +6,7 @@
  *  Copyright (c) 2004 - 2008 Jean-Daniel Dupas. All rights reserved.
  */
 /*!
-@header SharedPrefix
+ @header SharedPrefix
  @abstract Shared Prefix Header.
 */
 
@@ -16,14 +16,15 @@
 #include "wbc/core.h" // must be before all others
 
 #if defined(__OBJC__)
-#include "wbc/objc.h"
-#include "wbc/cfbridge.h"
+  #include "wbc/objc.h"
+  #include "wbc/cfbridge.h"
 #endif
 
 #if defined(__cplusplus)
-#include "wbc/cxx.h"
+  #include "wbc/cxx.h"
 #endif
 
+#include "wbc/link.h"
 #include "wbc/math.h"
 #include "wbc/assert.h"
 #include "wbc/profile.h"
