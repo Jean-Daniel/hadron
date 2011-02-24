@@ -28,6 +28,13 @@
   #define cxx_new new
   #define cxx_final final
   #define cxx_override override
+#elif _MSC_VER
+  #define cxx_explicit
+
+  #define cxx_new new
+  #define cxx_final sealed
+  #define cxx_override override
+  #define cxx_abstract abstract
 #else
   #define cxx_explicit
 

@@ -13,7 +13,15 @@
 #if !defined(__WBC_CORE_H__)
 #define __WBC_CORE_H__ 1
 
-#include <tgmath.h> // MUST be first
+#if defined(_WIN32)
+  #include "win32\core.h"
+#endif
+
+#if defined(__clang__) || defined(__GNUC__)
+  #include <tgmath.h> // MUST be first
+#endif
+
+#if defined(__MACH__)
 
 #if defined(__OBJC__)
   #import <Cocoa/Cocoa.h>
@@ -27,6 +35,8 @@
 #include <uuid/uuid.h> // already included in 10.6 but not in 10.5
 #include <libkern/OSAtomic.h>
 
+#endif // Mac
+
 #if !defined(MAC_OS_X_VERSION_10_5)
   #define MAC_OS_X_VERSION_10_5 1050
 #endif
@@ -37,22 +47,40 @@
 
 // MARK: Attributes
 #if !defined(SC_OBSOLETE)
-  #define SC_OBSOLETE __attribute__((deprecated))
+  #if defined(_MSC_VER)
+    #define SC_OBSOLETE(msg) __declspec(deprecated(msg))
+  #elif defined(__clang__)
+    #define SC_OBSOLETE(msg) __attribute__((deprecated(msg)))
+  #else
+    #define SC_OBSOLETE(msg) __attribute__((deprecated))
+  #endif
+#endif
+
+#if !defined(SC_UNUSED)
+  #if defined(_MSC_VER)
+    #define SC_UNUSED
+  #else
+    #define SC_UNUSED __attribute__((unused))
+  #endif
 #endif
 
 #if !defined(SC_REQUIRES_NIL_TERMINATION)
-  #if defined(__APPLE_CC__) && (__APPLE_CC__ >= 5549)
-    #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
+  #if defined(_MSC_VER)
+    #define SC_REQUIRES_NIL_TERMINATION
   #else
-    #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
+    #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
   #endif
 #endif
 
 #if !defined(SC_REQUIRED_ARGS)
-  #define SC_REQUIRED_ARGS(idx, args...) __attribute__((nonnull(idx, ##args)))
+  #if defined(_MSC_VER)
+    #define SC_REQUIRED_ARGS(idx, ...)
+  #else
+    #define SC_REQUIRED_ARGS(idx, args...) __attribute__((nonnull(idx, ##args)))
+  #endif
 #endif
 
-#pragma mark Visibility
+// MARK: Visibility
 
 #if !defined(SC_VISIBLE)
   #define SC_VISIBLE __attribute__((visibility("default")))
@@ -88,9 +116,13 @@
 
 #if !defined(SC_INLINE)
   #if !defined(__NO_INLINE__)
-    #define SC_INLINE static __inline__ __attribute__((always_inline))
+    #if defined(_MSC_VER)
+      #define SC_INLINE __forceinline static
+    #else
+      #define SC_INLINE __inline__ __attribute__((always_inline)) static
+    #endif
   #else
-    #define SC_INLINE static __inline__
+    #define SC_INLINE __inline__ static
   #endif /* No inline */
 #endif
 
@@ -197,17 +229,17 @@ enum {
 #elif defined(__BIG_ENDIAN__)
   kOSHostByteOrder = OSBigEndian,
 #else
-	#error undefined byte order
+  #error undefined byte order
 #endif
 };
 
 // MARK: Convenient types
 #if !defined(__OBJC__) // for C and C++
-	typedef long NSInteger;
+  typedef long NSInteger;
   #define NSIntegerMax LONG_MAX
   #define NSIntegerMin LONG_MIN
 
-	typedef unsigned long NSUInteger;
+  typedef unsigned long NSUInteger;
   #define NSUIntegerMAX ULONG_MAX
 #endif
 

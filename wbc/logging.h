@@ -14,36 +14,74 @@
 #define __WBC_LOGGING_H__ 1
 
 #if defined(__clang__)
-	#define __cfloglike(i, j) __attribute__((format(CFString, i, j)))
-	#define __nsloglike(i, j) __attribute__((format(NSString, i, j)))
-  #ifndef __printflike
+  #define __cfloglike(i, j) __attribute__((format(CFString, i, j)))
+  #define __nsloglike(i, j) __attribute__((format(NSString, i, j)))
+  #if !defined(__printflike)
     #define __printflike(i, j) __attribute__((format(printf, i, j)))
   #endif
 #else
-	#define __cfloglike(i, j)
-	#define __nsloglike(i, j)
-  #ifndef __printflike
-  	#define __printflike(fmtarg, firstvararg) __attribute__((__format__ (__printf__, fmtarg, firstvararg)))
+  #define __cfloglike(i, j)
+  #define __nsloglike(i, j)
+  #if !defined(__printflike)
+    #if defined(_MSC_VER)
+      #define __printflike(fmtarg, firstvararg)
+    #else
+      #define __printflike(fmtarg, firstvararg) __attribute__((__format__ (__printf__, fmtarg, firstvararg)))
+    #endif
   #endif
 #endif
 
-#pragma mark Logging
+// MARK: Logging
+#if !defined(__MACH__)
+
+typedef void *aslmsg;
+typedef void *aslclient;
+
+#define asl_log(...) do {} while (0)
+#define asl_vlog(...) do {} while (0)
+
+/*! @defineblock Log Message Priority Levels
+ * Log levels of the message.
+ */
+#define ASL_LEVEL_EMERG   0
+#define ASL_LEVEL_ALERT   1
+#define ASL_LEVEL_CRIT    2
+#define ASL_LEVEL_ERR     3
+#define ASL_LEVEL_WARNING 4
+#define ASL_LEVEL_NOTICE  5
+#define ASL_LEVEL_INFO    6
+#define ASL_LEVEL_DEBUG   7
+/*! @/defineblock */
+
+/*! @defineblock Log Message Priority Level Strings
+ * Strings corresponding to log levels.
+ */
+#define ASL_STRING_EMERG   "Emergency"
+#define ASL_STRING_ALERT   "Alert"
+#define ASL_STRING_CRIT    "Critical"
+#define ASL_STRING_ERR     "Error"
+#define ASL_STRING_WARNING "Warning"
+#define ASL_STRING_NOTICE  "Notice"
+#define ASL_STRING_INFO    "Info"
+#define ASL_STRING_DEBUG   "Debug"
+/*! @/defineblock */
+#endif
 
 #if DEBUG
 // MARK: -
 // MARK: =================== Debugging Configuration ===================
 
-#include <unistd.h>
-#include <pthread.h>
-#include <sys/time.h>
+#if defined(__MACH__)
+  #include <unistd.h>
+  #include <pthread.h>
+  #include <sys/time.h>
 
 // .hack from CoreFoundation, see comment in __WBLogPrintLinePrefix
-SC_EXTERN
-void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
+SC_EXTERN void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
 
 // Adding a static method here is not desired, but this is for debug build only.
 // And we really don't want to use NSLog as it clutters the Console
-static
+SC_UNUSED static
 void __WBLogPrintLinePrefix(FILE *f) {
   // This hacky call is from CoreFoundation.
   // This is the way CoreFoundation (and so NSLog) determines if it should log in stderr
@@ -66,6 +104,12 @@ void __WBLogPrintLinePrefix(FILE *f) {
 
   fprintf(f, "%s.%.3u %s[%u:%x] ", dtime, nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
 }
+#else
+SC_UNUSED static
+void __WBLogPrintLinePrefix(FILE *f) {
+  // TODO:
+}
+#endif
 
 SC_INLINE
 const char *__WBASLLevelString(int level) {
@@ -82,7 +126,7 @@ const char *__WBASLLevelString(int level) {
   return "????";
 }
 
-static __attribute__((unused))
+SC_UNUSED static
 void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
   // Print message
   const char *cstr = NULL;
@@ -114,9 +158,9 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
     fwrite("\n", 1, 1, f);
 }
 
-#define DCLog(format, args...)  do { \
+#define DCLog(format, ...)  do { \
   __WBLogPrintLinePrefix(stderr); \
-  fprintf(stderr, format "\n", ## args); \
+  fprintf(stderr, format "\n", ## __VA_ARGS__); \
 } while (0)
 
 #define DCLogv(format, args)  do { \
@@ -124,9 +168,9 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
   vfprintf(stderr, format "\n", args); \
 while (0)
 
-#define WBCLog(client, msg, level, format, args...) do { \
+#define WBCLog(client, msg, level, format, ...) do { \
   __WBLogPrintLinePrefix(stderr); \
-  fprintf(stderr, "Log(%s): " format "\n", __WBASLLevelString(level), ## args); \
+  fprintf(stderr, "Log(%s): " format "\n", __WBASLLevelString(level), ## __VA_ARGS__); \
 } while (0)
 
 SC_INLINE
@@ -230,10 +274,10 @@ void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
 #else /* DEBUG */
 // MARK: =================== Release Configuration ===================
 
-#define DCLog(format, args...) do {} while (0)
-#define DCLogv(format, args)   do {} while (0)
+#define DCLog(format, ...) do {} while (0)
+#define DCLogv(format, args) do {} while (0)
 
-#define WBCLog(client, msg, level, format, args...) asl_log(client, msg, level, format, ## args)
+#define WBCLog(client, msg, level, format, ...) asl_log(client, msg, level, format, ## __VA_ARGS__)
 SC_INLINE
 __printflike(4, 0)
 void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
@@ -292,8 +336,8 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 #endif /* DEBUG */
 
 /* =================== Common =================== */
-#define WBCLogWarning(format, args...) WBCLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## args)
-#define WBCLogError(format, args...)   WBCLog(NULL, NULL, ASL_LEVEL_ERR, format, ## args)
+#define WBCLogWarning(format, ...) WBCLog(NULL, NULL, ASL_LEVEL_WARNING, format, ## __VA_ARGS__)
+#define WBCLogError(format, ...)   WBCLog(NULL, NULL, ASL_LEVEL_ERR, format, ## __VA_ARGS__)
 
 #if defined (__OBJC__)
 
