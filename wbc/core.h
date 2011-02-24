@@ -127,17 +127,26 @@
 #endif
 
 // MARK: Clang
-#ifndef __has_builtin         // Optional of course.
-  #define __has_builtin(x) 0  // Compatibility with non-clang compilers.
+#ifndef __has_builtin
+  #define __has_builtin(x) 0
 #endif
 
-#ifndef __has_feature         // Optional of course.
-  #define __has_feature(x) 0  // Compatibility with non-clang compilers.
+#ifndef __has_feature
+  #define __has_feature(x) 0
 #endif
 
-#ifndef __has_attribute         // Optional of course.
-  #define __has_attribute(x) 0  // Compatibility with non-clang compilers.
+#ifndef __has_attribute
+  #define __has_attribute(x) 0
 #endif
+
+#ifndef __has_include
+  #define __has_include(x) 0
+#endif
+
+#ifndef __has_include_next
+  #define __has_include_next(x) 0
+#endif
+
 
 // MARK: Static Analyzer
 #ifndef CF_CONSUMED
