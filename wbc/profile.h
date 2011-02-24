@@ -13,7 +13,7 @@
 #if !defined(__WBC_PROFILE_H__)
 #define __WBC_PROFILE_H__ 1
 
-#pragma mark Debugging & Profiling
+// MARK: Debugging & Profiling
 
 #if defined(__x86_64__) || defined(__i386__)
   #define WBWaitDebugger() __asm("int3")

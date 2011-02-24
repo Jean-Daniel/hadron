@@ -13,7 +13,7 @@
 #if !defined(__WBC_BITFIELDS_H__)
 #define __WBC_BITFIELDS_H__ 1
 
-#pragma mark Bitfields
+// MARK: Bitfields
 /* Bit manipulation macros */
 /* Bits are numbered from 31/63 on left to 0 on right */
 /* May or may not work if you use them on bitfields in types other than NSUInteger, bitfields the full width of a NSUInteger, or anything else for which they were not designed. */
