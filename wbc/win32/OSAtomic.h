@@ -3,7 +3,7 @@
 #if !defined(__OS_ATOMIC_H)
 #define __OS_ATOMIC_H 1
 
-#include <stdint.h>
+#include "stdint.h"
 #include <intrin.h>
 
 static __inline

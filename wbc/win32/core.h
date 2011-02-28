@@ -17,6 +17,15 @@
   #define __STDC_LIMIT_MACROS
 #endif
 
+#ifdef _MSC_VER
+  #if !defined(__cplusplus)
+    // C support in MSVC is badly broken
+    #error Broken C Compiler. Use C++ if you want to use it.
+  #endif
+  // Symbols visibilities
+  #pragma warning(disable:4251)
+#endif
+
 #define NOMINMAX // avoid declaration of min() max() macros which conflicts with c++ functions
 #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 
@@ -28,8 +37,6 @@ typedef __int64 off_t;
 #include "stdint.h" // Must be before windows.h
 
 // MARK: System Include
-#pragma warning(disable:4251)
-
 // If you wish to build your application for a previous Windows platform,
 // set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
 #include <SDKDDKVer.h>
