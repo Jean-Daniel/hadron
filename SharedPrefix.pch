@@ -1,9 +1,9 @@
 /*
  *  SharedPrefix.h
- *  WonderBox
+ *  WBConfig
  *
  *  Created by Jean-Daniel Dupas.
- *  Copyright (c) 2004 - 2008 Jean-Daniel Dupas. All rights reserved.
+ *  Copyright © 2004 - 2011 Jean-Daniel Dupas. All rights reserved.
  */
 /*!
  @header SharedPrefix
