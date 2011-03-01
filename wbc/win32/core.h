@@ -50,8 +50,9 @@ typedef __int64 off_t;
 
 // Missing types
 #include "libc.h"
-
 #include "stdbool.h"
+#include "macerrors.h"
+
 #include "OSAtomic.h"
 #include "OSByteOrder.h"
 
