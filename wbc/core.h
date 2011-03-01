@@ -275,4 +275,12 @@ enum {
 SC_INLINE
 void WBCFRelease(CF_CONSUMED CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
+SC_INLINE
+Boolean WBCFEqual(CFTypeRef obj1, CFTypeRef obj2) {
+  if (!obj1) return !obj2;
+  if (obj2)
+    return CFEqual(obj1, obj2);
+  return false;
+}
+
 #endif /* __WBC_CORE_H__ */
