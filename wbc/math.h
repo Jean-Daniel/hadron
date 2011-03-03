@@ -154,13 +154,13 @@ __SC_TG_DECL(unsigned long long int) __SC_TG_LONG_DOUBLE(__tg_ullround)(long dou
   if (__result >= LLONG_MAX) return LLONG_MAX; \
   return (long long int)__result
 
-__SC_TG_DECL(unsigned long int) __SC_TG_FLOAT(__tg_slround)(float a) { __sc_slround(float, roundf(a)); }
-__SC_TG_DECL(unsigned long int) __SC_TG_DOUBLE(__tg_slround)(double a) { __sc_slround(double, round(a)); }
-__SC_TG_DECL(unsigned long int) __SC_TG_LONG_DOUBLE(__tg_slround)(long double a) { __sc_slround(long double, roundl(a)); }
+__SC_TG_DECL(long int) __SC_TG_FLOAT(__tg_slround)(float a) { __sc_slround(float, roundf(a)); }
+__SC_TG_DECL(long int) __SC_TG_DOUBLE(__tg_slround)(double a) { __sc_slround(double, round(a)); }
+__SC_TG_DECL(long int) __SC_TG_LONG_DOUBLE(__tg_slround)(long double a) { __sc_slround(long double, roundl(a)); }
 
-__SC_TG_DECL(unsigned long long int) __SC_TG_FLOAT(__tg_sllround)(float a) { __sc_sllround(float, roundf(a)); }
-__SC_TG_DECL(unsigned long long int) __SC_TG_DOUBLE(__tg_sllround)(double a) { __sc_sllround(double, round(a)); }
-__SC_TG_DECL(unsigned long long int) __SC_TG_LONG_DOUBLE(__tg_sllround)(long double a) { __sc_sllround(long double, roundl(a)); }
+__SC_TG_DECL(long long int) __SC_TG_FLOAT(__tg_sllround)(float a) { __sc_sllround(float, roundf(a)); }
+__SC_TG_DECL(long long int) __SC_TG_DOUBLE(__tg_sllround)(double a) { __sc_sllround(double, round(a)); }
+__SC_TG_DECL(long long int) __SC_TG_LONG_DOUBLE(__tg_sllround)(long double a) { __sc_sllround(long double, roundl(a)); }
 
 #define __sc_sulround(Ty, a) \
   Ty __result = a; \
