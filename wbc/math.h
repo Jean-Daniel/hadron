@@ -245,4 +245,82 @@ __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !_
 #undef __SC_TG_FLOAT
 #undef __SC_TG_DECL
 
+// MARK: bit maths
+#if defined(_MSC_VER)
+SC_INLINE int popcnt32(uint32_t value) { return __popcnt(value); }
+SC_INLINE int popcnt64(uint64_t value) { return __popcnt64(value); }
+
+static __inline int clz32(uint32_t value) {
+  unsigned long idx;
+  _BitScanReverse(&idx, value);
+  return idx;
+}
+static __inline int clz64(uint64_t value) {
+  unsigned long idx;
+  _BitScanReverse64(&idx, value);
+  return idx;
+}
+
+static __inline int fls32(uint32_t value) {
+  unsigned long idx = 0;
+  if (_BitScanReverse(&idx, value))
+    return idx + 1; // [1; 32] with 1 least significant bit
+  return 0;
+}
+static __inline int fls64(uint64_t value) {
+  unsigned long idx = 0;
+  if (_BitScanReverse64(&idx, value))
+    return idx + 1; // [1; 64] with 1 least significant bit
+  return 0;
+}
+
+int ctz32(uint32_t value) {
+  unsigned long idx; // do not init to match undefined behavior of GCC
+  _BitScanForward(&idx, value);
+  return idx;
+}
+int ctz64(uint64_t value) {
+  unsigned long idx;
+  _BitScanForward64(&idx, value);
+  return idx;
+}
+static __inline int ffs32(uint32_t value) {
+  unsigned long idx = 0;
+  if (_BitScanForward(&idx, value))
+    return idx + 1; // [1; 32] with 1 least significant bit
+  return 0;
+}
+static __inline int ffs64(uint64_t value) {
+  unsigned long idx = 0;
+  if (_BitScanForward64(&idx, value))
+    return idx + 1; // [1; 64] with 1 least significant bit
+  return 0;
+}
+#else
+// Population count
+SC_INLINE int popcnt32(uint32_t value) { return __builtin_popcount(value); }
+SC_INLINE int popcnt64(uint64_t value) { return __builtin_popcountll(value); }
+
+// Count Leading Zeros (left)
+// returns 0 based index. If value zero, result is undefined.
+SC_INLINE int clz32(uint32_t value) { return __builtin_clz(value); }
+SC_INLINE int clz64(uint64_t value) { return __builtin_clzll(value); }
+// returns 1 based index. If vlaue is 0, returns 0.
+SC_INLINE int fls32(uint32_t value) { return value ? __builtin_clz(value) + 1 : 0; }
+SC_INLINE int fls64(uint64_t value) { return value ? __builtin_clzll(value) + 1 : 0; }
+
+// Count Trailing Zeros (right)
+// returns 0 based index. If value zero, result is undefined.
+SC_INLINE int ctz32(uint32_t value) { return __builtin_ctz(value); }
+SC_INLINE int ctz64(uint64_t value) { return __builtin_ctzll(value); }
+// returns 1 based index. If vlaue is 0, returns 0.
+SC_INLINE int ffs32(uint32_t value) { return __builtin_ffs(value); }
+SC_INLINE int ffs64(uint64_t value) { return __builtin_ffsll(value); }
+
+// Returns the parity of value, i.e. the number of 1-bits in x modulo 2.
+//SC_INLINE int parity32(uint32_t value) { return __builtin_parity(value); }
+//SC_INLINE int parity64(uint64_t value) { return __builtin_parityll(value); }
+
+#endif
+
 #endif /* __WBC_MATH_H__ */

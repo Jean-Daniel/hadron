@@ -110,25 +110,6 @@ static __inline int fseeko(FILE *stream, off_t offset, int whence) { return _fse
 #define close(fd) _close(fd)
 #define fileno(stream) _fileno(stream)
 
-#if defined(_WIN64)
-static __inline int flsl(unsigned __int64 value) {
-  unsigned long idx = 0;
-  if (_BitScanReverse64(&idx, value))
-    return idx + 1; // [1; 64] with 1 least significant bit
-  return 0;
-}
-#else
-static __inline int flsl(unsigned long value) {
-  unsigned long idx = 0;
-  if (_BitScanReverse(&idx, value))
-    return idx + 1; // [1; 32] with 1 least significant bit
-  return 0;
-}
-#endif
-
-#ifdef _MSC_VER
-  #define __builtin_popcount(var) __popcnt(var)
-#endif
 
 static __inline
 int _NSGetExecutablePath(char *filename, uint32_t *length) {

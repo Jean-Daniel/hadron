@@ -14,8 +14,9 @@
 #define __WBC_PROFILE_H__ 1
 
 // MARK: Debugging & Profiling
-
-#if defined(__x86_64__) || defined(__i386__)
+#if defined(_MSC_VER)
+  #define WBWaitDebugger() __debugbreak()
+#elif defined(__x86_64__) || defined(__i386__)
   #define WBWaitDebugger() __asm("int3")
 #elif (__ppc__) || defined(__arm__)
   #define WBWaitDebugger() __asm("trap") // TODO: check if it works
