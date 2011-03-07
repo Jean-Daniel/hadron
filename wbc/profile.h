@@ -59,7 +59,7 @@ uint64_t WBHostTimeToNano(WBHostTime delta) {
   LARGE_INTEGER frequency;
   frequency.QuadPart = 0;
   QueryPerformanceFrequency(&frequency);
-  return sllround((double)delta * 1e9 / frequency.QuadPart);
+  return sullround((double)delta * 1e9 / frequency.QuadPart);
 }
 
 #endif
