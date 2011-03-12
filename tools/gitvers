@@ -1,0 +1,2 @@
+#!/bin/sh
+git describe --match zero | sed "s/zero-\([0-9]*\)-[a-z0-9]*/\1/g"
