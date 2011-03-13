@@ -45,6 +45,11 @@
 	#define MAC_OS_X_VERSION_10_6 1060
 #endif
 
+#if !defined(MAC_OS_X_VERSION_10_7)
+  #define MAC_OS_X_VERSION_10_7 1070
+#endif
+
+
 // MARK: Attributes
 #if !defined(SC_OBSOLETE)
   #if defined(_MSC_VER)
