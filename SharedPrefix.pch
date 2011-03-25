@@ -26,6 +26,7 @@
 
 #include "wbc/link.h"
 #include "wbc/math.h"
+#include "wbc/unix.h"
 #include "wbc/assert.h"
 #include "wbc/profile.h"
 #include "wbc/logging.h"
