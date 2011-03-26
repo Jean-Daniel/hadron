@@ -20,25 +20,14 @@
       TypeName(const TypeName&); \
       void operator=(const TypeName&)
 
-
 // MARK: C++0x Support
-#if defined(__clang__)
-  #define cxx_explicit explicit
-
-  #define cxx_new new
+#if __has_feature(cxx_override_control)
   #define cxx_final final
   #define cxx_override override
 #elif _MSC_VER
-  #define cxx_explicit
-
-  #define cxx_new new
   #define cxx_final sealed
   #define cxx_override override
-  #define cxx_abstract abstract
 #else
-  #define cxx_explicit
-
-  #define cxx_new
   #define cxx_final
   #define cxx_override
 #endif
