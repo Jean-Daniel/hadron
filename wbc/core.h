@@ -274,7 +274,8 @@ enum {
   inline T WBCFMakeCollectable(T aValue) { return aValue ? (T)CFMakeCollectable(aValue) : (T)NULL; }
 #else
   SC_INLINE CF_RETURNS_RETAINED
-  CFTypeRef WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
+  CFTypeRef __WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
+  #define WBCFRetain(typeref) (__typeof__(typeref))__WBCFRetain(typeref)
 #endif
 
 SC_INLINE
