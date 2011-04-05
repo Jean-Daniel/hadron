@@ -49,6 +49,10 @@
   #define MAC_OS_X_VERSION_10_7 1070
 #endif
 
+/* 10.6 SDK on 10.7 fixup */
+#if !defined (kCFCoreFoundationVersionNumber10_6)
+  #define kCFCoreFoundationVersionNumber10_6 550.0
+#endif
 
 // MARK: Attributes
 #if !defined(SC_OBSOLETE)
