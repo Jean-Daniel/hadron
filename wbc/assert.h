@@ -33,8 +33,6 @@
   #define WBStaticAssert(test, msg) typedef char _WBStaticAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
 #endif
 
-
-
 // Assert
 #if DEBUG_ASSERT_PRODUCTION_CODE
   #define WBCAssert(assertion, message) do { } while (0)
@@ -48,6 +46,12 @@
     } \
   } while (0)
 #endif /* DEBUG_ASSERT_PRODUCTION_CODE */
+
+#if DEBUG_ASSERT_PRODUCTION_CODE
+  #define WBUnreachable(msg) do { } while (0)
+#else
+  #define WBUnreachable(msg) WBCAssert(false, msg)
+#endif
 
 #if defined (__OBJC__)
 
