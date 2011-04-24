@@ -12,7 +12,7 @@
         Name = "Clang Nightly";
         Description = "Clang Nightly Build";
         Vendor = Apple;
-        Version = "2.9";
+        Version = "3.0";
         IsAbstract = NO;
         ShowInCompilerSelectionPopup = YES;
         FileTypes = (
@@ -1381,8 +1381,57 @@
                 );
                 // Category is hidden -- used by iPhoneSimulator to match runtime OS setup;
             },
+            {
+                Name = "CLANG_IBOUTLET";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = (
+                        "-DIBOutlet=__attribute__((iboutlet))",
+                    );
+                    NO = ();
+                };
+                FileTypes = (
+                    sourcecode.c.objc,
+                    sourcecode.cpp.objcpp,
+                );
+                // Category is hidden.
+            },
+            {
+                Name = "CLANG_IBOUTLETCOLLECTION";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = (
+                        "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))",
+                    );
+                    NO = ();
+                };
+                FileTypes = (
+                    sourcecode.c.objc,
+                    sourcecode.cpp.objcpp,
+                );
+                // Category is hidden.
+            },
+            {
+                Name = "CLANG_IBACTION";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = (
+                        "-DIBAction=void)__attribute__((ibaction)",
+                    );
+                    NO = ();
+                };
+                FileTypes = (
+                    sourcecode.c.objc,
+                    sourcecode.cpp.objcpp,
+                );
+                // Category is hidden.
+            },
         );
     },
+
     {
         Identifier = "com.apple.compilers.llvm.clang.nightly.compiler";
         Type = Compiler;
@@ -1442,71 +1491,9 @@
                 Name = CLANG;
                 Type = Path;
                 DefaultValue = "$(DEVELOPER_BIN_DIR)/clang";
-            },
-            {
-                Name = "CLANG_ANALYZER_IBOUTLET";
-                Type = Boolean;
-                DefaultValue = YES;
-                CommandLineArgs = {
-                    YES = (
-                        "-DIBOutlet=__attribute__((iboutlet))",
-                    );
-                    NO = ();
-                };
-                FileTypes = (
-                    sourcecode.c.objc,
-                    sourcecode.cpp.objcpp,
-                );
-                // Category is hidden.
-            },
-            {
-                Name = "CLANG_ANALYZER_IBOUTLETCOLLECTION";
-                Type = Boolean;
-                DefaultValue = YES;
-                CommandLineArgs = {
-                    YES = (
-                        "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection)))",
-                    );
-                    NO = ();
-                };
-                FileTypes = (
-                    sourcecode.c.objc,
-                    sourcecode.cpp.objcpp,
-                );
-                // Category is hidden.
-            },
-            {
-                Name = "CLANG_ANALYZER_IBACTION";
-                Type = Boolean;
-                DefaultValue = YES;
-                CommandLineArgs = {
-                    YES = (
-                        "-DIBAction=void)__attribute__((ibaction)",
-                    );
-                    NO = ();
-                };
-                FileTypes = (
-                    sourcecode.c.objc,
-                    sourcecode.cpp.objcpp,
-                );
-                // Category is hidden.
+                Category = Base;
             },
         );
-    },
-
-    {
-        Identifier = "com.apple.compilers.llvm.clang.nightly.no_cpp";
-        Type = Compiler;
-        BasedOn = "com.apple.compilers.llvm.clang.nightly.compiler";
-        Name = "Clang Nightly (no C++ support)";
-        Description = "Clang Nightly Build (no C++ support)";
-        IsAbstract = YES;
-        ShowInCompilerSelectionPopup = NO;
-        FileTypes = (
-            "sourcecode.c.c",
-            "sourcecode.c.objc",
-        );
-        Options = ();
     },
     {
         Identifier = "com.apple.compilers.llvm.clang.nightly.astbuilder";
