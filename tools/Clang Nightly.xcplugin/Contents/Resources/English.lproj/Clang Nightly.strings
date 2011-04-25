@@ -47,21 +47,25 @@
 "[GCC_C_LANGUAGE_STANDARD]-name" = "C Language Dialect";
 "[GCC_C_LANGUAGE_STANDARD]-description" = "Choose a standard or non-standard C language dialect.
 
-ANSI C: Accept ISO C90 and ISO C++, turning off GNU extensions that are incompatible. [-ansi]
+ANSI C: Accept ISO C 1990 and ISO C++, turning off GNU extensions that are incompatible. [-ansi]
 
 Incompatible GNU extensions include the 'asm', 'inline', and 'typeof' keywords (but not the equivalent __asm__, __inline__, and __typeof__ forms), and the '//' syntax for comments.
 
 This setting also enables trigraphs.
 
-C89: Accept ISO C90, but not GNU extensions. [-std=c89]
+C89: Accept ISO C 1990, but not GNU extensions. [-std=c89]
 
-GNU89: Accept ISO C90 and GNU extensions. [-std=gnu89]
+GNU89: Accept ISO C 1990 and GNU extensions. [-std=gnu89]
 
-C99: Accept ISO C99, but not GNU extensions. [-std=c99]
+C99: Accept ISO C 1999, but not GNU extensions. [-std=c99]
 
-GNU99: Accept ISO C99 and GNU extensions. [-std=gnu99]
+GNU99: Accept ISO C 1999 and GNU extensions. [-std=gnu99]
 
-Compiler Default: Tells the compiler to use its default C language dialect. This is normally the best choice unless you have specific needs. (Currently equivalent to GNU89.)
+C1x: Accept ISO C 201x, but not GNU extensions. [-std=c1x]
+
+GNU1x: Accept ISO C 201x and GNU extensions. [-std=gnu1x]
+
+Compiler Default: Tells the compiler to use its default C language dialect. This is normally the best choice unless you have specific needs. (Currently equivalent to C99.)
 
 Please see the full GCC manual for the full definition of all these settings on the C dialect:
 <http://developer.apple.com/documentation/DeveloperTools/gcc-4.2.1/gcc/C-Dialect-Options.html>
@@ -69,17 +73,21 @@ Please see the full GCC manual for the full definition of all these settings on 
 [GCC_C_LANGUAGE_STANDARD]
 ";
 "[GCC_C_LANGUAGE_STANDARD]-value-[ansi]" = "ANSI C [-ansi]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[ansi]" = "Accept ISO C90 and ISO C++, turning off GNU extensions that are incompatible.  [-ansi]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[ansi]" = "Accept ISO C 1990 and ISO C++, turning off GNU extensions that are incompatible.  [-ansi]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[c89]" = "C89 [-std=c89]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[c89]" = "Accept ISO C90, but not GNU extensions.  [-std=c89]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[c89]" = "Accept ISO C 1990, but not GNU extensions.  [-std=c89]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[gnu89]" = "GNU89 [-std=gnu89]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[gnu89]" = "Accept ISO C90 and GNU extensions.  [-std=gnu89]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[gnu89]" = "Accept ISO C 1990 and GNU extensions.  [-std=gnu89]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[c99]" = "C99 [-std=c99]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[c99]" = "Accept ISO C99, but not GNU extensions.  [-std=c99]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[c99]" = "Accept ISO C 1999, but not GNU extensions.  [-std=c99]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[gnu99]" = "GNU99 [-std=gnu99]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[gnu99]" = "Accept ISO C99 and GNU extensions.  [-std=gnu99]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[gnu99]" = "Accept ISO C 1999 and GNU extensions.  [-std=gnu99]";
+"[GCC_C_LANGUAGE_STANDARD]-value-[c1x]" = "C1x [-std=c1x]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[c1x]" = "Accept ISO C 201x, but not GNU extensions.  [-std=c1x]";
+"[GCC_C_LANGUAGE_STANDARD]-value-[gnu1x]" = "GNU1x [-std=gnu1x]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[gnu1x]" = "Accept ISO C 201x and GNU extensions.  [-std=gnu1x]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[compiler-default]" = "Compiler Default";
-"[GCC_C_LANGUAGE_STANDARD]-description-[compiler-default]" = "Tells the compiler to use its default C language dialect. This is normally the best choice unless you have specific needs. (Currently equivalent to GNU89.)";
+"[GCC_C_LANGUAGE_STANDARD]-description-[compiler-default]" = "Tells the compiler to use its default C language dialect. This is normally the best choice unless you have specific needs. (Currently equivalent to C99.)";
 
 "[CLANG_CPP_LANGUAGE_STANDARD]-name" = "C++ Language Dialect";
 "[CLANG_CPP_LANGUAGE_STANDARD]-description" = "Choose a standard or non-standard C++ language dialect.

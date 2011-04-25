@@ -134,6 +134,8 @@
                     gnu89,
                     c99,
                     gnu99,
+                    c1x,
+                    gnu1x,
                     "compiler-default",
                 );
                 DefaultValue = "compiler-default";
