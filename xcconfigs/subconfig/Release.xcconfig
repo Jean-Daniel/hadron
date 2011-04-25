@@ -3,17 +3,14 @@
 ONLY_ACTIVE_ARCH = NO
 
 GCC_OPTIMIZATION_LEVEL = s
-GCC_ENABLE_FIX_AND_CONTINUE = NO
 
-// Generate debug symbols to be able to symbolize stack trace if needed
-GCC_GENERATE_DEBUGGING_SYMBOLS = YES
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 
 // Deployment postprocessing is what triggers Xcode to strip
 DEPLOYMENT_POSTPROCESSING = YES
 STRIP_INSTALLED_PRODUCT = YES
 COPY_PHASE_STRIP = NO
-STRIP_STYLE = non-global
+// STRIP_STYLE = non-global
 
 DEAD_CODE_STRIPPING = YES
 PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES

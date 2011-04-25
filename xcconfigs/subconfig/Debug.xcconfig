@@ -4,7 +4,6 @@ ONLY_ACTIVE_ARCH = YES
 
 // No optimization
 GCC_OPTIMIZATION_LEVEL = 0
-//GCC_ENABLE_FIX_AND_CONTINUE = YES
 
 // INFOPLIST_OUTPUT_FORMAT = same-as-input
 // PLIST_FILE_OUTPUT_FORMAT = same-as-input
@@ -17,6 +16,9 @@ COPY_PHASE_STRIP = NO
 
 // Dead code stripping off
 DEAD_CODE_STRIPPING = NO
+
+// May catch errors
+GCC_NO_COMMON_BLOCKS = NO
 
 // Debug symbols should be on obviously
 DEBUG_INFORMATION_FORMAT = dwarf
