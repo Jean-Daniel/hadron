@@ -406,9 +406,14 @@ Also warn about constructions where there may be confusion to which if statement
 "[GCC_WARN_PROTOTYPE_CONVERSION]-name" = "Prototype Conversion";
 "[GCC_WARN_PROTOTYPE_CONVERSION]-description" = "Warn if a prototype causes a type conversion that is different from what would happen to the same argument in the absence of a prototype.  This includes conversions of fixed point to floating and vice versa, and conversions changing the width or signedness of a fixed point argument except when the same as the default promotion.
 
-Also, warn if a negative integer constant expression is implicitly converted to an unsigned type.  For example, warn about the assignment \"x = -1\" if \"x\" is unsigned.  But do not warn about explicit casts like \"(unsigned) -1\".  [GCC_WARN_PROTOTYPE_CONVERSION, -Wconversion]";
+Also, warn if a negative integer constant expression is implicitly converted to an unsigned type.  For example, warn about the assignment \"x = -1\" if \"x\" is unsigned.  But do not warn about explicit casts like \"(unsigned) -1\".  [GCC_WARN_PROTOTYPE_CONVERSION, -Wtraditional-conversion]";
 "[GCC_WARN_PROTOTYPE_CONVERSION]-value-[NO]" = "No";
 "[GCC_WARN_PROTOTYPE_CONVERSION]-value-[YES]" = "Yes";
+
+"[GCC_WARN_CONVERSION]-name" = "Implicit Conversion";
+"[GCC_WARN_CONVERSION]-description" = "Warn for implicit conversions that may alter a value.  [GCC_WARN_PROTOTYPE_CONVERSION, -Wconversion]";
+"[GCC_WARN_CONVERSION]-value-[NO]" = "No";
+"[GCC_WARN_CONVERSION]-value-[YES]" = "Yes";
 
 "[GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR]-name" = "Multiple Definition Types for Selector";
 "[GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR]-description" = "Warn if multiple methods of different types for the same selector are found during compilation.  The check is performed on the list of methods in the final stage of compilation.  Additionally, a check is performed for each selector appearing in a \"@selector(...)\"  expression, and a corresponding method for that selector has been found during compilation.  Because these checks scan the method table only at the end of compilation, these warnings are not produced if the final stage of compilation is not reached, for example because an error is found during compilation, or because the -fsyntax-only option is being used. [GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR, -Wselector]";

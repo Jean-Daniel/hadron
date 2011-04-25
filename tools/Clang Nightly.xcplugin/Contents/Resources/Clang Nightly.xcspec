@@ -759,6 +759,18 @@
                 DefaultValue = NO;
                 CommandLineArgs = {
                     YES = (
+                        "-Wtraditional-conversion",
+                    );
+                    NO = ();
+                };
+                Category = Warnings;
+            },
+						{
+                Name = "GCC_WARN_CONVERSION";
+                Type = Boolean;
+                DefaultValue = NO;
+                CommandLineArgs = {
+                    YES = (
                         "-Wconversion",
                     );
                     NO = ();
