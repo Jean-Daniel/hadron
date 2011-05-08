@@ -144,6 +144,10 @@
   #define __has_feature(x) 0
 #endif
 
+#ifndef __has_extension
+  #define __has_extension(x) __has_feature(x)
+#endif
+
 #ifndef __has_attribute
   #define __has_attribute(x) 0
 #endif
