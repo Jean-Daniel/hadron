@@ -21,14 +21,28 @@
  }
  */
 #ifdef _MSC_VER
+  /* Initializer */
   #pragma section(".CRT$XCU",read)
   #define INITIALIZER(f) \
     static void __cdecl f(void); \
     __declspec(allocate(".CRT$XCU")) void (__cdecl*f##_)(void) = f; \
     static void __cdecl f(void)
+
+  /* Terminators */
+  #pragma section(".CRT$XTU",read)
+  #define TERMINATOR(f) \
+  static void __cdecl f(void); \
+  __declspec(allocate(".CRT$XTU")) void (__cdecl*f##_)(void) = f; \
+  static void __cdecl f(void)
+
 #elif defined(__clang__) || defined(__GNUC__)
+  /* Initializer */
   #define INITIALIZER(f) \
     static void f(void) __attribute__((constructor)); \
+    static void f(void)
+  /* Terminators */
+  #define TERMINATOR(f) \
+    static void f(void) __attribute__((destructor)); \
     static void f(void)
 #else
   #error Compiler not supported
