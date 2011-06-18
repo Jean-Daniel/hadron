@@ -197,11 +197,11 @@
 
 #if defined(__OBJC__)
 
-  #ifndef UNUSED_IVAR
+  #ifndef NS_UNUSED_IVAR
     #if __has_feature(attribute_objc_ivar_unused)
-      #define UNUSED_IVAR __attribute__((unused))
+      #define NS_UNUSED_IVAR __attribute__((unused))
     #else
-      #define UNUSED_IVAR
+      #define NS_UNUSED_IVAR
     #endif
   #endif
 
@@ -245,11 +245,16 @@
     #endif
   #endif
 
-  // MARK: Extension
-  // NS_INIT_METHOD: Use to tell the static analyzer that a specified method has init semantic, ie it consumes self, and returns a retained object.
-  #ifndef NS_INIT_METHOD
-    #define NS_INIT_METHOD NS_CONSUMES_SELF NS_RETURNS_RETAINED
+  /* Method Family */
+  #ifndef NS_METHOD_FAMILY
+    /* supported families are: none, alloc, copy, init, mutableCopy, and new. */
+    #if __has_attribute(ns_returns_autoreleased)
+      #define NS_METHOD_FAMILY(family) __attribute__((objc_method_family(family)))
+    #else
+      #define NS_METHOD_FAMILY(arg)
+    #endif
   #endif
+
 #endif
 
 // MARK: -
