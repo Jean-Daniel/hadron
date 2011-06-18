@@ -22,45 +22,7 @@ int32_t WBIntSaturate(double x) {
 }
 
 #if defined(_WIN32)
-  #include <boost/math/special_functions/sign.hpp>
-  #include <boost/math/special_functions/round.hpp>
-  #include <boost/math/special_functions/fpclassify.hpp>
-
-  typedef int32_t Fixed;
-  #define fixed1 ((Fixed) 0x00010000L)
-  #define positiveInfinity ((Fixed)0x7FFFFFFFL)
-  #define negativeInfinity ((Fixed)(-0x7FFFFFFFL - 1))
-
-  #if !defined(INFINITY)
-    #define INFINITY std::numeric_limits<double>::infinity()
-  #endif
-
-  // libc maths
-  namespace std {
-	// TR1 Compatibility
-	template<typename Ty>
-	inline int isnan(Ty value) { return boost::math::isnan(value); }
-	template<typename Ty>
-	inline int isinf(Ty value) { return boost::math::isinf(value); }
-	template<typename Ty>
-	inline int signbit(Ty value) { return boost::math::signbit(value); }
-}
-
-template <class Ty>
-inline Ty round(Ty v) { return boost::math::round(v); }
-
-template <class Ty>
-inline long lround(Ty v) { return boost::math::lround(v); }
-
-template <class Ty>
-inline long long llround(Ty v) { return boost::math::llround(v); }
-
-__forceinline float roundf(float v) { return round<float>(v); }
-__forceinline long double roundl(long double v) { return round<long double>(v); }
-
-#define FE_INVALID 0
-inline static void feraiseexcept(int code) { /* FIXME: not supported */ }
-
+  #include "win32/math.h"
 #endif
 
 SC_INLINE
