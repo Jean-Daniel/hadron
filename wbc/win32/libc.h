@@ -68,36 +68,36 @@ int setlinebuf(FILE *f) {
 #define snprintf(str, length, fmt, ...) _snprintf_s(str, length, _TRUNCATE, fmt, __VA_ARGS__)
 
 static __inline
-FILE *w32_fopen(const char *file, const char *mode) {
-	char bmode[32];
-	bmode[0] = 'b';
-	size_t length = 1;
-	if (mode) {
-		length += strlen(mode);
-		if (length <= 30)
-		 memcpy(bmode + 1, mode, length - 1);
-	}
-	bmode[length] = '\0';
+const char *w32_getfmode(const char *mode, char[32] bmode) {
+  /* is "b" already present ? */
+  if (mode && strchr(mode, 'b'))
+    return mode;
 
-	FILE *result;
-	if (0 == fopen_s(&result, file, bmode))
+  size_t length = 0;
+	if (mode) {
+		length = strlen(mode);
+		if (length <= 30)
+		  memcpy(bmode, mode, length);
+		else
+		  return mode;
+	}
+  bmode[length] = 'b';
+  bmode[length + 1] = '\0';
+  return bmode;
+}
+
+static __inline
+FILE *w32_fopen(const char *file, const char *mode) {
+  FILE *result;
+	char bmode[32];
+	if (0 == fopen_s(&result, file, w32_getfmode(mode, bmode)))
 		return result;
 	return NULL;
 }
 static __inline
 FILE *w32_fdopen(int fd, const char *mode) {
 	char bmode[32];
-	size_t length = 0;
-	if (mode) {
-		length = strlen(mode);
-		if (length <= 30)
-		  memcpy(bmode, mode, length);
-		else
-		  return NULL;
-	}
-	bmode[length] = 'b';
-	bmode[length + 1] = '\0';
-	return _fdopen(fd, bmode);
+	return _fdopen(fd, w32_getfmode(mode, bmode));
 }
 
 #define fopen(path, mode) w32_fopen(path, mode)
