@@ -129,6 +129,7 @@ const char *__WBASLLevelString(int level) {
   return "????";
 }
 
+#if defined(__COREFOUNDATION__)
 SC_UNUSED static
 void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
   // Print message
@@ -161,6 +162,7 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
   if (eol)
     fwrite("\n", 1, 1, f);
 }
+#endif
 
 #define DCLog(format, ...)  do { \
   __WBLogPrintLinePrefix(stderr); \

@@ -310,6 +310,8 @@ enum {
   #define WBCFRetain(typeref) (__typeof__(typeref))__WBCFRetain(typeref)
 #endif
 
+#ifdef __COREFOUNDATION__
+
 SC_INLINE
 void WBCFRelease(CF_CONSUMED CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
 
@@ -320,5 +322,7 @@ Boolean WBCFEqual(CFTypeRef obj1, CFTypeRef obj2) {
     return CFEqual(obj1, obj2);
   return false;
 }
+
+#endif
 
 #endif /* __WBC_CORE_H__ */
