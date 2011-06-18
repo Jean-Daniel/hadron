@@ -26,6 +26,10 @@
   #pragma warning(disable:4251)
 #endif
 
+#if defined(__WIN32__) && !defined(_WIN32)
+  #define _WIN32 1
+#endif
+
 #define NOMINMAX // avoid declaration of min() max() macros which conflicts with c++ functions
 #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 

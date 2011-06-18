@@ -13,7 +13,7 @@
 #if !defined(__WBC_CORE_H__)
 #define __WBC_CORE_H__ 1
 
-#if defined(_WIN32)
+#if defined(__WIN32__) || defined(_WIN32)
   #include "win32\core.h"
 #endif
 
