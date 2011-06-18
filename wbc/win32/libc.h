@@ -103,8 +103,8 @@ FILE *w32_fdopen(int fd, const char *mode) {
 #define fopen(path, mode) w32_fopen(path, mode)
 #define fdopen(fd, mode) w32_fdopen(fd, mode)
 
-static __inline off_t ftello(FILE *stream) { return _ftelli64(stream); }
-static __inline int fseeko(FILE *stream, off_t offset, int whence) { return _fseeki64(stream, offset, whence); }
+static __forceinline off_t ftello(FILE *stream) { return _ftelli64(stream); }
+static __forceinline int fseeko(FILE *stream, off_t offset, int whence) { return _fseeki64(stream, offset, whence); }
 
 #define open(path, mode, ...) _open(path, mode | O_BINARY, __VA_ARGS__)
 #define close(fd) _close(fd)
