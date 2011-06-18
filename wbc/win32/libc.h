@@ -65,8 +65,6 @@ int setlinebuf(FILE *f) {
   return setvbuf(f, (char *)NULL, _IOLBF, BUFSIZ);
 }
 
-#define snprintf(str, length, fmt, ...) _snprintf_s(str, length, _TRUNCATE, fmt, __VA_ARGS__)
-
 static __inline
 const char *w32_getfmode(const char *mode, char[32] bmode) {
   /* is "b" already present ? */
@@ -111,6 +109,24 @@ static __forceinline int fseeko(FILE *stream, off_t offset, int whence) { return
 // #define close(fd) _close(fd)
 // #define fileno(stream) _fileno(stream)
 
+/* String */
+#define snprintf(str, length, fmt, ...) _snprintf_s(str, length, _TRUNCATE, fmt, ##__VA_ARGS__)
+//#define snscanf(str, len, format, ...) _snscanf_s(str, len, format, ##__VA_ARGS__)
+
+static __forceinline size_t strlcpy(char *strDest, const char *strSource, size_t count) {
+	size_t length = strlen(strSource) + 1;
+
+	size_t limit = length;
+	if (limit > count) limit = count;
+	strncpy_s(strDest, limit, strSource, limit - 1);
+
+	return length;
+}
+static __forceinline int strcasecmp(const char *string1, const char *string2) { return _stricmp(string1, string2); }
+static __forceinline int strncasecmp(const char *string1, const char *string2, size_t count) { return _strnicmp(string1, string2, count); }
+/* Date Time */
+static __forceinline time_t timegm(struct tm * const tmtime) { return _mkgmtime(tmtime); }
+//static __forceinline struct tm *gmtime_r(const time_t *clock, struct tm *result) { return (0 == gmtime_s(result, *clock)) ? result : NULL; }
 
 static __inline
 int _NSGetExecutablePath(char *filename, uint32_t *length) {
