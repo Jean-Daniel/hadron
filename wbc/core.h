@@ -13,6 +13,11 @@
 #if !defined(__WBC_CORE_H__)
 #define __WBC_CORE_H__ 1
 
+/* We want to be able to use std C macros in C++ */
+#if defined(__cplusplus) && !defined(__STDC_LIMIT_MACROS)
+  #define __STDC_LIMIT_MACROS 1
+#endif
+
 #if defined(__WIN32__) || defined(_WIN32)
   #include "win32\core.h"
 #endif
@@ -77,7 +82,11 @@
   #if defined(_MSC_VER)
     #define SC_REQUIRES_NIL_TERMINATION
   #else
-    #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
+    #if defined(__APPLE_CC__) && (__APPLE_CC__ >= 5549)
+      #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
+    #else
+      #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
+    #endif
   #endif
 #endif
 
@@ -256,13 +265,28 @@ enum {
 };
 
 // MARK: Convenient types
-#if !defined(__OBJC__) // for C and C++
+#if !defined(__OBJC__) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5) // for C and C++
   typedef long NSInteger;
   #define NSIntegerMax LONG_MAX
   #define NSIntegerMin LONG_MIN
 
   typedef unsigned long NSUInteger;
   #define NSUIntegerMAX ULONG_MAX
+#endif
+
+#if !defined(CGFLOAT_DEFINED)
+  #if defined(__LP64__) && __LP64__
+    typedef double CGFloat;
+    #define CGFLOAT_MIN DBL_MIN
+    #define CGFLOAT_MAX DBL_MAX
+    #define CGFLOAT_IS_DOUBLE 1
+  #else	/* !defined(__LP64__) || !__LP64__ */
+    typedef float CGFloat;
+    #define CGFLOAT_MIN FLT_MIN
+    #define CGFLOAT_MAX FLT_MAX
+    #define CGFLOAT_IS_DOUBLE 0
+  #endif	/* !defined(__LP64__) || !__LP64__ */
+  #define CGFLOAT_DEFINED 1
 #endif
 
 // MARK: -

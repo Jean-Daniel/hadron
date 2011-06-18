@@ -88,10 +88,12 @@ void __WBLogPrintLinePrefix(FILE *f) {
   // As we only use stderr (and not asl like CF does), we use this same hack to prevent duplicate
   // prefix in Console output when not running in Xcode (launchd already append a prefix).
   // if it could be a pipe back to launchd, ignore
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
   int64_t val = 0;
   // assumes val is not written to on error
   vproc_swap_integer(NULL, 5 /* VPROC_GSK_IS_MANAGED */, NULL, &val);
   if (val) return;
+#endif
 
   /* Print date first */
   char dtime[32];
@@ -104,6 +106,7 @@ void __WBLogPrintLinePrefix(FILE *f) {
 
   fprintf(f, "%s.%.3u %s[%u:%x] ", dtime, nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
 }
+
 #else
 SC_UNUSED static
 void __WBLogPrintLinePrefix(FILE *f) {
