@@ -68,7 +68,7 @@ int setlinebuf(FILE *f) {
 }
 
 static __inline
-const char *w32_getfmode(const char *mode, char[32] bmode) {
+const char *w32_getfmode(const char *mode, char bmode[32]) {
   /* is "b" already present ? */
   if (mode && strchr(mode, 'b'))
     return mode;
@@ -119,7 +119,7 @@ static
 size_t strlcat(char *strDest, const char *strSource, size_t count) {
   size_t destlen = strlen(strDest);
   size_t srclen = strlen(strSource);
-  size_t total = srclen + deslen + 1;
+  size_t total = srclen + destlen + 1;
   // check if there is enough space in the buffer
   if (total > count) {
     if (destlen < count)
@@ -151,7 +151,7 @@ static __forceinline int strcasecmp(const char *string1, const char *string2) { 
 static __forceinline int strncasecmp(const char *string1, const char *string2, size_t count) { return _strnicmp(string1, string2, count); }
 /* Date Time */
 static __forceinline time_t timegm(struct tm * const tmtime) { return _mkgmtime(tmtime); }
-//static __forceinline struct tm *gmtime_r(const time_t *clock, struct tm *result) { return (0 == gmtime_s(result, *clock)) ? result : NULL; }
+static __forceinline struct tm *gmtime_r(const time_t *clock, struct tm *result) { return (0 == gmtime_s(result, clock)) ? result : NULL; }
 
 static __inline
 int _NSGetExecutablePath(char *filename, uint32_t *length) {
