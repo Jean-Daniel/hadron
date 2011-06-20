@@ -26,9 +26,11 @@ extern "C" {
 #endif
 
 typedef SSIZE_T ssize_t;
-#define SSIZE_MAX MAXSSIZE_T
+#if !defined(SSIZE_MAX)
+  #define SSIZE_MAX MAXSSIZE_T
+#endif
 
-#ifndef PATH_MAX
+#if !defined(PATH_MAX)
   #define PATH_MAX 2048
 #endif
 
@@ -113,7 +115,29 @@ static __forceinline int fseeko(FILE *stream, off_t offset, int whence) { return
 #define snprintf(str, length, fmt, ...) _snprintf_s(str, length, _TRUNCATE, fmt, ##__VA_ARGS__)
 //#define snscanf(str, len, format, ...) _snscanf_s(str, len, format, ##__VA_ARGS__)
 
-static __forceinline size_t strlcpy(char *strDest, const char *strSource, size_t count) {
+static
+size_t strlcat(char *strDest, const char *strSource, size_t count) {
+  size_t destlen = strlen(strDest);
+  size_t srclen = strlen(strSource);
+  size_t total = srclen + deslen + 1;
+  // check if there is enough space in the buffer
+  if (total > count) {
+    if (destlen < count)
+      srclen = count - destlen - 1;
+    else // should not append except in case of invalid parameters.
+      srclen = 0;
+  }
+  // append strSource to strDest.
+  if (srclen > 0) {
+    memcpy(strDest + destlen, strSource, srclen);
+    strDest[srclen + destlen] = '\0';
+  }
+
+  return total;
+}
+
+static
+size_t strlcpy(char *strDest, const char *strSource, size_t count) {
 	size_t length = strlen(strSource) + 1;
 
 	size_t limit = length;
@@ -122,6 +146,7 @@ static __forceinline size_t strlcpy(char *strDest, const char *strSource, size_t
 
 	return length;
 }
+
 static __forceinline int strcasecmp(const char *string1, const char *string2) { return _stricmp(string1, string2); }
 static __forceinline int strncasecmp(const char *string1, const char *string2, size_t count) { return _strnicmp(string1, string2, count); }
 /* Date Time */
