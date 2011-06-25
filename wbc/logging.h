@@ -226,7 +226,7 @@ CFStringRef __WBCFStringCreateWithFormatAndArguments(CFStringRef fmt, va_list ar
 SC_INLINE
 __nsloglike(1, 0)
 void DLogv(NSString *format, va_list args) {
-  CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
+  CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, WBNSToCFString(format), args);
   if (__str) {
     __WBLogPrintLinePrefix(stderr);
     __WBLogPrintString(__str, true, stderr);
@@ -237,7 +237,7 @@ void DLogv(NSString *format, va_list args) {
 SC_INLINE
 __nsloglike(4, 0)
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
-  CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, (CFStringRef)format, args);
+  CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, WBNSToCFString(format), args);
   if (__str) {
     __WBLogPrintLinePrefix(stderr);
     fprintf(stderr, "Log(%s): ", __WBASLLevelString(level));
