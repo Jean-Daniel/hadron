@@ -31,6 +31,19 @@
   #define cxx_noexcept
 #endif
 
+/* we can't use __has_extension to test for features in code, as only clang support it. */
+
+/* rvalue references */
+#if __has_extension(cxx_rvalue_references) || _MSC_VER
+  #define has_cxx_rvalue_references 1
+#endif
+
+#if has_cxx_rvalue_references
+  #define cxx_move(arg) std::move(arg)
+#else
+  #define cxx_move(arg) arg
+#endif
+
 // A macro to disallow the copy constructor and operator= functions
 // This should be used in the private: declarations for a class
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \

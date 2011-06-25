@@ -199,7 +199,7 @@
 #if defined(__OBJC__)
 
   #ifndef NS_UNUSED_IVAR
-    #if __has_feature(attribute_objc_ivar_unused)
+    #if __has_extension(attribute_objc_ivar_unused)
       #define NS_UNUSED_IVAR __attribute__((unused))
     #else
       #define NS_UNUSED_IVAR
