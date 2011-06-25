@@ -1,7 +1,7 @@
 /**
     Clang Nightly build task
 
-    Copyright (c) 2000-2010 Apple Inc.  All rights reserved.
+    Copyright (c) 2000-2011 Apple Inc.  All rights reserved.
 */
 
 (
@@ -1491,6 +1491,7 @@
         CommandOutputParser = (
             ("^([^:]*):([0-9]*):[0-9]*: [^:]*error: (.*)$", "emit-analyzer-warning"),
             ("^([^:]*):() [^:]*error: (.*)$", "emit-analyzer-warning"),
+            ("^()()error: (.*)$", "emit-analyzer-warning"),
         );
         CommandResultsPostprocessor = "XCStaticAnalyzerResultsPostprocessor";
         SourceFileOption = "--analyze";
@@ -1510,11 +1511,11 @@
         );
     },
     {
-        Identifier = "com.apple.compilers.llvm.clang.nightly.astbuilder";
+        Identifier = "com.apple.compilers.llvm.clang.1_0.astbuilder";
         Type = Compiler;
-        BasedOn = "com.apple.compilers.llvm.clang.nightly";
+        BasedOn = "com.apple.compilers.llvm.clang.1_0";
         Name = "AST Builder";
-        Description = "Clang AST Builder Nightly Build";
+        Description = "Apple Clang AST Builder 1.0";
         FileTypes = (
             "sourcecode.c.c",
             "sourcecode.c.objc",
@@ -1525,10 +1526,12 @@
         OverridingProperties = {
             "ENABLE_HEADER_DEPENDENCIES" = YES;
             "SHARED_PRECOMPS_DIR" = "$(INDEX_PRECOMPS_DIR)";
+            "CLEAN_PRECOMPS" = NO;
         };
         RuleName = "Build AST from $(InputFile)";
         OutputFileExtension = ast;
         IsAbstract = YES;
         ShowInCompilerSelectionPopup = NO;
+        PrunePrecompiledHeaderCache = NO;
     },
 )
