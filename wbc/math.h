@@ -68,7 +68,10 @@ uint32_t WBUInt64To32(uint64_t value) {
   #endif
 #endif
 
-#if defined(__clang__)
+// .hack: we have to undef round to avoid tgmath expansion.
+#undef round
+
+#if defined(__clang__) || defined(__cplusplus)
   #define __SC_TG_FLOAT(fct)         fct
   #define __SC_TG_DOUBLE(fct)        fct
   #define __SC_TG_LONG_DOUBLE(fct)   fct
@@ -209,6 +212,13 @@ __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !_
   #define fequal(__x, __y)    __TGMATH_REAL_2(__x, __y, __tg_fequal)
   #define fnotequal(__x, __y) __TGMATH_REAL_2(__x, __y, __tg_fnotequal)
 #endif // clang/gcc
+
+#if defined(__tg_promote1)
+  // must match tgmath.h declaration.
+  #define round(__x) __tg_round(__tg_promote1((__x))(__x))
+#elif defined(__TGMATH_REAL)
+  #define round(x) __TGMATH_REAL(x, round)
+#endif
 
 #undef __SC_TG_LONG_DOUBLE
 #undef __SC_TG_DOUBLE
