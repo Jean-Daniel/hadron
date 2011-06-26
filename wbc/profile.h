@@ -25,53 +25,74 @@
 
 typedef uint64_t WBHostTime;
 
-#if defined(__MACH__)
-
-#include <mach/mach.h>
-#include <mach/mach_time.h>
-
-SC_INLINE
-WBHostTime WBHostTimeGetCurrent(void) { return mach_absolute_time(); }
+#if defined(__APPLE__)
+  #include <mach/mach.h>
+  #include <mach/mach_time.h>
+#endif
 
 SC_INLINE
-WBHostTime WBNanoToHostTime(UInt64 nano) {
-  return UnsignedWideToUInt64(NanosecondsToAbsolute(UInt64ToUnsignedWide(nano)));
-}
-
-SC_INLINE
-UInt64 WBHostTimeToNano(WBHostTime delta) {
-  // Convert to nanoseconds.
-  return UnsignedWideToUInt64(AbsoluteToNanoseconds(UInt64ToUnsignedWide(delta)));
-}
-
-#elif defined(_WIN32)
-
-static inline
 WBHostTime WBHostTimeGetCurrent(void) {
+#if defined(__APPLE__)
+  return mach_absolute_time();
+#elif defined(_WIN32)
   LARGE_INTEGER counter;
   counter.QuadPart = 0;
   QueryPerformanceCounter(&counter);
   return counter.QuadPart;
+#elif defined(_POSIX_TIMERS)
+  struct timespec ticks;
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ticks);
+  return (WBHostTime)ticks.tv_sec * 1e9 + ticks.tv_nsec;
+#else
+  struct timeval ticks;
+  gettimeofday(&ticks, NULL);
+  return (WBHostTime)ticks.tv_sec * 1e6 + ticks.tv_usec;
+#endif
 }
 
 static inline
-uint64_t WBHostTimeToNano(WBHostTime delta) {
-  // Convert to nanoseconds.
-  LARGE_INTEGER frequency;
-  frequency.QuadPart = 0;
-  QueryPerformanceFrequency(&frequency);
-  return sullround((double)delta * 1e9 / frequency.QuadPart);
+double _WBHostTimeToNanoFactor(void) {
+#if defined(__APPLE__)
+  static double sFactor = -1;
+  if (sFactor < 0) {
+    mach_timebase_info_data_t sTimebaseInfo = {0, 0};
+    mach_timebase_info(&sTimebaseInfo);
+    sFactor = ((double)sTimebaseInfo.numer / (double)sTimebaseInfo.denom);
+  }
+  return sFactor;
+#elif defined(_WIN32)
+  static double sFactor = -1;
+  if (sFactor < 0) {
+    LARGE_INTEGER frequency;
+    frequency.QuadPart = 0;
+    QueryPerformanceFrequency(&frequency);
+    sFactor = 1e9 / frequency.QuadPart;
+  }
+  return sFactor;
+#elif defined(_POSIX_TIMERS)
+  return 1;
+#else
+  return 1e3;
+#endif
 }
 
-#endif
+SC_INLINE
+uint64_t WBHostTimeToNano(WBHostTime delta) {
+  return sullround(_WBHostTimeToNanoFactor() * delta);
+}
 
 SC_INLINE
-uint64_t WBHostTimeToMicro(WBHostTime delta) { return ullround((double)WBHostTimeToNano(delta) / 1e3); }
+WBHostTime WBHostTimeFromNano(uint64_t nano) {
+  return sullround(nano / _WBHostTimeToNanoFactor());
+}
 
 SC_INLINE
-uint32_t WBHostTimeToMillis(WBHostTime delta) { return (uint32_t)ulround((double)WBHostTimeToNano(delta) / 1e6); }
+uint64_t WBHostTimeToMicro(WBHostTime delta) { return sullround(_WBHostTimeToNanoFactor() * delta / 1e3); }
 
 SC_INLINE
-CFTimeInterval WBHostTimeToTimeInterval(WBHostTime delta) { return (CFTimeInterval)WBHostTimeToNano(delta) / 1e9; }
+uint32_t WBHostTimeToMillis(WBHostTime delta) { return (uint32_t)ulround(_WBHostTimeToNanoFactor() * delta / 1e6); }
+
+SC_INLINE
+CFTimeInterval WBHostTimeToTimeInterval(WBHostTime delta) { return _WBHostTimeToNanoFactor() * delta / 1e9; }
 
 #endif /* __WBC_PROFILE_H__ */
