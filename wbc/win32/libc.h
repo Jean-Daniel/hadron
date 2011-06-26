@@ -13,11 +13,6 @@
 #if !defined(__WBC_WIN32_LIBC_H__)
 #define __WBC_WIN32_LIBC_H__ 1
 
-// io and locale do not like open macro.
-// include them before defining open
-#include <io.h>
-#include <locale>
-
 #include <fcntl.h>
 #include <stdarg.h>
 

@@ -29,28 +29,26 @@
 #ifndef _OS_OSBYTEORDER_H
 #define _OS_OSBYTEORDER_H
 
-/* Macros for swapping constant values in the preprocessing stage. */
-#define OSSwapInt16(x)	_byteswap_ushort(x)
-#define OSSwapInt32(x)	_byteswap_ulong(x)
-#define OSSwapInt64(x)	_byteswap_uint64(x)
+#if !defined(OS_INLINE)
+  #if defined(__cplusplus)
+    #define OS_INLINE static inline
+  #else
+    #define OS_INLINE static __inline
+  #endif
+#endif
 
-#define OSSwapConstInt16(x)	_byteswap_ushort(x)
-#define OSSwapConstInt32(x)	_byteswap_ulong(x)
-#define OSSwapConstInt64(x)	_byteswap_uint64(x)
+/* Macros for swapping constant values in the preprocessing stage. */
+#if defined(__GNUC__)
+  #include "byteorder/gnuc.h"
+#elif defined(_WIN32)
+  #include "byteorder/windows.h"
+#endif
 
 enum {
     OSUnknownByteOrder,
     OSLittleEndian,
     OSBigEndian
 };
-
-#if !defined(OS_INLINE)
-#if defined(__cplusplus)
-    #define OS_INLINE static inline
-#else
-    #define OS_INLINE static __inline
-#endif
-#endif
 
 OS_INLINE
 int32_t
@@ -64,11 +62,11 @@ OSHostByteOrder(void) {
 #endif
 }
 
-#define OSReadBigInt(x, y)		OSReadBigInt32(x, y)
+#define OSReadBigInt(x, y)		    OSReadBigInt32(x, y)
 #define OSWriteBigInt(x, y, z)		OSWriteBigInt32(x, y, z)
-#define OSSwapBigToHostInt(x)		OSSwapBigToHostInt32(x)
-#define OSSwapHostToBigInt(x)		OSSwapHostToBigInt32(x)
-#define OSReadLittleInt(x, y)		OSReadLittleInt32(x, y)
+#define OSSwapBigToHostInt(x)		  OSSwapBigToHostInt32(x)
+#define OSSwapHostToBigInt(x)		  OSSwapHostToBigInt32(x)
+#define OSReadLittleInt(x, y)		  OSReadLittleInt32(x, y)
 #define OSWriteLittleInt(x, y, z)	OSWriteLittleInt32(x, y, z)
 #define OSSwapHostToLittleInt(x)	OSSwapHostToLittleInt32(x)
 #define OSSwapLittleToHostInt(x)	OSSwapLittleToHostInt32(x)

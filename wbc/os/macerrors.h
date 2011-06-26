@@ -10,8 +10,8 @@
  @abstract Visibility macros + basics functions
 */
 
-#if !defined(__WBC_WIN32_MAC_ERRORS_H__)
-#define __WBC_WIN32_MAC_ERRORS_H__ 1
+#if !defined(__WBC_OS_MAC_ERRORS_H__)
+#define __WBC_OS_MAC_ERRORS_H__ 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -3175,4 +3175,4 @@ enum {
 }
 #endif
 
-#endif /* __WBC_WIN32_MAC_ERRORS_H__ */
+#endif /* __WBC_OS_MAC_ERRORS_H__ */

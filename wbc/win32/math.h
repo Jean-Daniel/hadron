@@ -13,11 +13,6 @@
 #if !defined(__WBC_WIN32_MATH_H__)
 #define __WBC_WIN32_MATH_H__ 1
 
-typedef int32_t Fixed;
-#define fixed1 ((Fixed) 0x00010000L)
-#define positiveInfinity ((Fixed)0x7FFFFFFFL)
-#define negativeInfinity ((Fixed)(-0x7FFFFFFFL - 1))
-
 #if !defined(INFINITY)
   #define INFINITY std::numeric_limits<double>::infinity()
 #endif

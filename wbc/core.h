@@ -18,15 +18,17 @@
   #define __STDC_LIMIT_MACROS 1
 #endif
 
-#if defined(__WIN32__) || defined(_WIN32)
-  #include "win32\core.h"
-#endif
-
 #if defined(__clang__) || defined(__GNUC__)
   #include <tgmath.h> // MUST be first
 #endif
 
-#if defined(__MACH__)
+#if defined(__WIN32__) || defined(_WIN32)
+  #include "win32\core.h"
+#elif defined(__linux__)
+  #include "linux/core.h"
+#endif
+
+#if defined(__APPLE__)
 
 #if defined(__OBJC__)
   #import <Cocoa/Cocoa.h>
@@ -41,19 +43,28 @@
 #include <uuid/uuid.h> // already included in 10.6 but not in 10.5
 #include <libkern/OSAtomic.h>
 
-#endif // Mac
 
 #if !defined(MAC_OS_X_VERSION_10_5)
   #define MAC_OS_X_VERSION_10_5 1050
 #endif
 
 #if !defined(MAC_OS_X_VERSION_10_6)
-	#define MAC_OS_X_VERSION_10_6 1060
+  #define MAC_OS_X_VERSION_10_6 1060
 #endif
 
 #if !defined(MAC_OS_X_VERSION_10_7)
   #define MAC_OS_X_VERSION_10_7 1070
 #endif
+
+#else
+
+/* Mac OS Compatibility */
+#include "os/macerrors.h"
+
+#include "os/OSAtomic.h"
+#include "os/OSByteOrder.h"
+
+#endif // Apple
 
 /* 10.6 SDK on 10.7 fixup */
 #if !defined (kCFCoreFoundationVersionNumber10_6)
@@ -271,7 +282,7 @@ enum {
 };
 
 // MARK: Convenient types
-#if !defined(__OBJC__) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5) // for C and C++
+#if !defined(__OBJC__) || (defined(__APPLE__) && (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)) // for C and C++
   typedef long NSInteger;
   #define NSIntegerMax LONG_MAX
   #define NSIntegerMin LONG_MIN
@@ -305,6 +316,8 @@ enum {
   #define CFIndexMin LONG_MIN
 #endif
 
+#ifdef __COREFOUNDATION__
+
 #if defined(__cplusplus)
   template<typename T> // CF_RETURNS_RETAINED (buggy with template)
   inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
@@ -313,10 +326,8 @@ enum {
 #else
   SC_INLINE CF_RETURNS_RETAINED
   CFTypeRef __WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
-  #define WBCFRetain(typeref) (__typeof__(typeref))__WBCFRetain(typeref)
+  #define WBCFRetain(typeref) ((__typeof__(typeref))__WBCFRetain(typeref))
 #endif
-
-#ifdef __COREFOUNDATION__
 
 SC_INLINE
 void WBCFRelease(CF_CONSUMED CFTypeRef aValue) { if (aValue) CFRelease(aValue); }

@@ -21,6 +21,14 @@ int32_t WBIntSaturate(double x) {
   return x <= (double)INT32_MIN ? INT32_MIN : (double)INT32_MAX <= x ? (int32_t)INT32_MAX : (int32_t)x;
 }
 
+#if !defined(__APPLE__)
+  typedef int32_t Fixed;
+  #define fixed1 ((Fixed) 0x00010000L)
+  #define positiveInfinity ((Fixed)0x7FFFFFFFL)
+  #define negativeInfinity ((Fixed)(-0x7FFFFFFFL - 1))
+#endif
+
+/* Windows math.h lacks a lot of standards functions */
 #if defined(_WIN32)
   #include "win32/math.h"
 #endif
@@ -220,9 +228,9 @@ static inline int popcount32(uint32_t x) {
 	static const uint32_t m4 = 0x0f0f0f0f; //binary:  4 zeros,  4 ones ...
 	static const uint32_t h01= 0x01010101; //the sum of 256 to the power of 0,1,2,3...
 	x -= (x >> 1) & m1;             //put count of each 2 bits into those 2 bits
-    x = (x & m2) + ((x >> 2) & m2); //put count of each 4 bits into those 4 bits
-    x = (x + (x >> 4)) & m4;        //put count of each 8 bits into those 8 bits
-    return (x * h01) >> 24;  //returns left 8 bits of x + (x<<8) + (x<<16) + (x<<24)
+  x = (x & m2) + ((x >> 2) & m2); //put count of each 4 bits into those 4 bits
+  x = (x + (x >> 4)) & m4;        //put count of each 8 bits into those 8 bits
+  return (x * h01) >> 24;  //returns left 8 bits of x + (x<<8) + (x<<16) + (x<<24)
 }
 
 static inline int popcount64(uint64_t x) {
@@ -231,9 +239,9 @@ static inline int popcount64(uint64_t x) {
 	static const uint64_t m4  = 0x0f0f0f0f0f0f0f0f; //binary:  4 zeros,  4 ones ...
 	static const uint64_t h01 = 0x0101010101010101; //the sum of 256 to the power of 0,1,2,3...
 	x -= (x >> 1) & m1;             //put count of each 2 bits into those 2 bits
-    x = (x & m2) + ((x >> 2) & m2); //put count of each 4 bits into those 4 bits
-    x = (x + (x >> 4)) & m4;        //put count of each 8 bits into those 8 bits
-    return (x * h01)>>56;  //returns left 8 bits of x + (x<<8) + (x<<16) + (x<<24) + ...
+  x = (x & m2) + ((x >> 2) & m2); //put count of each 4 bits into those 4 bits
+  x = (x + (x >> 4)) & m4;        //put count of each 8 bits into those 8 bits
+  return (x * h01)>>56;  //returns left 8 bits of x + (x<<8) + (x<<16) + (x<<24) + ...
 }
 
 #if !defined(_WIN64)

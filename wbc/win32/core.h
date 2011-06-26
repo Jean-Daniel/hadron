@@ -55,16 +55,35 @@ typedef __int64 off_t;
 #define _WIN32_WINNT 0x501 // Target WinXP by default
 #include <SDKDDKVer.h>
 
-#include "AssertMacros.h"
-#include "AvailabilityMacros.h"
-
 #include <tchar.h>
-#include <assert.h>
 #include <windows.h>
 
-// #include <CoreFoundation\CoreFoundation.h> // defines endian macros
+#if !defined(SC_EXCLUDE_FRAMEWORK_HEADERS)
+  #include <CoreFoundation\CoreFoundation.h>
+#else
 
-#if !defined(__COREFOUNDATION__)
+#include <assert.h>
+
+// FIXME: Windows headers
+//#include <sys/types.h>
+//#include <stdarg.h>
+//#include <assert.h>
+//#include <ctype.h>
+//#include <errno.h>
+//#include <float.h>
+//#include <limits.h>
+//#include <locale.h>
+//#include <math.h>
+//#include <setjmp.h>
+//#include <signal.h>
+//#include <stddef.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <time.h>
+//#include <inttypes.h>
+//#include <stdbool.h>
+//#include <stdint.h>
 
 #if !defined(__LITTLE_ENDIAN__) && !defined(__BIG_ENDIAN__)
   #if defined(__i386__) || defined(__x86_64__) || defined(_M_AMD64) || defined(_M_IX86) || defined(_M_X64)
@@ -81,10 +100,6 @@ typedef double CFTimeInterval;
 // Missing types
 #include "libc.h"
 #include "stdbool.h"
-#include "macerrors.h"
-
-#include "OSAtomic.h"
-#include "OSByteOrder.h"
 
 #define SC_HIDDEN
 
