@@ -15,20 +15,22 @@
 
 // MARK: C++0x Support
 #if __has_extension(cxx_override_control)
-  #define cxx_final final
-  #define cxx_override override
+  #define wb_final final
+  #define wb_override override
 #elif _MSC_VER
-  #define cxx_final sealed
-  #define cxx_override override
+  #define wb_final sealed
+  #define wb_override override
 #else
-  #define cxx_final
-  #define cxx_override
+  #define wb_final
+  #define wb_override
 #endif
 
 #if __has_extension(cxx_noexcept)
-  #define cxx_noexcept noexcept
+  #define wb_noexcept noexcept
+  #define wb_noexcept_(arg) noexcept(arg)
 #else
-  #define cxx_noexcept
+  #define wb_noexcept
+  #define wb_noexcept_(arg)
 #endif
 
 /* we can't use __has_extension to test for features in code, as only clang support it. */
@@ -48,7 +50,7 @@
 // This should be used in the private: declarations for a class
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
   private: \
-    TypeName(const TypeName&) cxx_noexcept; \
-    void operator=(const TypeName&) cxx_noexcept
+    TypeName(const TypeName&) wb_noexcept; \
+    void operator=(const TypeName&) wb_noexcept
 
 #endif /* __WBC_CXX_H__ */
