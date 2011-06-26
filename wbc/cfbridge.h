@@ -17,15 +17,6 @@
 
 #if defined(__OBJC__)
 
-// MARK: Tiger Compatibility
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-  #define WBMakeCollectable(ptr) (id)ptr
-  #define WBCFAutorelease(cftype) [(id)cftype autorelease]
-#else
-  #define WBMakeCollectable(ptr) NSMakeCollectable(ptr)
-  #define WBCFAutorelease(cftype) [NSMakeCollectable(cftype) autorelease]
-#endif
-
 SC_INLINE
 NSRange NSRangeFromCFRange(CFRange range) {
   return NSMakeRange((NSUInteger)range.location, (NSUInteger)range.length);
@@ -39,10 +30,10 @@ CFRange NSRangeToCFRange(NSRange range) {
 // MARK: NSMutableSet
 #define __WBNSCFTypeBridge(Ty) \
   SC_INLINE CF##Ty##Ref WBNSToCF##Ty(NS##Ty *inValue) { \
-    return (CF##Ty##Ref)inValue; \
+    return (__bridge CF##Ty##Ref)inValue; \
   } \
   SC_INLINE NS##Ty *WBCFToNS##Ty(CF##Ty##Ref inValue) { \
-    return (NS##Ty *)inValue; \
+    return (__bridge NS##Ty *)inValue; \
   } \
 
 __WBNSCFTypeBridge(URL)
@@ -85,6 +76,11 @@ __WBNSCFTypeBridge(Calendar)
  - CFCharacterSetRef
  - CFMutableCharacterSetRef
  */
+#if __has_feature(objc_arr)
+  #define WBCFAutorelease(nstype, cfvalue) WBCFTo##nstype(cfvalue)
+#else
+  #define WBCFAutorelease(nstype, cfvalue) [WBCFTo##nstype(cfvalue) autorelease]
+#endif
 
 #endif /* __OBJC__ */
 

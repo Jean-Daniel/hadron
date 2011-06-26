@@ -15,6 +15,28 @@
 
 #if defined (__OBJC__)
 
+#if !__has_feature(objc_arr)
+/* Objective-C ARC keywords */
+  #if !defined(__bridge)
+    #define __bridge
+  #endif
+  #if !defined(__bridge_retain)
+    #define __bridge_retain
+  #endif
+  #if !defined(__bridge_retained)
+    #define __bridge_retained
+  #endif
+  #if !defined(__bridge_transfer)
+    #define __bridge_transfer
+  #endif
+  #if !defined(__autoreleased)
+    #define __autoreleased
+  #endif
+  #if !defined(__unsafe_unretained)
+    #define __unsafe_unretained
+  #endif
+#endif
+
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
   #define NSIntegerHashCallBacks NSIntHashCallBacks
   #define NSIntegerMapKeyCallBacks NSIntMapKeyCallBacks
@@ -33,9 +55,10 @@
 
 // MARK: Accessors
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
+#if !__has_feature(objc_arr)
 #define WBSetterRetain(ivar, var) _WBSetterRetain(&ivar, var)
 SC_INLINE
-BOOL _WBSetterRetain(id *ivar, id var) {
+BOOL _WBSetterRetain(__strong id *ivar, id var) {
   if (*ivar != var) {
     [var retain];
     [*ivar release];
@@ -69,6 +92,11 @@ BOOL _WBSetterMutableCopy(id *ivar, id var) {
   }
   return NO;
 }
+#else
+#define WBSetterRetain(ivar, var) ivar = var
+#define WBSetterCopy(ivar, var) ivar = [var copyWithZone:nil]
+#define WBSetterMutableCopy(ivar, var) ivar = [var mutableCopyWithZone:nil]
+#endif
 
 // MARK: Atomic Variants
 //extern id objc_getProperty(id self, SEL _cmd, ptrdiff_t offset, BOOL atomic);
