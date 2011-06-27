@@ -11,7 +11,7 @@
  */
 
 #if !defined(__WBC_WIN32_MATH_H__)
-#define __WBC_WIN32_MATH_H__ 1 
+#define __WBC_WIN32_MATH_H__ 1
 
 typedef int32_t Fixed;
 #define fixed1 ((Fixed) 0x00010000L)
