@@ -119,38 +119,6 @@ static __forceinline int fseeko(FILE *stream, off_t offset, int whence) { return
 #define snprintf(str, length, fmt, ...) _snprintf_s(str, length, _TRUNCATE, fmt, ##__VA_ARGS__)
 //#define snscanf(str, len, format, ...) _snscanf_s(str, len, format, ##__VA_ARGS__)
 
-static
-size_t strlcat(char *strDest, const char *strSource, size_t count) {
-  size_t destlen = strlen(strDest);
-  size_t srclen = strlen(strSource);
-  size_t total = srclen + destlen + 1;
-  // check if there is enough space in the buffer
-  if (total > count) {
-    if (destlen < count)
-      srclen = count - destlen - 1;
-    else // should not append except in case of invalid parameters.
-      srclen = 0;
-  }
-  // append strSource to strDest.
-  if (srclen > 0) {
-    memcpy(strDest + destlen, strSource, srclen);
-    strDest[srclen + destlen] = '\0';
-  }
-
-  return total;
-}
-
-static
-size_t strlcpy(char *strDest, const char *strSource, size_t count) {
-	size_t length = strlen(strSource) + 1;
-
-	size_t limit = length;
-	if (limit > count) limit = count;
-	strncpy_s(strDest, limit, strSource, limit - 1);
-
-	return length;
-}
-
 static __forceinline int strcasecmp(const char *string1, const char *string2) { return _stricmp(string1, string2); }
 static __forceinline int strncasecmp(const char *string1, const char *string2, size_t count) { return _strnicmp(string1, string2, count); }
 /* Date Time */
