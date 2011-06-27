@@ -64,10 +64,7 @@
 SC_INLINE __attribute__((__noreturn__))
 void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
   NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
-#if !__has_feature(objc_arr)
-  [str autorelease];
-#endif
-  NSException *except = [NSException exceptionWithName:name reason:str userInfo:userInfo];
+  NSException *except = [NSException exceptionWithName:name reason:wb_autorelease(str) userInfo:userInfo];
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
   @throw except;
 #else
@@ -80,7 +77,7 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 //void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
 #define WBThrowExceptionWithInfo(name, info, fmt, args...) do { \
   NSString *__str = [[NSString alloc] initWithFormat:fmt, ##args]; \
-  @throw [NSException exceptionWithName:name reason:[__str autorelease] userInfo:info]; \
+  @throw [NSException exceptionWithName:name reason:wb_autorelease(__str) userInfo:info]; \
 } while (0)
 
 //SC_INLINE __attribute__((__noreturn__))

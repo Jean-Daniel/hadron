@@ -27,7 +27,15 @@ CFRange NSRangeToCFRange(NSRange range) {
   return CFRangeMake((CFIndex)range.location, (CFIndex)range.length);
 }
 
-// MARK: NSMutableSet
+// MARK: Safe casts
+
+SC_INLINE CFTypeRef WBNSToCFType(id inValue) {
+  return (__bridge CFTypeRef)inValue;
+}
+SC_INLINE id WBCFToNSType(CFTypeRef inValue) {
+  return (__bridge id)inValue;
+}
+
 #define __WBNSCFTypeBridge(Ty) \
   SC_INLINE CF##Ty##Ref WBNSToCF##Ty(NS##Ty *inValue) { \
     return (__bridge CF##Ty##Ref)inValue; \

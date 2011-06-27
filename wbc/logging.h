@@ -200,11 +200,11 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 #if defined (__OBJC__)
 
 static __attribute__((unused))
-__nsloglike(1, 2) NS_RETURNS_RETAINED
-NSString *__WBNSStringCreateWithFormat(NSString *fmt, ...) {
+__nsloglike(1, 2)
+CFStringRef __WBNSStringCreateWithFormat(NSString *fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
+  CFStringRef str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, WBNSToCFString(fmt), args);
   va_end(args);
   return str;
 }
@@ -215,11 +215,11 @@ CFStringRef __WBCFStringCreateWithFormatAndArguments(CFStringRef fmt, va_list ar
 }
 
 #define DLog(format, args...)   do { \
-  NSString *__str = __WBNSStringCreateWithFormat(format, ##args); \
+  CFStringRef __str = __WBNSStringCreateWithFormat(format, ##args); \
   if (__str) { \
     __WBLogPrintLinePrefix(stderr); \
-    __WBLogPrintString(WBNSToCFString(__str), true, stderr); \
-    [__str release]; \
+    __WBLogPrintString(__str, true, stderr); \
+    CFRelease(__str); \
   } \
 } while(0)
 
@@ -249,12 +249,12 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 //SC_INLINE
 //void WBLog(aslclient client, aslmsg msg, int level, NSString *format, ...) { var_args and inline are incompatible
 #define WBLog(client, msg, level, format, args...) do { \
-  NSString *__str = __WBNSStringCreateWithFormat(format, ##args); \
+  CFStringRef __str = __WBNSStringCreateWithFormat(format, ##args); \
   if (__str) { \
     __WBLogPrintLinePrefix(stderr); \
     fprintf(stderr, "Log(%s): ", __WBASLLevelString(level)); \
-    __WBLogPrintString(WBNSToCFString(__str), true, stderr); \
-    [__str release]; \
+    __WBLogPrintString(__str, true, stderr); \
+    CFRelease(__str); \
   } \
 } while (0)
 

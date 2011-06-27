@@ -37,6 +37,17 @@
   #endif
 #endif
 
+/* Hybrid mode */
+#if __has_feature(objc_arr)
+  #define wb_retain(arg) arg
+  #define wb_release(arg) do {} while(0)
+  #define wb_autorelease(arg) arg
+#else
+  #define wb_retain(arg) [arg retain]
+  #define wb_release(arg) [arg release]
+  #define wb_autorelease(arg) [arg autorelease]
+#endif
+
 #if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
   #define NSIntegerHashCallBacks NSIntHashCallBacks
   #define NSIntegerMapKeyCallBacks NSIntMapKeyCallBacks
@@ -58,39 +69,33 @@
 #if !__has_feature(objc_arr)
 #define WBSetterRetain(ivar, var) _WBSetterRetain(&ivar, var)
 SC_INLINE
-BOOL _WBSetterRetain(__strong id *ivar, id var) {
+void _WBSetterRetain(id *ivar, id var) {
   if (*ivar != var) {
     [var retain];
     [*ivar release];
     *ivar = var;
-    return YES;
   }
-  return NO;
 }
 
 /* For safety we copy var before releasing ivar (ivar can contain the last reference on var). */
 #define WBSetterCopy(ivar, var) _WBSetterCopy(&ivar, var)
 SC_INLINE
-BOOL _WBSetterCopy(id *ivar, id var) {
+void _WBSetterCopy(id *ivar, id var) {
   if (*ivar != var) {
     var = [var copyWithZone:nil];
     [*ivar release];
     *ivar = var;
-    return YES;
   }
-  return NO;
 }
 
 #define WBSetterMutableCopy(ivar, var) _WBSetterMutableCopy(&ivar, var)
 SC_INLINE
-BOOL _WBSetterMutableCopy(id *ivar, id var) {
+void _WBSetterMutableCopy(id *ivar, id var) {
   if (*ivar != var) {
     var = [var mutableCopyWithZone:nil];
     [*ivar release];
     *ivar = var;
-    return YES;
   }
-  return NO;
 }
 #else
 #define WBSetterRetain(ivar, var) ivar = var
