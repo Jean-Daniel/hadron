@@ -36,6 +36,7 @@
 
 // Misc useful includes
 #include <asl.h>
+#include <unistd.h>
 #include <libgen.h>
 #include <uuid/uuid.h> // already included in 10.6 but not in 10.5
 #include <libkern/OSAtomic.h>

@@ -72,7 +72,6 @@ typedef void *aslclient;
 // MARK: =================== Debugging Configuration ===================
 
 #if defined(__MACH__)
-  #include <unistd.h>
   #include <pthread.h>
   #include <sys/time.h>
 
