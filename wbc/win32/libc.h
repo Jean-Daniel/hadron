@@ -13,6 +13,7 @@
 #if !defined(__WBC_WIN32_LIBC_H__)
 #define __WBC_WIN32_LIBC_H__ 1
 
+#include <io.h>
 #include <fcntl.h>
 #include <stdarg.h>
 

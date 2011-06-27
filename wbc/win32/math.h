@@ -13,6 +13,9 @@
 #if !defined(__WBC_WIN32_MATH_H__)
 #define __WBC_WIN32_MATH_H__ 1
 
+#include <cmath>
+#include <limits>
+
 #if !defined(INFINITY)
   #define INFINITY std::numeric_limits<double>::infinity()
 #endif

@@ -58,32 +58,27 @@ typedef __int64 off_t;
 #include <tchar.h>
 #include <windows.h>
 
-#if !defined(SC_EXCLUDE_FRAMEWORK_HEADERS)
+#if defined(SC_INCLUDE_CORE_FOUNDATION_H)
   #include <CoreFoundation\CoreFoundation.h>
 #else
 
 #include <assert.h>
 
 // FIXME: Windows headers
-//#include <sys/types.h>
-//#include <stdarg.h>
-//#include <assert.h>
-//#include <ctype.h>
-//#include <errno.h>
-//#include <float.h>
-//#include <limits.h>
-//#include <locale.h>
-//#include <math.h>
-//#include <setjmp.h>
-//#include <signal.h>
-//#include <stddef.h>
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <time.h>
-//#include <inttypes.h>
-//#include <stdbool.h>
-//#include <stdint.h>
+#include <sys/types.h>
+#include <stdarg.h>
+#include <ctype.h>
+#include <errno.h>
+#include <float.h>
+#include <limits.h>
+#include <locale.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 #if !defined(__LITTLE_ENDIAN__) && !defined(__BIG_ENDIAN__)
   #if defined(__i386__) || defined(__x86_64__) || defined(_M_AMD64) || defined(_M_IX86) || defined(_M_X64)
