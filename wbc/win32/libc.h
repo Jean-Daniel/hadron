@@ -103,6 +103,14 @@ FILE *w32_fdopen(int fd, const char *mode) {
 #define fopen(path, mode) w32_fopen(path, mode)
 #define fdopen(fd, mode) w32_fdopen(fd, mode)
 
+static __forceinline int ftruncate(int fd, __int64 size) {
+	int err = _chsize_s(fd, size);
+	if (!err) return 0;
+	/* match posix version and set errno instead of returning it */
+	_set_errno(err);
+	return -1;
+}
+
 static __forceinline off_t ftello(FILE *stream) { return _ftelli64(stream); }
 static __forceinline int fseeko(FILE *stream, off_t offset, int whence) { return _fseeki64(stream, offset, whence); }
 
@@ -184,6 +192,18 @@ int asprintf( char **sptr, const char *fmt, ... ) {
     va_end( argv );
     return retval;
 }
+
+/* functions defined in winrt */
+extern char *basename(const char *path);
+extern char *dirname(char *path);
+
+extern char *strcasestr(const char* phaystack, const char* pneedle);
+
+extern size_t strlcat(char *strDest, const char *strSource, size_t count);
+extern size_t strlcpy(char *strDest, const char *strSource, size_t count);
+
+extern char *strptime(const char *buf, const char *format, struct tm *tm);
+// strftime is defined in windows.
 
 #if defined(__cplusplus)
 }
