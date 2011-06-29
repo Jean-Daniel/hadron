@@ -27,6 +27,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
+#include <fenv.h>
 #include <float.h>
 #include <limits.h>
 #include <locale.h>
@@ -39,6 +40,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <inttypes.h>
 #include <stdbool.h>
