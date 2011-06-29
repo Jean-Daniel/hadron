@@ -36,7 +36,7 @@
 /* we can't use __has_extension to test for features in code, as only clang support it. */
 
 /* rvalue references */
-#if __has_extension(cxx_rvalue_references) || _MSC_VER
+#if __has_extension(cxx_rvalue_references) || defined(_MSC_VER)
   #define has_cxx_rvalue_references 1
 #endif
 
