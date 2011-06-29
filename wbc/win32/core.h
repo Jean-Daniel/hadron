@@ -33,6 +33,8 @@
 
   // Symbols visibilities
   #pragma warning(disable:4251)
+
+  #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
 
 #define NOMINMAX // avoid declaration of min() max() macros which conflicts with c++ functions
@@ -45,8 +47,6 @@
 typedef long _off_t; // expected and used by Windows (so we declare it compatible with the Win32 API)
 typedef __int64 off_t;
 #define _OFF_T_DEFINED // prevent redefinition
-
-#include "stdint.h" // Must be before windows.h
 
 // MARK: System Include
 // If you wish to build your application for a previous Windows platform,
@@ -75,6 +75,7 @@ typedef __int64 off_t;
 #include <setjmp.h>
 #include <signal.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,6 +90,7 @@ typedef __int64 off_t;
 #endif
 
 typedef double CFTimeInterval;
+typedef double CFAbsoluteTime;
 
 #endif
 

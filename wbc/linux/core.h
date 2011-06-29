@@ -54,6 +54,7 @@
 #endif
 
 typedef double CFTimeInterval;
+typedef double CFAbsoluteTime;
 
 #endif
 
