@@ -15,7 +15,7 @@
 
 #if defined (__OBJC__)
 
-#if !__has_feature(objc_arr)
+#if !__has_feature(objc_arc)
 /* Objective-C ARC keywords */
   #if !defined(__bridge)
     #define __bridge
@@ -38,11 +38,19 @@
 #endif
 
 /* Hybrid mode */
-#if __has_feature(objc_arr)
+#if !__has_feature(objc_arc) || __has_feature(objc_arc_weak)
+  #define wb_weak __weak
+#else
+  #define wb_weak __unsafe_unretained
+#endif
+
+#if __has_feature(objc_arc)
+  #define wb_dealloc() do {} while(0)
   #define wb_retain(arg) arg
   #define wb_release(arg) do {} while(0)
   #define wb_autorelease(arg) arg
 #else
+  #define wb_dealloc() [super dealloc]
   #define wb_retain(arg) [arg retain]
   #define wb_release(arg) [arg release]
   #define wb_autorelease(arg) [arg autorelease]
@@ -66,7 +74,7 @@
 
 // MARK: Accessors
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
-#if !__has_feature(objc_arr)
+#if !__has_feature(objc_arc)
 #define WBSetterRetain(ivar, var) _WBSetterRetain(&ivar, var)
 SC_INLINE
 void _WBSetterRetain(id *ivar, id var) {

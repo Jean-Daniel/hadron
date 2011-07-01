@@ -84,7 +84,7 @@ __WBNSCFTypeBridge(Calendar)
  - CFCharacterSetRef
  - CFMutableCharacterSetRef
  */
-#if __has_feature(objc_arr)
+#if __has_feature(objc_arc)
   #define WBCFAutorelease(nstype, cfvalue) WBCFTo##nstype(cfvalue)
 #else
   #define WBCFAutorelease(nstype, cfvalue) [WBCFTo##nstype(cfvalue) autorelease]
