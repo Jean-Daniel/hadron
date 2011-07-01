@@ -42,8 +42,10 @@
 
 #if has_cxx_rvalue_references
   #define cxx_move(arg) std::move(arg)
+  #define cxx_forward(Ty, arg) std::forward<Ty>(arg)
 #else
   #define cxx_move(arg) arg
+  #define cxx_forward(Ty, arg) arg
 #endif
 
 // A macro to disallow the copy constructor and operator= functions
