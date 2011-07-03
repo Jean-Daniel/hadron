@@ -75,41 +75,69 @@
 // MARK: Accessors
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
 #if !__has_feature(objc_arc)
-#define WBSetterRetain(ivar, var) _WBSetterRetain(&ivar, var)
-SC_INLINE
-void _WBSetterRetain(id *ivar, id var) {
-  if (*ivar != var) {
-    [var retain];
-    [*ivar release];
-    *ivar = var;
-  }
-}
+#define WBSetterRetainAndDo(ivar, var, statement) do { \
+  id __var = var; \
+  if (ivar != __var) { \
+    [__var retain]; \
+    [ivar release]; \
+    ivar = __var; \
+    statement; \
+  } \
+} while (0)
 
 /* For safety we copy var before releasing ivar (ivar can contain the last reference on var). */
-#define WBSetterCopy(ivar, var) _WBSetterCopy(&ivar, var)
-SC_INLINE
-void _WBSetterCopy(id *ivar, id var) {
-  if (*ivar != var) {
-    var = [var copyWithZone:nil];
-    [*ivar release];
-    *ivar = var;
-  }
-}
+#define WBSetterCopyAndDo(ivar, var, statement) do { \
+  id __var = var; \
+  if (ivar != __var) { \
+    __var = [__var copyWithZone:nil]; \
+    [ivar release]; \
+    ivar = __var; \
+    statement; \
+  } \
+} while (0)
 
-#define WBSetterMutableCopy(ivar, var) _WBSetterMutableCopy(&ivar, var)
-SC_INLINE
-void _WBSetterMutableCopy(id *ivar, id var) {
-  if (*ivar != var) {
-    var = [var mutableCopyWithZone:nil];
-    [*ivar release];
-    *ivar = var;
-  }
-}
+#define WBSetterMutableCopyAndDo(ivar, var, statement) do { \
+  id __var = var; \
+  if (ivar != __var) { \
+    __var = [__var mutableCopyWithZone:nil]; \
+    [ivar release]; \
+    ivar = __var; \
+    statement; \
+  } \
+} while (0)
+
 #else
-#define WBSetterRetain(ivar, var) ivar = var
-#define WBSetterCopy(ivar, var) ivar = [var copyWithZone:nil]
-#define WBSetterMutableCopy(ivar, var) ivar = [var mutableCopyWithZone:nil]
+
+/* ARC Compliant macros */
+#define WBSetterRetainAndDo(ivar, var, statement) do { \
+  id __var = var; \
+  if (ivar != __var) { \
+    ivar = __var; \
+    statement; \
+  } \
+} while (0)
+
+#define WBSetterCopyAndDo(ivar, var, statement) do { \
+  id __var = var; \
+  if (ivar != __var) { \
+    ivar = [__var copyWithZone:nil]; \
+    statement; \
+  } \
+} while (0)
+
+#define WBSetterMutableCopyAndDo(ivar, var, statement) do { \
+  id __var = var; \
+  if (ivar != __var) { \
+    ivar = [__var mutableCopyWithZone:nil]; \
+    statement; \
+  } \
+} while (0)
+
 #endif
+
+#define WBSetterCopy(ivar, var) WBSetterCopyAndDo(ivar, var, do {} while(0))
+#define WBSetterRetain(ivar, var) WBSetterRetainAndDo(ivar, var, do {} while(0))
+#define WBSetterMutableCopy(ivar, var) WBSetterMutableCopyAndDo(ivar, var, do {} while(0))
 
 // MARK: Atomic Variants
 //extern id objc_getProperty(id self, SEL _cmd, ptrdiff_t offset, BOOL atomic);
