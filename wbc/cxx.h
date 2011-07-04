@@ -40,6 +40,11 @@
   #define has_cxx_rvalue_references 1
 #endif
 
+/* declaration for move, swap, forward, ... */
+#if __has_include(<utility>)
+  #include <utility>
+#endif
+
 #if has_cxx_rvalue_references
   #define cxx_move(arg) std::move(arg)
   #define cxx_forward(Ty, arg) std::forward<Ty>(arg)
