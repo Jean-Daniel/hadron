@@ -314,7 +314,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
   NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
   if (__str) {
     asl_log(client, msg, level, "%s", [__str UTF8String]);
-    [__str release];
+    wb_release(__str);
   }
 }
 
@@ -324,7 +324,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
   NSString *__str = [[NSString alloc] initWithFormat:format, ##args]; \
   if (__str) { \
     asl_log(client, msg, level, "%s", [__str UTF8String]); \
-    [__str release]; \
+    wb_release(__str); \
   } \
 } while (0)
 
