@@ -32,7 +32,7 @@
 #endif
 
 // MARK: Logging
-#if !defined(__MACH__)
+#if !defined(__APPLE__)
 
 typedef void *aslmsg;
 typedef void *aslclient;
@@ -71,7 +71,50 @@ typedef void *aslclient;
 // MARK: -
 // MARK: =================== Debugging Configuration ===================
 
-#if defined(__MACH__)
+#if defined(_WIN32) && !defined(_CONSOLE)
+
+#if _UNICODE
+  #define wb_vscprintf _vscwprintf
+  #define wb_vsnprintf _vsnwprintf_s
+#else
+  #define wb_vscprintf _vscprintf
+  #define wb_vsnprintf _vsnprintf_s
+#endif
+
+SC_UNUSED static
+void _wb_vprintf(LPCTSTR fmt, va_list args) {
+  TCHAR stackbuf[256];
+  TCHAR *buffer = stackbuf;
+
+  size_t len = wb_vscprintf(fmt, args) + 1; // for '\0'
+  if (len > 256)
+    buffer = (TCHAR *)malloc(len);
+
+  /* write the string */
+  len = wb_vsnprintf(buffer, len, len, fmt, args);
+  if (len > 0)
+    OutputDebugString(buffer);
+
+  if (buffer != stackbuf)
+    free(buffer);
+}
+
+static inline
+void _wb_printf(LPCTSTR fmt, ...) {
+  va_list args;
+  va_start(args, fmt);
+  _wb_vprintf(fmt, args);
+  va_end(args);
+}
+
+  #define wb_printf(fmt, ...) _wb_printf(_T(fmt), ##__VA_ARGS__)
+  #define wb_vprintf(fmt, args) _wb_vprintf(_T(fmt), args)
+#else
+  #define wb_printf(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+  #define wb_vprintf(fmt, args) vfprintf(stderr, fmt, args)
+#endif
+
+#if defined(__APPLE__)
   #include <pthread.h>
   #include <sys/time.h>
 
@@ -165,17 +208,17 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
 
 #define DCLog(format, ...)  do { \
   __WBLogPrintLinePrefix(stderr); \
-  fprintf(stderr, format "\n", ## __VA_ARGS__); \
+  wb_printf(format "\n", ## __VA_ARGS__); \
 } while (0)
 
 #define DCLogv(format, args)  do { \
   __WBLogPrintLinePrefix(stderr); \
-  vfprintf(stderr, format "\n", args); \
+  wb_vprintf(format "\n", args); \
 while (0)
 
 #define WBCLog(client, msg, level, format, ...) do { \
   __WBLogPrintLinePrefix(stderr); \
-  fprintf(stderr, "Log(%s): " format "\n", __WBASLLevelString(level), ## __VA_ARGS__); \
+  wb_printf("Log(%s): " format "\n", __WBASLLevelString(level), ## __VA_ARGS__); \
 } while (0)
 
 SC_INLINE
@@ -184,7 +227,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
   char *str = NULL;
   if (vasprintf(&str, format, args) >= 0 && str) {
     __WBLogPrintLinePrefix(stderr);
-    fprintf(stderr, "Log(%s): %s\n", __WBASLLevelString(level), str);
+    wb_printf("Log(%s): %s\n", __WBASLLevelString(level), str);
     free(str);
   }
 }
@@ -192,7 +235,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 #define WBTrace() do { \
   __WBLogPrintLinePrefix(stderr); \
   char *__file = strdup(__FILE__); \
-  fprintf(stderr, "[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
+  wb_printf("[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
   if (__file) free(__file); \
 } while(0)
 
@@ -240,7 +283,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
   CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, WBNSToCFString(format), args);
   if (__str) {
     __WBLogPrintLinePrefix(stderr);
-    fprintf(stderr, "Log(%s): ", __WBASLLevelString(level));
+    wb_printf("Log(%s): ", __WBASLLevelString(level));
     __WBLogPrintString(__str, true, stderr);
     CFRelease(__str);
   }
@@ -252,7 +295,7 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
   CFStringRef __str = __WBNSStringCreateWithFormat(format, ##args); \
   if (__str) { \
     __WBLogPrintLinePrefix(stderr); \
-    fprintf(stderr, "Log(%s): ", __WBASLLevelString(level)); \
+    wb_printf("Log(%s): ", __WBASLLevelString(level)); \
     __WBLogPrintString(__str, true, stderr); \
     CFRelease(__str); \
   } \
@@ -265,7 +308,7 @@ void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
   __WBLogPrintLinePrefix(stderr);
   char *__file = strdup(filename);
   Class cls = [self class];
-  fprintf(stderr, "[%s:%li]: %c[%s %s]\n", __file ? basename(__file) : "", line, self == (id)cls ? '+' : '-', class_getName(cls), sel_getName(_cmd));
+  wb_printf("[%s:%li]: %c[%s %s]\n", __file ? basename(__file) : "", line, self == (id)cls ? '+' : '-', class_getName(cls), sel_getName(_cmd));
   if (__file) free(__file);
 }
 
