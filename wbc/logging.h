@@ -73,39 +73,31 @@ typedef void *aslclient;
 
 #if defined(_WIN32) && !defined(_CONSOLE)
 
-#if _UNICODE
-  #define wb_vscprintf _vscwprintf
-  #define wb_vsnprintf _vsnwprintf_s
-#else
-  #define wb_vscprintf _vscprintf
-  #define wb_vsnprintf _vsnprintf_s
-#endif
+  SC_UNUSED static
+  void _wb_vprintf(LPCTSTR fmt, va_list args) {
+    TCHAR stackbuf[256];
+    TCHAR *buffer = stackbuf;
 
-SC_UNUSED static
-void _wb_vprintf(LPCTSTR fmt, va_list args) {
-  TCHAR stackbuf[256];
-  TCHAR *buffer = stackbuf;
+    size_t len = _vtcprintf_s(fmt, args) + 1; // for '\0'
+    if (len > 256)
+      buffer = (TCHAR *)malloc(len);
 
-  size_t len = wb_vscprintf(fmt, args) + 1; // for '\0'
-  if (len > 256)
-    buffer = (TCHAR *)malloc(len);
+    /* write the string */
+    len = _vsntprintf_s(buffer, len, len, fmt, args);
+    if (len > 0)
+      OutputDebugString(buffer);
 
-  /* write the string */
-  len = wb_vsnprintf(buffer, len, len, fmt, args);
-  if (len > 0)
-    OutputDebugString(buffer);
+    if (buffer != stackbuf)
+      free(buffer);
+  }
 
-  if (buffer != stackbuf)
-    free(buffer);
-}
-
-static inline
-void _wb_printf(LPCTSTR fmt, ...) {
-  va_list args;
-  va_start(args, fmt);
-  _wb_vprintf(fmt, args);
-  va_end(args);
-}
+  static inline
+  void _wb_printf(LPCTSTR fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    _wb_vprintf(fmt, args);
+    va_end(args);
+  }
 
   #define wb_printf(fmt, ...) _wb_printf(_T(fmt), ##__VA_ARGS__)
   #define wb_vprintf(fmt, args) _wb_vprintf(_T(fmt), args)
@@ -114,12 +106,41 @@ void _wb_printf(LPCTSTR fmt, ...) {
   #define wb_vprintf(fmt, args) vfprintf(stderr, fmt, args)
 #endif
 
-#if defined(__APPLE__)
-  #include <pthread.h>
-  #include <sys/time.h>
+#if defined(_WIN32)
 
+static inline
+double _time_from_filetime(const FILETIME *ft) {
+	double ret = (double)ft->dwHighDateTime * 429.49672960;
+	ret += (double)ft->dwLowDateTime / 10000000.0;
+  /* seconds between 1601 and 1970 */
+	ret -= 11644473600.0;
+	return ret;
+}
+
+SC_UNUSED static
+void __WBLogPrintLinePrefix(FILE *f) {
+  FILETIME ft;
+  GetSystemTimeAsFileTime(&ft);
+  double secs = _time_from_filetime(&ft);
+  time_t t = (time_t)secs;
+
+  struct tm now;
+  char dtime[32];
+  localtime_s(&now, &t);
+  strftime(dtime, 32, "%Y-%m-%d %H:%M:%S", &now);
+
+  wb_printf("%s.%.3u [%d:%d] ", dtime, (unsigned)(fmod(secs, 1) * 1000), getpid(), GetCurrentThreadId());
+}
+
+#else
+
+#include <pthread.h>
+#include <sys/time.h>
+
+#if defined(__APPLE__) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 // .hack from CoreFoundation, see comment in __WBLogPrintLinePrefix
 SC_EXTERN void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
+#endif
 
 // Adding a static method here is not desired, but this is for debug build only.
 // And we really don't want to use NSLog as it clutters the Console
@@ -130,7 +151,7 @@ void __WBLogPrintLinePrefix(FILE *f) {
   // As we only use stderr (and not asl like CF does), we use this same hack to prevent duplicate
   // prefix in Console output when not running in Xcode (launchd already append a prefix).
   // if it could be a pipe back to launchd, ignore
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if defined(__APPLE__) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
   int64_t val = 0;
   // assumes val is not written to on error
   vproc_swap_integer(NULL, 5 /* VPROC_GSK_IS_MANAGED */, NULL, &val);
@@ -147,12 +168,6 @@ void __WBLogPrintLinePrefix(FILE *f) {
   strftime(dtime, 32, "%F %T", &now);
 
   fprintf(f, "%s.%.3u %s[%u:%x] ", dtime, nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
-}
-
-#else
-SC_UNUSED static
-void __WBLogPrintLinePrefix(FILE *f) {
-  // TODO:
 }
 #endif
 
