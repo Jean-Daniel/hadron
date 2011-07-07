@@ -66,9 +66,17 @@
 
 #endif // Apple
 
-/* 10.6 SDK on 10.7 fixup */
+/* Compilation on older SDK */
+#if !defined (kCFCoreFoundationVersionNumber10_5)
+  #define kCFCoreFoundationVersionNumber10_5 476.00
+#endif
+
 #if !defined (kCFCoreFoundationVersionNumber10_6)
   #define kCFCoreFoundationVersionNumber10_6 550.0
+#endif
+
+#if !defined (kCFCoreFoundationVersionNumber10_7)
+  #define kCFCoreFoundationVersionNumber10_7 635.0
 #endif
 
 // MARK: Attributes

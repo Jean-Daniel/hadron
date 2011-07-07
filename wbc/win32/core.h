@@ -67,6 +67,7 @@ typedef __int64 off_t;
 // FIXME: Windows headers
 #include <sys/types.h>
 #include <stdarg.h>
+#include <conio.h>
 #include <ctype.h>
 #include <errno.h>
 #include <float.h>
