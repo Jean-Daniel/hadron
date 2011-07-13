@@ -1,4 +1,0 @@
-
-#include "../subconfig/WonderBox.xcconfig"
-// Pull in the general settings
-#include "../generic/SnowLeopard_Debug.xcconfig"

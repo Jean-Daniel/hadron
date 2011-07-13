@@ -1,0 +1,3 @@
+
+// System configuration Min: 10.5, Max: current
+MACOSX_DEPLOYMENT_TARGET = 10.5

@@ -5,10 +5,6 @@ ONLY_ACTIVE_ARCH = YES
 // No optimization
 GCC_OPTIMIZATION_LEVEL = 0
 
-// INFOPLIST_OUTPUT_FORMAT = same-as-input
-// PLIST_FILE_OUTPUT_FORMAT = same-as-input
-STRINGS_FILE_OUTPUT_ENCODING = UTF-16
-
 // Deployment postprocessing is what triggers Xcode to strip, turn it off
 DEPLOYMENT_POSTPROCESSING = NO
 STRIP_INSTALLED_PRODUCT = NO
@@ -17,25 +13,6 @@ COPY_PHASE_STRIP = NO
 // May catch errors
 GCC_NO_COMMON_BLOCKS = NO
 
-// Debug symbols should be on obviously
 DEBUG_INFORMATION_FORMAT = dwarf
-// do not works well with dwarf
-GCC_ENABLE_SYMBOL_SEPARATION = NO
-GCC_GENERATE_DEBUGGING_SYMBOLS = YES
 
-// C Flags only
-// WB_CONFIGURATION_OTHER_CFLAGS = -Wunreachable-code
-// WB_CONFIGURATION_WARNING_CFLAGS = -Wunreachable-code
-
-// Turn off warnings about uninitialized autos
-// can only be done when GCC_OPTIMIZATION_LEVEL is actually optimizing
-GCC_WARN_UNINITIALIZED_AUTOS = NO
-
-// Turns on special C++ STL checks to "encourage" good STL use
-// _GLIBCXX_DEBUG_PEDANTIC _GLIBCPP_CONCEPT_CHECKS
 WB_CONFIGURATION_GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1
-
-// Turns on stack protection on debug builds for Leopard and above
-WB_CONFIGURATION_OTHER_CFLAGS = -fstack-protector-all
-// Stack protection doesn't exist on Tiger
-WB_CONFIGURATION_OTHER_CFLAGS[sdk=macosx10.4] =

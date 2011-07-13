@@ -1,0 +1,12 @@
+
+// Pull in the general settings
+#include "../subconfig/base.xcconfig"
+
+// Tiger or later
+#include "../subconfig/lion.xcconfig"
+
+// Debug settings
+#include "../subconfig/release.xcconfig"
+
+// Merge settings
+#include "../subconfig/merge.xcconfig"

@@ -1,9 +1,0 @@
-
-// Dont build 64 bits for Tiger
-VALID_ARCHS=i386 ppc
-
-// according to Xcode release notes, GCC 4.2 must not be used to target 10.4
-GCC_VERSION = 4.0
-// System configuration Min: 10.4, Max: 10.6
-MACOSX_DEPLOYMENT_TARGET = 10.4
-

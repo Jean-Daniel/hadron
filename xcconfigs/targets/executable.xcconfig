@@ -1,0 +1,5 @@
+
+GCC_DYNAMIC_NO_PIC = $(LD_NO_PIE)
+
+WB_TARGET_OTHER_LDFLAGS = -Wl,-weak_reference_mismatches,error -sectcreate __TEXT __info_plist "$(INFOPLIST_FILE)"
+
