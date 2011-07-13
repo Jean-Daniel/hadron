@@ -13,6 +13,8 @@
 #if !defined(__WBC_ASSERT_H__)
 #define __WBC_ASSERT_H__ 1
 
+#define wb_abort(msg) ((void)printf("%s:%u: failed assertion `%s'\n", __FILE__, __LINE__, msg), abort())
+
 #if __has_extension(cxx_static_assert)
   // C++11 static assert supported
   #define WBStaticAssert(test, msg)  static_assert(test, #msg)
