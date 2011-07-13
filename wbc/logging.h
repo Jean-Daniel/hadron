@@ -152,10 +152,10 @@ void __WBLogPrintLinePrefix(FILE *f) {
   // prefix in Console output when not running in Xcode (launchd already append a prefix).
   // if it could be a pipe back to launchd, ignore
 #if defined(__APPLE__) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-  int64_t val = 0;
-  // assumes val is not written to on error
-  vproc_swap_integer(NULL, 5 /* VPROC_GSK_IS_MANAGED */, NULL, &val);
-  if (val) return;
+  static int64_t val = -1;
+  if (val < 0) // assumes val is not written to on error
+    vproc_swap_integer(NULL, 5 /* VPROC_GSK_IS_MANAGED */, NULL, &val);
+  if (val > 0) return;
 #endif
 
   /* Print date first */
@@ -203,8 +203,8 @@ void __WBLogPrintString(CFStringRef aString, bool eol, FILE *f) {
     CFRange range = CFRangeMake(0, CFStringGetLength(aString));
     while (range.length > 0) {
       CFIndex length;
-      uint8_t buffer[128];
-      size_t done = (size_t)CFStringGetBytes(aString, range, kCFStringEncodingUTF8, '?', false, buffer, 128, &length);
+      uint8_t buffer[256];
+      size_t done = (size_t)CFStringGetBytes(aString, range, kCFStringEncodingUTF8, '?', false, buffer, 256, &length);
       if (done > 0) {
         if (length > 0)
           fwrite(buffer, 1, (size_t)length, stderr); // lenght may be ≠ done when generating multibytes chars

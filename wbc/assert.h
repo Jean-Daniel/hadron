@@ -77,10 +77,8 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 
 //SC_INLINE __attribute__((__noreturn__))
 //void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
-#define WBThrowExceptionWithInfo(name, info, fmt, args...) do { \
-  NSString *__str = [[NSString alloc] initWithFormat:fmt, ##args]; \
-  @throw [NSException exceptionWithName:name reason:wb_autorelease(__str) userInfo:info]; \
-} while (0)
+#define WBThrowExceptionWithInfo(name, info, fmt, args...) \
+  @throw [NSException exceptionWithName:name reason:wb_autorelease(([[NSString alloc] initWithFormat:fmt, ##args])) userInfo:info]
 
 //SC_INLINE __attribute__((__noreturn__))
 //void WBThrowException(NSString *name, NSString *fmt, ...)
