@@ -135,6 +135,6 @@ WB_BASE_COMPILE_FLAGS = -fstack-protector-all
 WB_BASE_OTHER_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
 
 // C++ Only Warnings
-WB_BASE_OTHER_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wstrict-null-sentinel -Wsign-promo
+WB_BASE_OTHER_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo
+WB_COMPILER_OTHER_CPLUSPLUSFLAGS = -Wstrict-null-sentinel -Wabi -Weffc++
 
-// WB_GENERAL_OTHER_LDFLAGS = -Wl,-weak_reference_mismatches,error
