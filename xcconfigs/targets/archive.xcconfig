@@ -2,3 +2,6 @@
 // Xcode uses libtool to link archive (static library), so we have to inhibit ld flags.
 WB_TARGET_OTHER_LDFLAGS =
 WB_COMPILER_OTHER_LDFLAGS =
+
+// Cannot sign static ibrary
+CODE_SIGN_IDENTITY =
