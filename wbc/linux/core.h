@@ -13,11 +13,7 @@
 #if !defined(__WBC_LINUX_CORE_H__)
 #define __WBC_LINUX_CORE_H__ 1
 
-#if defined(__cplusplus) && !defined(__STDC_LIMIT_MACROS)
-  #define __STDC_LIMIT_MACROS
-#endif
-
-#if !defined(SC_EXCLUDE_FRAMEWORK_HEADERS)
+#if defined(SC_INCLUDE_CORE_FOUNDATION_H)
   #include <CoreFoundation/CoreFoundation.h>
 #else
 
@@ -27,6 +23,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <fenv.h>
 #include <float.h>
 #include <limits.h>
@@ -57,6 +54,27 @@
 
 typedef double CFTimeInterval;
 typedef double CFAbsoluteTime;
+
+/* Rely on libbsd to include missing functions */
+
+// .Hask to avoid bsd/md5.h inclusion. It conflicts with <openSSL/md5.h>
+#define _MD5_H_ 1
+#include <bsd/bsd.h>
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+static inline void *reallocf(void *ptr, size_t newSize) {
+	void *result = realloc(ptr, newSize);
+	if (!result)
+		free(ptr);
+	return result;
+}
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif
 

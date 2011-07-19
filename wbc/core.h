@@ -18,6 +18,11 @@
   #define __STDC_LIMIT_MACROS 1
 #endif
 
+/* Required to use some advanced feature (program_invocation_short_name) */
+#if defined(__linux__) && !defined(_GNU_SOURCE)
+  #define _GNU_SOURCE 1
+#endif
+
 #if defined(__clang__) || defined(__GNUC__)
   #include <tgmath.h> // MUST be first
 #endif

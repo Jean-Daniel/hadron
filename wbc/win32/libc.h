@@ -38,6 +38,13 @@ DWORD GetLastErrorOrDefault() {
   return err ? err : -1;
 }
 
+static __inline
+void *reallocf(void *ptr, size_t size) {
+  void *result = realloc(ptr, size);
+  if (!result) free(ptr);
+  return result;
+}
+
 static __forceinline
 void sleep(int seconds) {
   Sleep(seconds * 1000);
