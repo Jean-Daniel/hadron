@@ -137,6 +137,15 @@
   #endif /* No inline */
 #endif
 
+/* Misc attributes */
+#if !defined(wb_noreturn)
+  #if defined(_MSC_VER)
+    #define wb_noreturn __declspec(noreturn)
+  #else
+    #define wb_noreturn __attribute__((noreturn))
+  #endif
+#endif
+
 // MARK: Clang
 #ifndef __has_builtin
   #define __has_builtin(x) 0
