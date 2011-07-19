@@ -113,6 +113,7 @@
   #endif
 #endif
 
+// MARK: Visibility
 #if !defined(SC_EXTERN)
   #if defined(__cplusplus)
     #define SC_EXTERN extern "C"
@@ -121,6 +122,18 @@
   #endif
 #endif
 
+#if !defined(SC_VISIBLE)
+  #define SC_VISIBLE __attribute__((visibility("default")))
+#endif
+
+#if !defined(SC_HIDDEN)
+  #define SC_HIDDEN __attribute__((visibility("hidden")))
+#endif
+
+#define SC_PRIVATE SC_EXTERN SC_HIDDEN
+#define SC_EXPORT SC_EXTERN SC_VISIBLE
+
+// MARK: Inlining
 #if defined(__cplusplus)
   #define __inline__ inline
 #endif
@@ -135,15 +148,6 @@
   #else
     #define SC_INLINE __inline__ static
   #endif /* No inline */
-#endif
-
-/* Misc attributes */
-#if !defined(wb_noreturn)
-  #if defined(_MSC_VER)
-    #define wb_noreturn __declspec(noreturn)
-  #else
-    #define wb_noreturn __attribute__((noreturn))
-  #endif
 #endif
 
 // MARK: Clang
