@@ -15,6 +15,10 @@
 
 #include "wbc/core.h" // must be before all others
 
+#ifdef __COREFOUNDATION__
+  #include "wbc/cfutils.h"
+#endif
+
 #if defined(__OBJC__)
   #include "wbc/objc.h"
   #include "wbc/cfbridge.h"

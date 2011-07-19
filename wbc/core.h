@@ -85,16 +85,6 @@
 #endif
 
 // MARK: Attributes
-#if !defined(SC_OBSOLETE)
-  #if defined(_MSC_VER)
-    #define SC_OBSOLETE(msg) __declspec(deprecated(msg))
-  #elif defined(__clang__)
-    #define SC_OBSOLETE(msg) __attribute__((deprecated(msg)))
-  #else
-    #define SC_OBSOLETE(msg) __attribute__((deprecated))
-  #endif
-#endif
-
 #if !defined(SC_UNUSED)
   #if defined(_MSC_VER)
     #define SC_UNUSED
@@ -123,16 +113,6 @@
   #endif
 #endif
 
-// MARK: Visibility
-
-#if !defined(SC_VISIBLE)
-  #define SC_VISIBLE __attribute__((visibility("default")))
-#endif
-
-#if !defined(SC_HIDDEN)
-  #define SC_HIDDEN __attribute__((visibility("hidden")))
-#endif
-
 #if !defined(SC_EXTERN)
   #if defined(__cplusplus)
     #define SC_EXTERN extern "C"
@@ -141,21 +121,9 @@
   #endif
 #endif
 
-/*!
- @defined SC_PRIVATE
- @abstract Private extern symbol.
- */
-/*!
- @defined SC_EXPORT
- @abstract Exported Wonderbox Function.
- */
-
 #if defined(__cplusplus)
   #define __inline__ inline
 #endif
-
-#define SC_PRIVATE SC_EXTERN SC_HIDDEN
-#define SC_EXPORT SC_EXTERN SC_VISIBLE
 
 #if !defined(SC_INLINE)
   #if !defined(__NO_INLINE__)
@@ -194,32 +162,7 @@
   #define __has_include_next(x) 0
 #endif
 
-
 // MARK: Static Analyzer
-#ifndef CF_CONSUMED
-  #if __has_attribute(cf_consumed)
-    #define CF_CONSUMED __attribute__((cf_consumed))
-  #else
-    #define CF_CONSUMED
-  #endif
-#endif
-
-#ifndef CF_RETURNS_RETAINED
-  #if __has_attribute(cf_returns_retained)
-    #define CF_RETURNS_RETAINED __attribute__((cf_returns_retained))
-  #else
-    #define CF_RETURNS_RETAINED
-  #endif
-#endif
-
-#ifndef CF_RETURNS_NOT_RETAINED
-	#if __has_attribute(cf_returns_not_retained)
-		#define CF_RETURNS_NOT_RETAINED __attribute__((cf_returns_not_retained))
-	#else
-		#define CF_RETURNS_NOT_RETAINED
-	#endif
-#endif
-
 #if defined(__OBJC__)
 
   #ifndef NS_UNUSED_IVAR
@@ -317,42 +260,6 @@ enum {
     #define CGFLOAT_IS_DOUBLE 0
   #endif	/* !defined(__LP64__) || !__LP64__ */
   #define CGFLOAT_DEFINED 1
-#endif
-
-// MARK: -
-// MARK: Core Foundation
-#if !defined(CFIndexMax)
-  #define CFIndexMax LONG_MAX
-#endif
-
-#if !defined(CFIndexMin)
-  #define CFIndexMin LONG_MIN
-#endif
-
-#ifdef __COREFOUNDATION__
-
-#if defined(__cplusplus)
-  template<typename T> // CF_RETURNS_RETAINED (buggy with template)
-  inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
-  template<typename T>
-  inline T WBCFMakeCollectable(T aValue) { return aValue ? (T)CFMakeCollectable(aValue) : (T)NULL; }
-#else
-  SC_INLINE CF_RETURNS_RETAINED
-  CFTypeRef __WBCFRetain(CFTypeRef aValue) { return aValue ? CFRetain(aValue) : NULL; }
-  #define WBCFRetain(typeref) ((__typeof__(typeref))__WBCFRetain(typeref))
-#endif
-
-SC_INLINE
-void WBCFRelease(CF_CONSUMED CFTypeRef aValue) { if (aValue) CFRelease(aValue); }
-
-SC_INLINE
-Boolean WBCFEqual(CFTypeRef obj1, CFTypeRef obj2) {
-  if (!obj1) return !obj2;
-  if (obj2)
-    return CFEqual(obj1, obj2);
-  return false;
-}
-
 #endif
 
 #endif /* __WBC_CORE_H__ */

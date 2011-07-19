@@ -78,7 +78,7 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 //SC_INLINE __attribute__((__noreturn__))
 //void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
 #define WBThrowExceptionWithInfo(name, info, fmt, args...) \
-  @throw [NSException exceptionWithName:name reason:wb_autorelease(([[NSString alloc] initWithFormat:fmt, ##args])) userInfo:info]
+  @throw [NSException exceptionWithName:name reason:[NSString stringWithFormat:fmt, ##args] userInfo:info]
 
 //SC_INLINE __attribute__((__noreturn__))
 //void WBThrowException(NSString *name, NSString *fmt, ...)
@@ -104,9 +104,11 @@ do { \
  @defined WBClusterException
  @abstract   Raise an invalig argument exception.
  */
-#define WBClusterException()    WBThrowException(NSInvalidArgumentException, \
-                                                 @"-%@ only defined for abstract class. Define -[%@ %@]!", \
-                                                 NSStringFromSelector(_cmd), NSStringFromClass([self class]), NSStringFromSelector(_cmd))
+#define WBAbstractMethodException()    WBThrowException(NSInvalidArgumentException, \
+                                                        @"-%@ only defined for abstract class. Define -[%@ %@]!", \
+                                                        NSStringFromSelector(_cmd), NSStringFromClass([self class]), NSStringFromSelector(_cmd))
+
+#define wb_abstract __attribute__((noreturn))
 
 #endif /* __OBJC__ */
 
