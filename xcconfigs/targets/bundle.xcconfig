@@ -1,2 +1,2 @@
 
-WB_TARGET_OTHER_LDFLAGS = -Wl,-weak_reference_mismatches,error
+OTHER_LDFLAGS = $(inherited) -Wl,-weak_reference_mismatches,error
