@@ -55,15 +55,14 @@
 typedef double CFTimeInterval;
 typedef double CFAbsoluteTime;
 
-/* Rely on libbsd to include missing functions */
-
-// .Hask to avoid bsd/md5.h inclusion. It conflicts with <openSSL/md5.h>
-#define _MD5_H_ 1
-#include <bsd/bsd.h>
-
 #if defined(__cplusplus)
 extern "C" {
 #endif
+
+/* Rely on libbsd to include missing functions */
+// .Hack to avoid bsd/md5.h inclusion. It conflicts with <openSSL/md5.h>
+#define _MD5_H_ 1
+#include <bsd/bsd.h> // Must be in extern "C" block
 
 static inline void *reallocf(void *ptr, size_t newSize) {
 	void *result = realloc(ptr, newSize);
