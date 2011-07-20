@@ -129,7 +129,7 @@ IBC_ERRORS = YES
 IBC_NOTICES = YES
 IBC_WARNINGS = YES
 
-WB_BASE_COMPILE_FLAGS = -fstack-protector-all 
+WB_BASE_COMPILE_FLAGS = -fstack-protector-all
 
 // Stack protection + warning flags that do not apply to c++
 WB_BASE_OTHER_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
