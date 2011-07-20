@@ -13,7 +13,15 @@
 #if !defined(__WBC_ASSERT_H__)
 #define __WBC_ASSERT_H__ 1
 
-#define wb_abort(msg) ((void)printf("%s:%u: failed assertion `%s'\n", __FILE__, __LINE__, msg), abort())
+static inline SC_NORETURN
+void _wb_abort(const char *msg, const char *file, uint32_t line) {
+	printf("%s:%u: failed assertion `%s'\n", __FILE__, __LINE__, msg);
+	abort();
+#if defined(_WIN32)
+	_exit(3); // abort is not marked as no return in Windows.
+#endif
+}
+#define wb_abort(msg) _wb_abort(msg, __FILE__, __LINE__)
 
 #if __has_extension(cxx_static_assert)
   // C++11 static assert supported

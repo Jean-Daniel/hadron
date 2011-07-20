@@ -113,6 +113,14 @@
   #endif
 #endif
 
+#if !defined(SC_NORETURN)
+  #if defined(_MSC_VER)
+    #define SC_NORETURN __declspec(noreturn)
+  #else
+    #define SC_NORETURN __attribute__((noreturn))
+  #endif
+#endif
+
 // MARK: Visibility
 #if !defined(SC_EXTERN)
   #if defined(__cplusplus)
