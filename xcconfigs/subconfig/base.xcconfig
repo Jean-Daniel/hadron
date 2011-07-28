@@ -103,6 +103,7 @@ GCC_WARN_ABOUT_MISSING_NEWLINE = YES
 GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES
 
 // WARNING_CFLAGS = #merged
+// -Wsign-conversion
 WB_BASE_WARNING_CFLAGS = -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls
 
 GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES
