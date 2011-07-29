@@ -23,10 +23,6 @@
   #define _GNU_SOURCE 1
 #endif
 
-#if defined(__clang__) || defined(__GNUC__)
-  #include <tgmath.h> // MUST be first
-#endif
-
 #if defined(__WIN32__) || defined(_WIN32)
   #include "win32\core.h"
 #elif defined(__linux__)
@@ -47,7 +43,6 @@
 #include <libgen.h>
 #include <uuid/uuid.h> // already included in 10.6 but not in 10.5
 #include <libkern/OSAtomic.h>
-
 
 #if !defined(MAC_OS_X_VERSION_10_5)
   #define MAC_OS_X_VERSION_10_5 1050

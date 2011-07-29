@@ -13,6 +13,10 @@
 #if !defined(__WBC_MATH_H__)
 #define __WBC_MATH_H__ 1
 
+#if defined(__TGMATH_H)
+  #error tgmath.h must not be included at this point
+#endif
+
 SC_INLINE
 bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
 
@@ -68,9 +72,6 @@ uint32_t WBUInt64To32(uint64_t value) {
   #endif
 #endif
 
-// .hack: we have to undef round to avoid tgmath expansion.
-#undef round
-
 #if defined(__clang__) || defined(__cplusplus)
   #define __SC_TG_FLOAT(fct)         fct
   #define __SC_TG_DOUBLE(fct)        fct
@@ -102,17 +103,6 @@ __SC_TG_DECL(unsigned long long int) __SC_TG_LONG_DOUBLE(__tg_ullround)(long dou
 
 #undef __sc_ullround
 #undef __sc_ulround
-
-#if defined(__cplusplus)
-  #define ulround(__x)        __tg_ulround(__x)
-  #define ullround(__x)       __tg_ullround(__x)
-#elif defined(__clang__)
-  #define ulround(__x)        __tg_ulround(__tg_promote1((__x))(__x))
-  #define ullround(__x)       __tg_ullround(__tg_promote1((__x))(__x))
-#else
-  #define ulround(__x)        __TGMATH_REAL(__x, __tg_ulround)
-  #define ullround(__x)       __TGMATH_REAL(__x, __tg_ullround)
-#endif
 
 // MARK: Saturate rounding
 #define __sc_slround(Ty, a) \
@@ -160,23 +150,6 @@ __SC_TG_DECL(unsigned long long int) __SC_TG_LONG_DOUBLE(__tg_sullround)(long do
 #undef __sc_sllround
 #undef __sc_slround
 
-#if defined(__cplusplus)
-  #define slround(__x)        __tg_slround(__x)
-  #define sllround(__x)       __tg_sllround(__x)
-  #define sulround(__x)       __tg_sulround(__x)
-  #define sullround(__x)      __tg_sullround(__x)
-#elif defined(__clang__)
-  #define slround(__x)        __tg_slround(__tg_promote1((__x))(__x))
-  #define sllround(__x)       __tg_sllround(__tg_promote1((__x))(__x))
-  #define sulround(__x)       __tg_sulround(__tg_promote1((__x))(__x))
-  #define sullround(__x)      __tg_sullround(__tg_promote1((__x))(__x))
-#else
-  #define slround(__x)        __TGMATH_REAL(__x, __tg_slround)
-  #define sllround(__x)       __TGMATH_REAL(__x, __tg_sllround)
-  #define sulround(__x)       __TGMATH_REAL(__x, __tg_sulround)
-  #define sullround(__x)      __TGMATH_REAL(__x, __tg_sullround)
-#endif
-
 // MARK: Float comparisons
 __SC_TG_DECL(bool) __SC_TG_FLOAT(__tg_fequal)(float a, float b) { float delta = a - b; return (delta <= FLT_EPSILON && delta >= -FLT_EPSILON); }
 __SC_TG_DECL(bool) __SC_TG_DOUBLE(__tg_fequal)(double a, double b) { double delta = a - b; return (delta <= DBL_EPSILON && delta >= -DBL_EPSILON); }
@@ -194,36 +167,86 @@ __SC_TG_DECL(bool) __SC_TG_FLOAT(__tg_fnonzero)(float f) { return !__SC_TG_FLOAT
 __SC_TG_DECL(bool) __SC_TG_DOUBLE(__tg_fnonzero)(double f) { return !__SC_TG_DOUBLE(__tg_fiszero)(f); }
 __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !__SC_TG_LONG_DOUBLE(__tg_fiszero)(f); }
 
+#undef __SC_TG_LONG_DOUBLE
+#undef __SC_TG_DOUBLE
+#undef __SC_TG_FLOAT
+#undef __SC_TG_DECL
+
+// We have to include tgmath after defining you function to be able to use
+// math functions directly (for instance, round() must not be expanded as a tgmath macros)
+#if defined(__clang__) || defined(__GNUC__)
+  #include <tgmath.h>
+#endif
+
 #if defined(__cplusplus)
+// Unsigned round
+  #define ulround(__x)        __tg_ulround(__x)
+  #define ullround(__x)       __tg_ullround(__x)
+
+// Saturate round
+  #define slround(__x)        __tg_slround(__x)
+  #define sllround(__x)       __tg_sllround(__x)
+  #define sulround(__x)       __tg_sulround(__x)
+  #define sullround(__x)      __tg_sullround(__x)
+
+// Floating point compare
   #define fiszero(__x)         __tg_fiszero(__x)
   #define fnonzero(__x)        __tg_fnonzero(__x)
   #define fequal(__x, __y)     __tg_fequal(__x, __y)
   #define fnotequal(__x, __y)  __tg_fnotequal(__x, __y)
 #elif defined(__clang__)
-  // Clang tgmath support
+// Unsigned round
+  #define ulround(__x)        __tg_ulround(__tg_promote1((__x))(__x))
+  #define ullround(__x)       __tg_ullround(__tg_promote1((__x))(__x))
+
+// Saturate round
+  #define slround(__x)        __tg_slround(__tg_promote1((__x))(__x))
+  #define sllround(__x)       __tg_sllround(__tg_promote1((__x))(__x))
+  #define sulround(__x)       __tg_sulround(__tg_promote1((__x))(__x))
+  #define sullround(__x)      __tg_sullround(__tg_promote1((__x))(__x))
+
+// Floating point compare
   #define fiszero(__x)         __tg_fiszero(__tg_promote1((__x))(__x))
   #define fnonzero(__x)        __tg_fnonzero(__tg_promote1((__x))(__x))
   #define fequal(__x, __y)     __tg_fequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
   #define fnotequal(__x, __y)  __tg_fnotequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
-#else
-  // GCC tgmath support
+
+#elif defined(__TGMATH_REAL)
+// Unsigned round
+  #define ulround(__x)        __TGMATH_REAL(__x, __tg_ulround)
+  #define ullround(__x)       __TGMATH_REAL(__x, __tg_ullround)
+
+// Saturate round
+  #define slround(__x)        __TGMATH_REAL(__x, __tg_slround)
+  #define sllround(__x)       __TGMATH_REAL(__x, __tg_sllround)
+  #define sulround(__x)       __TGMATH_REAL(__x, __tg_sulround)
+  #define sullround(__x)      __TGMATH_REAL(__x, __tg_sullround)
+
+// Floating point compare
   #define fiszero(__x)        __TGMATH_REAL(__x, __tg_fiszero)
   #define fnonzero(__x)       __TGMATH_REAL(__x, __tg_fnonzero)
   #define fequal(__x, __y)    __TGMATH_REAL_2(__x, __y, __tg_fequal)
   #define fnotequal(__x, __y) __TGMATH_REAL_2(__x, __y, __tg_fnotequal)
-#endif // clang/gcc
 
-#if defined(__tg_promote1)
-  // must match tgmath.h declaration.
-  #define round(__x) __tg_round(__tg_promote1((__x))(__x))
-#elif defined(__TGMATH_REAL)
-  #define round(x) __TGMATH_REAL(x, round)
+#elif defined(__TGMATH_UNARY_REAL_ONLY)
+// Unsigned round
+  #define ulround(__x)        __TGMATH_UNARY_REAL_ONLY(__x, __tg_ulround)
+  #define ullround(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_ullround)
+
+// Saturate round
+  #define slround(__x)        __TGMATH_UNARY_REAL_ONLY(__x, __tg_slround)
+  #define sllround(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_sllround)
+  #define sulround(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_sulround)
+  #define sullround(__x)      __TGMATH_UNARY_REAL_ONLY(__x, __tg_sullround)
+
+// Floating point compare
+  #define fiszero(__x)        __TGMATH_UNARY_REAL_ONLY(__x, __tg_fiszero)
+  #define fnonzero(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_fnonzero)
+  #define fequal(__x, __y)    __TGMATH_BINARY_REAL_ONLY(__x, __y, __tg_fequal)
+  #define fnotequal(__x, __y) __TGMATH_BINARY_REAL_ONLY(__x, __y, __tg_fnotequal)
+#else
+  #error tgmath implmentation not supported
 #endif
-
-#undef __SC_TG_LONG_DOUBLE
-#undef __SC_TG_DOUBLE
-#undef __SC_TG_FLOAT
-#undef __SC_TG_DECL
 
 // MARK: bit maths
 #if defined(_MSC_VER)

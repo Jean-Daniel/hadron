@@ -15,6 +15,8 @@
 
 #include "wbc/core.h" // must be before all others
 
+#include "wbc/math.h" // must be include in second
+
 #ifdef __COREFOUNDATION__
   #include "wbc/cfutils.h"
 #endif
@@ -29,7 +31,6 @@
 #endif
 
 #include "wbc/link.h"
-#include "wbc/math.h"
 #include "wbc/unix.h"
 #include "wbc/assert.h"
 #include "wbc/profile.h"
