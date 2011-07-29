@@ -174,81 +174,42 @@ __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !_
 
 // We have to include tgmath after defining you function to be able to use
 // math functions directly (for instance, round() must not be expanded as a tgmath macros)
-#if defined(__clang__) || defined(__GNUC__)
+#if !defined(__cplusplus)
   #include <tgmath.h>
+#else
+  #include <cmath>
 #endif
 
 #if defined(__cplusplus)
-// Unsigned round
-  #define ulround(__x)        __tg_ulround(__x)
-  #define ullround(__x)       __tg_ullround(__x)
-
-// Saturate round
-  #define slround(__x)        __tg_slround(__x)
-  #define sllround(__x)       __tg_sllround(__x)
-  #define sulround(__x)       __tg_sulround(__x)
-  #define sullround(__x)      __tg_sullround(__x)
-
-// Floating point compare
-  #define fiszero(__x)         __tg_fiszero(__x)
-  #define fnonzero(__x)        __tg_fnonzero(__x)
-  #define fequal(__x, __y)     __tg_fequal(__x, __y)
-  #define fnotequal(__x, __y)  __tg_fnotequal(__x, __y)
+  #define wb_tg_unary_fct(__x, fct)        fct(__x)
+  #define wb_tg_binary_fct(__x, __y, fct)  fct(__x, __y)
 #elif defined(__clang__)
-// Unsigned round
-  #define ulround(__x)        __tg_ulround(__tg_promote1((__x))(__x))
-  #define ullround(__x)       __tg_ullround(__tg_promote1((__x))(__x))
-
-// Saturate round
-  #define slround(__x)        __tg_slround(__tg_promote1((__x))(__x))
-  #define sllround(__x)       __tg_sllround(__tg_promote1((__x))(__x))
-  #define sulround(__x)       __tg_sulround(__tg_promote1((__x))(__x))
-  #define sullround(__x)      __tg_sullround(__tg_promote1((__x))(__x))
-
-// Floating point compare
-  #define fiszero(__x)         __tg_fiszero(__tg_promote1((__x))(__x))
-  #define fnonzero(__x)        __tg_fnonzero(__tg_promote1((__x))(__x))
-  #define fequal(__x, __y)     __tg_fequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
-  #define fnotequal(__x, __y)  __tg_fnotequal(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
-
+  #define wb_tg_unary_fct(__x, fct)        fct(__tg_promote1((__x))(__x))
+  #define wb_tg_binary_fct(__x, __y, fct)  fct(__tg_promote2((__x), (__y))(__x), __tg_promote2((__x), (__y))(__y))
 #elif defined(__TGMATH_REAL)
-// Unsigned round
-  #define ulround(__x)        __TGMATH_REAL(__x, __tg_ulround)
-  #define ullround(__x)       __TGMATH_REAL(__x, __tg_ullround)
-
-// Saturate round
-  #define slround(__x)        __TGMATH_REAL(__x, __tg_slround)
-  #define sllround(__x)       __TGMATH_REAL(__x, __tg_sllround)
-  #define sulround(__x)       __TGMATH_REAL(__x, __tg_sulround)
-  #define sullround(__x)      __TGMATH_REAL(__x, __tg_sullround)
-
-// Floating point compare
-  #define fiszero(__x)        __TGMATH_REAL(__x, __tg_fiszero)
-  #define fnonzero(__x)       __TGMATH_REAL(__x, __tg_fnonzero)
-  #define fequal(__x, __y)    __TGMATH_REAL_2(__x, __y, __tg_fequal)
-  #define fnotequal(__x, __y) __TGMATH_REAL_2(__x, __y, __tg_fnotequal)
-
+  #define wb_tg_unary_fct(__x, fct)        __TGMATH_REAL(__x, fct)
+  #define wb_tg_binary_fct(__x, __y, fct)  __TGMATH_REAL_2(__x, __y, fct)
 #elif defined(__TGMATH_UNARY_REAL_ONLY)
-// Unsigned round
-  #define ulround(__x)        __TGMATH_UNARY_REAL_ONLY(__x, __tg_ulround)
-  #define ullround(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_ullround)
-
-// Saturate round
-  #define slround(__x)        __TGMATH_UNARY_REAL_ONLY(__x, __tg_slround)
-  #define sllround(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_sllround)
-  #define sulround(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_sulround)
-  #define sullround(__x)      __TGMATH_UNARY_REAL_ONLY(__x, __tg_sullround)
-
-// Floating point compare
-  #define fiszero(__x)        __TGMATH_UNARY_REAL_ONLY(__x, __tg_fiszero)
-  #define fnonzero(__x)       __TGMATH_UNARY_REAL_ONLY(__x, __tg_fnonzero)
-  #define fequal(__x, __y)    __TGMATH_BINARY_REAL_ONLY(__x, __y, __tg_fequal)
-  #define fnotequal(__x, __y) __TGMATH_BINARY_REAL_ONLY(__x, __y, __tg_fnotequal)
+  #define wb_tg_unary_fct(__x, fct)        __TGMATH_UNARY_REAL_ONLY(__x, fct)
+  #define wb_tg_binary_fct(__x, __y, fct)  __TGMATH_BINARY_REAL_ONLY(__x, __y, fct)
 #else
   #error tgmath implmentation not supported
 #endif
 
+// Unsigned round
+#define ulround(__x)        wb_tg_unary_fct(__x, __tg_ulround)
+#define ullround(__x)       wb_tg_unary_fct(__x, __tg_ullround)
 
+// Saturate round
+#define slround(__x)        wb_tg_unary_fct(__x, __tg_slround)
+#define sllround(__x)       wb_tg_unary_fct(__x, __tg_sllround)
+#define sulround(__x)       wb_tg_unary_fct(__x, __tg_sulround)
+#define sullround(__x)      wb_tg_unary_fct(__x, __tg_sullround)
 
+// Floating point compare
+#define fiszero(__x)        wb_tg_unary_fct(__x, __tg_fiszero)
+#define fnonzero(__x)       wb_tg_unary_fct(__x, __tg_fnonzero)
+#define fequal(__x, __y)    wb_tg_binary_fct(__x, __y, __tg_fequal)
+#define fnotequal(__x, __y) wb_tg_binary_fct(__x, __y, __tg_fnotequal)
 
 #endif /* __WBC_MATH_H__ */
