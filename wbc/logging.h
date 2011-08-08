@@ -347,12 +347,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
   asl_vlog(client, msg, level, format, args);
 }
 
-/*!
- @defined WBCTrace
- @abstract Print a string like: '[file:line]: function()'.
- @discussion This Macro does nothing when DEBUG is not defined
- */
-#define WBCTrace() do {} while (0)
+#define WBTrace()  do {} while (0)
 
 #if defined (__OBJC__)
 // MARK: ============= Objective-C =============
@@ -391,7 +386,6 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
  @abstract Print a string like: '+/-[sender selector]'.
  @discussion This Macro does nothing when DEBUG is not defined
  */
-#define WBTrace()  do {} while (0)
 #define WBDTrace() do {} while (0)
 
 #endif /* __OBJC__ */
