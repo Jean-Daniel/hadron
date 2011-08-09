@@ -13,6 +13,14 @@
 #if !defined(__WBC_ASSERT_H__)
 #define __WBC_ASSERT_H__ 1
 
+#if defined(_MSC_VER)
+  #define wb_probable(x)    (x)
+  #define wb_improbable(x)  (x)
+#else
+  #define wb_probable(x)    __builtin_expect((x), 1)
+  #define wb_improbable(x)  __builtin_expect((x), 0)
+#endif
+
 static inline SC_NORETURN
 void _wb_abort(const char *msg, const char *file, uint32_t line) {
 	printf("%s:%u: failed assertion `%s'\n", __FILE__, __LINE__, msg);
@@ -53,7 +61,7 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 #else
   #define WBCAssert(assertion, message) \
   do { \
-    if (__builtin_expect(!(assertion), 0)) { \
+    if (wb_improbable(!(assertion))) { \
       DEBUG_ASSERT_MESSAGE( \
         DEBUG_ASSERT_COMPONENT_NAME_STRING, \
         #assertion, 0, message, __FILE__, __LINE__, 0); \
@@ -98,7 +106,7 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 #if !defined(NS_BLOCK_ASSERTIONS)
 #define WBAssert(condition, desc, args...) \
 do { \
-  if (__builtin_expect(!(condition), 0)) \
+  if (wb_improbable(!(condition))) \
     [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithUTF8String:__func__] \
                                                             file:[NSString stringWithUTF8String:__FILE__ ] \
                                                       lineNumber:__LINE__ \
