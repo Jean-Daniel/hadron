@@ -13,7 +13,9 @@
 #if !defined(__WBC_OBJC_H__)
 #define __WBC_OBJC_H__ 1
 
-#if defined (__OBJC__)
+#if !defined(__OBJC__)
+  #error This File should not be include in non objective-c code.
+#endif
 
 #ifndef NS_UNUSED_IVAR
   #if __has_extension(attribute_objc_ivar_unused)
@@ -72,6 +74,12 @@
     #define NS_METHOD_FAMILY(arg)
   #endif
 #endif
+
+// gracefully degrade
+#if !__has_feature(objc_instancetype)
+  #define instancetype id
+#endif
+
 
 #if !__has_feature(objc_arc)
 /* Objective-C ARC keywords */
@@ -343,7 +351,5 @@ void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder en
 SC_INLINE
 NSInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntegerForKey:key]; }
 #endif
-
-#endif /* __OBJC__ */
 
 #endif /* __WBC_OBJC_H__ */
