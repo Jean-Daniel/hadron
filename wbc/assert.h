@@ -21,7 +21,7 @@
   #define wb_improbable(x)  __builtin_expect((x), 0)
 #endif
 
-static inline SC_NORETURN
+static SC_NORETURN inline
 void _wb_abort(const char *msg, const char *file, uint32_t line) {
 	printf("%s:%u: failed assertion `%s'\n", __FILE__, __LINE__, msg);
 	abort();
