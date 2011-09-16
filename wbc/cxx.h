@@ -56,8 +56,22 @@
 // A macro to disallow the copy constructor and operator= functions
 // This should be used in the private: declarations for a class
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  private: \
+  private:                                 \
     TypeName(const TypeName&) wb_noexcept; \
     void operator=(const TypeName&) wb_noexcept
+
+#if has_cxx_rvalue_references
+  #define DISALLOW_MOVE(TypeName)       \
+    private:                            \
+      TypeName(TypeName&&) wb_noexcept; \
+      void operator=(TypeName&&) wb_noexcept
+#else
+  #define DISALLOW_MOVE(TypeName)
+#endif
+
+#define DISALLOW_COPY_ASSIGN_MOVE(TypeName) \
+  DISALLOW_MOVE(TypeName);                  \
+  DISALLOW_COPY_AND_ASSIGN(TypeName)
+
 
 #endif /* __WBC_CXX_H__ */
