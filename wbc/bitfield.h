@@ -203,7 +203,7 @@ SC_INLINE int popcount64(uint64_t value) { return __builtin_popcountll(value); }
 // returns 0 based index. If value zero, result is undefined.
 SC_INLINE int clz32(uint32_t value) { return __builtin_clz(value); }
 SC_INLINE int clz64(uint64_t value) { return __builtin_clzll(value); }
-// returns 1 based index. If vlaue is 0, returns 0.
+// returns 1 based index. If value is 0, returns 0.
 SC_INLINE int fls32(uint32_t value) { return value ? __builtin_clz(value) + 1 : 0; }
 SC_INLINE int fls64(uint64_t value) { return value ? __builtin_clzll(value) + 1 : 0; }
 
@@ -211,7 +211,7 @@ SC_INLINE int fls64(uint64_t value) { return value ? __builtin_clzll(value) + 1 
 // returns 0 based index. If value zero, result is undefined.
 SC_INLINE int ctz32(uint32_t value) { return __builtin_ctz(value); }
 SC_INLINE int ctz64(uint64_t value) { return __builtin_ctzll(value); }
-// returns 1 based index. If vlaue is 0, returns 0.
+// returns 1 based index. If value is 0, returns 0.
 SC_INLINE int ffs32(uint32_t value) { return __builtin_ffs(value); }
 SC_INLINE int ffs64(uint64_t value) { return __builtin_ffsll(value); }
 
