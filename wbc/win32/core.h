@@ -35,6 +35,10 @@
   #pragma warning(disable:4251)
 
   #define __PRETTY_FUNCTION__ __FUNCSIG__
+
+  #if !defined(__thread)
+    #define __thread declspec(thread)
+  #endif
 #endif
 
 #define NOMINMAX // avoid declaration of min() max() macros which conflicts with c++ functions
