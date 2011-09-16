@@ -75,15 +75,17 @@ __WBNSCFTypeBridge(Locale)
 __WBNSCFTypeBridge(TimeZone)
 __WBNSCFTypeBridge(Calendar)
 
-#undef __WBNSCFTypeBridge
+__WBNSCFTypeBridge(CharacterSet)
+__WBNSCFTypeBridge(MutableCharacterSet)
 
 /* other type:
  - CFReadStreamRef
  - CFWriteStreamRef
  - CFRunLoopTimerRef
- - CFCharacterSetRef
- - CFMutableCharacterSetRef
  */
+
+#undef __WBNSCFTypeBridge
+
 #if __has_feature(objc_arc)
   #define WBCFAutorelease(nstype, cfvalue) WBCFTo##nstype(cfvalue)
 #else
