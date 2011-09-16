@@ -22,7 +22,7 @@ WB_COMPILER_COMPILE_FLAGS = -fcatch-undefined-behavior -ferror-limit=50
 // -Wused-but-marked-unused
 // -Wimplicit-atomic-properties: false positive
 // -Wno-idiomatic-parentheses: assignement used as condition with method starting by -init or with -nextObject.
-WB_COMPILER_WARNING_CFLAGS = -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wmissing-noreturn -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
+WB_COMPILER_WARNING_CFLAGS = -Wimplicit-atomic-properties -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wmissing-noreturn -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
 
 // override GCC specifics flags
 WB_COMPILER_OTHER_CFLAGS =
