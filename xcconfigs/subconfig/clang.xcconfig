@@ -5,10 +5,13 @@
   CLANG = /opt/llvm/nightly/bin/clang
   
   GCC_C_LANGUAGE_STANDARD = c1x
-  CLANG_CPP_LANGUAGE_STANDARD = c++0x
 
+  CLANG_CXX_LANGUAGE_STANDARD = c++0x
+  CLANG_CXX_LIBRARY = libc++
+
+  CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO
   // -Wconversion does not have an useless semantic in clang
-  // GCC_WARN_CONVERSION=YES
+  CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO
 // else
   // GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 // endif
@@ -26,6 +29,4 @@ WB_COMPILER_WARNING_CFLAGS = -Wimplicit-atomic-properties -Wno-idiomatic-parenth
 
 // override GCC specifics flags
 WB_COMPILER_OTHER_CFLAGS =
-WB_COMPILER_OTHER_CPLUSPLUSFLAGS = -stdlib=libc++
-
-WB_COMPILER_OTHER_LDFLAGS = -stdlib=libc++
+WB_COMPILER_OTHER_CPLUSPLUSFLAGS =

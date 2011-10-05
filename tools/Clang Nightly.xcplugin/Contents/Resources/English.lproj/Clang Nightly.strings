@@ -1,4 +1,4 @@
-﻿//
+//
 // Clang Nightly
 // Xcode Compiler Specification
 // English localization
@@ -47,19 +47,19 @@
 "[GCC_C_LANGUAGE_STANDARD]-name" = "C Language Dialect";
 "[GCC_C_LANGUAGE_STANDARD]-description" = "Choose a standard or non-standard C language dialect.
 
-ANSI C: Accept ISO C 1990 and ISO C++, turning off GNU extensions that are incompatible. [-ansi]
+ANSI C: Accept ISO C90 and ISO C++, turning off GNU extensions that are incompatible. [-ansi]
 
 Incompatible GNU extensions include the 'asm', 'inline', and 'typeof' keywords (but not the equivalent __asm__, __inline__, and __typeof__ forms), and the '//' syntax for comments.
 
 This setting also enables trigraphs.
 
-C89: Accept ISO C 1990, but not GNU extensions. [-std=c89]
+C89: Accept ISO C90, but not GNU extensions. [-std=c89]
 
-GNU89: Accept ISO C 1990 and GNU extensions. [-std=gnu89]
+GNU89: Accept ISO C90 and GNU extensions. [-std=gnu89]
 
-C99: Accept ISO C 1999, but not GNU extensions. [-std=c99]
+C99: Accept ISO C99, but not GNU extensions. [-std=c99]
 
-GNU99: Accept ISO C 1999 and GNU extensions. [-std=gnu99]
+GNU99: Accept ISO C99 and GNU extensions. [-std=gnu99]
 
 C1x: Accept ISO C 201x, but not GNU extensions. [-std=c1x]
 
@@ -73,56 +73,66 @@ Please see the full GCC manual for the full definition of all these settings on 
 [GCC_C_LANGUAGE_STANDARD]
 ";
 "[GCC_C_LANGUAGE_STANDARD]-value-[ansi]" = "ANSI C [-ansi]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[ansi]" = "Accept ISO C 1990 and ISO C++, turning off GNU extensions that are incompatible.  [-ansi]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[ansi]" = "Accept ISO C90 and ISO C++, turning off GNU extensions that are incompatible.  [-ansi]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[c89]" = "C89 [-std=c89]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[c89]" = "Accept ISO C 1990, but not GNU extensions.  [-std=c89]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[c89]" = "Accept ISO C90, but not GNU extensions.  [-std=c89]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[gnu89]" = "GNU89 [-std=gnu89]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[gnu89]" = "Accept ISO C 1990 and GNU extensions.  [-std=gnu89]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[gnu89]" = "Accept ISO C90 and GNU extensions.  [-std=gnu89]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[c99]" = "C99 [-std=c99]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[c99]" = "Accept ISO C 1999, but not GNU extensions.  [-std=c99]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[c99]" = "Accept ISO C99, but not GNU extensions.  [-std=c99]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[gnu99]" = "GNU99 [-std=gnu99]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[gnu99]" = "Accept ISO C 1999 and GNU extensions.  [-std=gnu99]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[gnu99]" = "Accept ISO C99 and GNU extensions.  [-std=gnu99]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[c1x]" = "C1x [-std=c1x]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[c1x]" = "Accept ISO C 201x, but not GNU extensions.  [-std=c1x]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[c1x]" = "Accept ISO C1x, but not GNU extensions.  [-std=c1x]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[gnu1x]" = "GNU1x [-std=gnu1x]";
-"[GCC_C_LANGUAGE_STANDARD]-description-[gnu1x]" = "Accept ISO C 201x and GNU extensions.  [-std=gnu1x]";
+"[GCC_C_LANGUAGE_STANDARD]-description-[gnu1x]" = "Accept ISO C1x and GNU extensions.  [-std=gnu1x]";
 "[GCC_C_LANGUAGE_STANDARD]-value-[compiler-default]" = "Compiler Default";
 "[GCC_C_LANGUAGE_STANDARD]-description-[compiler-default]" = "Tells the compiler to use its default C language dialect. This is normally the best choice unless you have specific needs. (Currently equivalent to C99.)";
 
-"[CLANG_CPP_LANGUAGE_STANDARD]-name" = "C++ Language Dialect";
-"[CLANG_CPP_LANGUAGE_STANDARD]-description" = "Choose a standard or non-standard C++ language dialect.
+/* TED IS AWESOME */
 
-ANSI C: Accept ISO C90 and ISO C++, turning off GNU extensions that are incompatible. [-ansi]
+"[CLANG_CXX_LANGUAGE_STANDARD]-name" = "C++ Language Dialect";
+"[CLANG_CXX_LANGUAGE_STANDARD]-description" = "Choose a standard or non-standard C++ language dialect.
 
-This setting also enables trigraphs.
+C++98: Accept ISO C++ 1998 with amendments, but not GNU extensions. [-std=c++98]
 
-C++98: ISO C++ 1998 with amendments. [-std=c++98]
+GNU++98: Accept ISO C++ 1998 with amendments and GNU extensions. [-std=gnu++98]
 
-GNU++98: ISO C++ 1998 with amendments and GNU extensions. [-std=gnu++98]
+C++0x: Accept the upcoming ISO C++ 20xx standard with amendments, but not GNU extensions. [-std=c++0x]
 
-c++0x: Upcoming ISO C++ 200x with amendments. [-std=c++0x]
+GNU++0x: Accept the upcoming ISO C++ 20xx standard with amendments and GNU extensions. [-std=gnu++0x]
 
-GNU++0x: Upcoming ISO C++ 200x with amendments and GNU extensions. [-std=gnu++0x]
+Compiler Default: Tells the compiler to use its default C++ language dialect. This is normally the best choice unless you have specific needs. (Currently equivalent to GNU++98.)
 
-Compiler Default: Tells the compiler to use its default C++ language dialect. This is normally the best choice unless you have specific needs.
-
-Please see the full Clang manual for the full definition of all these settings on the C dialect:
-<http://clang.llvm.org/docs/UsersManual.html#c>
-
-[CLANG_CPP_LANGUAGE_STANDARD]
+[CLANG_CXX_LANGUAGE_STANDARD]
 ";
-"[CLANG_CPP_LANGUAGE_STANDARD]-value-[ansi]" = "ANSI C [-ansi]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-description-[ansi]" = "Accept ISO C90 and ISO C++, turning off GNU extensions that are incompatible.  [-ansi]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-value-[c++98]" = "C++98 [-std=c++98]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-description-[c++98]" = "ISO C++ 1998 with amendments. [-std=c++98]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-value-[gnu++98]" = "GNU++98 [-std=gnu++98]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-description-[gnu++98]" = "ISO C++ 1998 with amendments and GNU extensions. [-std=gnu++98]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-value-[c++0x]" = "C++0x [-std=c++0x]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-description-[c++0x]" = "Upcoming ISO C++ 200x with amendments. [-std=c++0x]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-value-[gnu++0x]" = "GNU++0x [-std=gnu++0x]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-description-[gnu++0x]" = "Upcoming ISO C++ 200x with amendments and GNU extensions. [-std=gnu++0x]";
-"[CLANG_CPP_LANGUAGE_STANDARD]-value-[compiler-default]" = "Compiler Default";
-"[CLANG_CPP_LANGUAGE_STANDARD]-description-[compiler-default]" = "Tells the compiler to use its default C language dialect. This is normally the best choice unless you have specific needs.";
+
+"[CLANG_CXX_LANGUAGE_STANDARD]-value-[c++98]" = "C++98 [-std=c++98]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-description-[c++98]" = "Accept ISO C++ 1998 with amendments, but not GNU extensions. [-std=c++98]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-value-[gnu++98]" = "GNU++98 [-std=gnu++98]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-description-[gnu++98]" = "Accept ISO C++ 1998 with amendments and GNU extensions. [-std=gnu++98]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-value-[c++0x]" = "C++0x [-std=c++0x]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-description-[c++0x]" = "Accept the upcoming ISO C++ 200x standard with amendments, but not GNU extensions. [-std=c++0x]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-value-[gnu++0x]" = "GNU++0x [-std=gnu++0x]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-description-[gnu++0x]" = "Accept the upcoming ISO C++ 200x standard with amendments and GNU extensions. [-std=gnu++0x]";
+"[CLANG_CXX_LANGUAGE_STANDARD]-value-[compiler-default]" = "Compiler Default";
+"[CLANG_CXX_LANGUAGE_STANDARD]-description-[compiler-default]" = "Tells the compiler to use its default C++ language dialect. This is normally the best choice unless you have specific needs. (Currently equivalent to GNUC++98.)";
+
+"[CLANG_CXX_LIBRARY]-name" = "C++ Standard Library";
+"[CLANG_CXX_LIBRARY]-description" = "Choose a version of the C++ standard library to use.
+
+libstdc++: traditional C++ standard library that works with GCC and the LLVM Compiler (default).
+libc++: highly optimized C++ standard library that works only with the LLVM Compiler, and is designed to support new C++'0X features.
+
+[CLANG_CXX_LIBRARY]
+";
+"[CLANG_CXX_LIBRARY]-value-[compiler-default]" = "Compiler Default";
+"[CLANG_CXX_LIBRARY]-description-[compiler-default]" = "Tells the compiler to use its default C++ standard library.  (Currently equivalent to libstdc++)";
+
+"[CLANG_CXX_LIBRARY]-value-[libstdc++]" = "libstdc++ (GNU C++ standard library)";
+"[CLANG_CXX_LIBRARY]-description-[libstdc++]" = "C++ standard library that works with GCC and the LLVM Compiler.";
+"[CLANG_CXX_LIBRARY]-value-[libc++]" = "libc++ (LLVM C++ standard library with C++'0X support)";
+"[CLANG_CXX_LIBRARY]-description-[libc++]" = "New optimized C++ standard library that works only with the LLVM Compiler.";
 
 "[GCC_CHAR_IS_UNSIGNED_CHAR]-name" = "'char' Type Is Unsigned";
 "[GCC_CHAR_IS_UNSIGNED_CHAR]-description" = "Enabling this setting causes 'char' to be unsigned by default, disabling it causes 'char' to be signed by default.  [GCC_CHAR_IS_UNSIGNED_CHAR, -funsigned-char]";
@@ -246,6 +256,16 @@ Enabling increased sharing of PCH files carries some risk: If two targets use th
 "[GCC_TREAT_WARNINGS_AS_ERRORS]-value-[NO]" = "No";
 "[GCC_TREAT_WARNINGS_AS_ERRORS]-value-[YES]" = "Yes";
 
+"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-name" = "Treat Missing Function Prototypes as Errors";
+"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-description" = "Causes warnings about missing function prototypes to be treated as errors.  Only applies to C and Objective-C.  [GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS, -Werror-implicit-function-declaration]";
+"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-value-[NO]" = "No";
+"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-value-[YES]" = "Yes";
+
+"[GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS]-name" = "Treat Incompatible Pointer Type Warnings as Errors";
+"[GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS]-description" = "Enabling this option causes warnings about incompatible pointer types to be treated as errors.  [GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS, -Werror=incompatible-pointer-types]";
+"[GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS]-value-[NO]" = "No";
+"[GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS]-value-[YES]" = "Yes";
+
 "[GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS]-name" = "Missing Fields in Structure Initializers";
 "[GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS]-description" = "Warn if a structure's initializer has some fields missing.  For example, the following code would cause such a warning, because \"x.h\" is implicitly zero:
 
@@ -266,15 +286,15 @@ This option does not warn about designated initializers, so the following modifi
 "[GCC_WARN_ABOUT_MISSING_PROTOTYPES]-value-[NO]" = "No";
 "[GCC_WARN_ABOUT_MISSING_PROTOTYPES]-value-[YES]" = "Yes";
 
-"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-name" = "Treat Missing Function Prototypes as Errors";
-"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-description" = "Causes warnings about missing function prototypes to be treated as errors.  Only applies to C and Objective-C.  [GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS, -Werror-implicit-function-declaration]";
-"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-value-[NO]" = "No";
-"[GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS]-value-[YES]" = "Yes";
-
 "[GCC_WARN_ABOUT_RETURN_TYPE]-name" = "Mismatched Return Type";
 "[GCC_WARN_ABOUT_RETURN_TYPE]-description" = "Causes warnings to be emitted when a function with a defined return type (not void) contains a return statement without a return-value.  Also emits a warning when a function is defined without specifying a return type.  [GCC_WARN_ABOUT_RETURN_TYPE, -Wreturn-type]";
 "[GCC_WARN_ABOUT_RETURN_TYPE]-value-[NO]" = "No";
 "[GCC_WARN_ABOUT_RETURN_TYPE]-value-[YES]" = "Yes";
+
+"[CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES]-name" = "Implicit Atomic Objective-C Properties";
+"[CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES]-description" = "Warn about @property declarations that are implicitly atomic.";
+"[CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES]-value-[NO]" = "No";
+"[CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES]-value-[YES]" = "Yes";
 
 "[GCC_WARN_NON_VIRTUAL_DESTRUCTOR]-name" = "Nonvirtual Destructor";
 "[GCC_WARN_NON_VIRTUAL_DESTRUCTOR]-description" = "Warn when a class declares an nonvirtual destructor that should probably be virtual, because it looks like the class will be used polymorphically.  [GCC_WARN_NON_VIRTUAL_DESTRUCTOR, -Wnon-virtual-dtor]
@@ -403,18 +423,6 @@ Also warn about constructions where there may be confusion to which if statement
 "[GCC_WARN_SIGN_COMPARE]-value-[NO]" = "No";
 "[GCC_WARN_SIGN_COMPARE]-value-[YES]" = "Yes";
 
-"[GCC_WARN_PROTOTYPE_CONVERSION]-name" = "Prototype Conversion";
-"[GCC_WARN_PROTOTYPE_CONVERSION]-description" = "Warn if a prototype causes a type conversion that is different from what would happen to the same argument in the absence of a prototype.  This includes conversions of fixed point to floating and vice versa, and conversions changing the width or signedness of a fixed point argument except when the same as the default promotion.
-
-Also, warn if a negative integer constant expression is implicitly converted to an unsigned type.  For example, warn about the assignment \"x = -1\" if \"x\" is unsigned.  But do not warn about explicit casts like \"(unsigned) -1\".  [GCC_WARN_PROTOTYPE_CONVERSION, -Wtraditional-conversion]";
-"[GCC_WARN_PROTOTYPE_CONVERSION]-value-[NO]" = "No";
-"[GCC_WARN_PROTOTYPE_CONVERSION]-value-[YES]" = "Yes";
-
-"[GCC_WARN_CONVERSION]-name" = "Implicit Conversion";
-"[GCC_WARN_CONVERSION]-description" = "Warn for implicit conversions that may alter a value.  [GCC_WARN_PROTOTYPE_CONVERSION, -Wconversion]";
-"[GCC_WARN_CONVERSION]-value-[NO]" = "No";
-"[GCC_WARN_CONVERSION]-value-[YES]" = "Yes";
-
 "[GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR]-name" = "Multiple Definition Types for Selector";
 "[GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR]-description" = "Warn if multiple methods of different types for the same selector are found during compilation.  The check is performed on the list of methods in the final stage of compilation.  Additionally, a check is performed for each selector appearing in a \"@selector(...)\"  expression, and a corresponding method for that selector has been found during compilation.  Because these checks scan the method table only at the end of compilation, these warnings are not produced if the final stage of compilation is not reached, for example because an error is found during compilation, or because the -fsyntax-only option is being used. [GCC_WARN_MULTIPLE_DEFINITION_TYPES_FOR_SELECTOR, -Wselector]";
 
@@ -423,6 +431,19 @@ Also, warn if a negative integer constant expression is implicitly converted to 
 
 "[GCC_WARN_UNDECLARED_SELECTOR]-name" = "Undeclared Selector";
 "[GCC_WARN_UNDECLARED_SELECTOR]-description" = "Warn if a \"@selector(...)\" expression referring to an undeclared selector is found.  A selector is considered undeclared if no method with that name has been declared before the \"@selector(...)\" expression, either explicitly in an @interface or @protocol declaration, or implicitly in an @implementation section.  This option always performs its checks as soon as a \"@selector(...)\" expression is found, while -Wselector only performs its checks in the final stage of compilation.  This also enforces the coding style convention that methods and selectors must be declared before being used. [GCC_WARN_UNDECLARED_SELECTOR, -Wundeclared-selector]";
+
+"[CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS]-name" = "Overriding Deprecated Objective-C Methods";
+"[CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS]-description" = "Warn if an Objective-C class either subclasses a deprecated class or overrides a method that has been marked deprecated.";
+
+"[CLANG_WARN_OBJCPP_ARC_ABI]-name" = "Objective-C++ Automatic Reference Counting ABI incompatibilities";
+"[CLANG_WARN_OBJCPP_ARC_ABI]-description" = "When compiling Objective-C++ code that uses Automatic Reference Counting, report code that may cause ABI issues when linking ARC code with traditional manual reference counting code.";
+"[CLANG_WARN_OBJCPP_ARC_ABI]-value-[NO]" = "No";
+"[CLANG_WARN_OBJCPP_ARC_ABI]-value-[YES]" = "Yes";
+
+"[CLANG_WARN_CXX0X_EXTENSIONS]-name" = "Using C++'0x extensions in earlier versions of C++";
+"[CLANG_WARN_CXX0X_EXTENSIONS]-description" = "When compiling C++ code using a language standard older than C++'0X, warn about the use of C++'0X extensions.";
+"[CLANG_WARN_CXX0X_EXTENSIONS]-value-[NO]" = "No";
+"[CLANG_WARN_CXX0X_EXTENSIONS]-value-[YES]" = "Yes";
 
 "[WARNING_CFLAGS]-name" = "Other Warning Flags";
 "[WARNING_CFLAGS]-description" = "Space-separated list of additional warning flags to pass to the compiler. Use this setting if Xcode does not already provide UI for a particular compiler warning flag. [WARNING_CFLAGS]";
@@ -514,6 +535,16 @@ Fastest, smallest: Optimize for size.  This setting enables all 'Faster' optimiz
 "[GCC_STRICT_ALIASING]-value-[NO]" = "No";
 "[GCC_STRICT_ALIASING]-value-[YES]" = "Yes";
 
+"[GCC_INSTRUMENT_PROGRAM_FLOW_ARCS]-name" = "Instrument Program Flow";
+"[GCC_INSTRUMENT_PROGRAM_FLOW_ARCS]-description" = "Activating this setting indicates that code should be added so program flow arcs are instrumented. [GCC_INSTRUMENT_PROGRAM_FLOW_ARCS, -fprofile-arcs]";
+"[GCC_INSTRUMENT_PROGRAM_FLOW_ARCS]-value-[NO]" = "No";
+"[GCC_INSTRUMENT_PROGRAM_FLOW_ARCS]-value-[YES]" = "Yes";
+
+"[GCC_GENERATE_TEST_COVERAGE_FILES]-name" = "Generate Test Coverage Files";
+"[GCC_GENERATE_TEST_COVERAGE_FILES]-description" = "Activating this setting causes a 'notes' file to be produced that the gcov code-coverage utility can use to show program coverage. [GCC_GENERATE_TEST_COVERAGE_FILES, -ftest-coverage]";
+"[GCC_GENERATE_TEST_COVERAGE_FILES]-value-[NO]" = "No";
+"[GCC_GENERATE_TEST_COVERAGE_FILES]-value-[YES]" = "Yes";
+
 "[GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL]-name" = "Incomplete Objective-C Protocols";
 "[GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL]-description" = "Warn if methods required by a protocol are not implemented in the class adopting it.  Only applies to Objective-C. [GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL, -Wno-protocol]";
 "[GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL]-value-[NO]" = "No";
@@ -542,10 +573,13 @@ The restrictions on offsetof may be relaxed in a future version of the C++ stand
 "[GCC_ENABLE_OBJC_GC]-value-[supported]" = "Supported [-fobjc-gc]";
 "[GCC_ENABLE_OBJC_GC]-value-[required]" = "Required [-fobjc-gc-only]";
 
-"[CLANG_ENABLE_OBJC_EXPERIMENTAL]-name" = "Objective-C Non-Fragile ABI v2";
-"[CLANG_ENABLE_OBJC_EXPERIMENTAL]-description" = "EXPERIMENTAL: Enables features related to the Objective-C Non-Fragile ABI v2.0.   These features are to be considered experimental and details may change between now and final release.   The non-fragile ABI features include automatic @synthesis of all @properties that are not marked @dynamic and do not have manually implemented setters and getters.   It also includes the ability to declare instance variables in class extensions and in a class's @implementation.";
-"[CLANG_ENABLE_OBJC_EXPERIMENTAL]-value-[NO]" = "No";
-"[CLANG_ENABLE_OBJC_EXPERIMENTAL]-value-[YES]" = "Yes";
+"[CLANG_ENABLE_OBJC_ARC]-name" = "Objective-C Automatic Reference Counting";
+"[CLANG_ENABLE_OBJC_ARC]-description" = "Compiles reference-counted Objective-C code (when garbage collection is not enabled) to use Automatic Reference Counting.
+Code compiled using automated reference counting is compatible with other code (e.g., frameworks) compiled using either
+manual reference counting (i.e., traditional \"retain\" and \"release\" messages) or automated reference counting.  Using this mode is currently
+incompatible with compiling code to use Objective-C Garbage Collection.";
+"[CLANG_ENABLE_OBJC_ARC]-value-[YES]" = "Use automated reference counting";
+"[CLANG_ENABLE_OBJC_ARC]-value-[NO]" = "Use manual (traditional) reference counting";
 
 "[GCC_ENABLE_EXCEPTIONS]-name" = "Enable Exceptions";
 "[GCC_ENABLE_EXCEPTIONS]-description" = "Enable exception handling.  Generates extra code needed to propagate exceptions.  For some targets, this implies GCC will generate frame unwind information for all functions, which can produce significant data size overhead, although it does not affect execution.  If you do not specify this option, GCC will enable it by default for languages like C++ and Objective-C which normally require exception handling, and disable it for languages like C that do not normally require it.  However, you may need to enable this option when compiling C code that needs to interoperate properly with exception handlers written in other languages.  You may also wish to disable this option if you are compiling older programs that don't use exception handling.  [GCC_ENABLE_EXCEPTIONS, -fexceptions]";
@@ -611,7 +645,45 @@ For more information, see <http://developer.apple.com/documentation/DeveloperToo
 "[GCC_WARN_ABOUT_MISSING_NEWLINE]-value-[NO]" = "No";
 "[GCC_WARN_ABOUT_MISSING_NEWLINE]-value-[YES]" = "Yes";
 
+"[CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION]-name" = "Suspicious Implicit Conversions";
+"[CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION]-description" = "Warn about various implicit conversions that can lose information or are otherwise suspicious.  [CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION, -Wconversion]";
+"[CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION]-value-[NO]" = "No";
+"[CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION]-value-[YES]" = "Yes";
+
+"[CLANG_WARN_IMPLICIT_SIGN_CONVERSION]-name" = "Implicit Signedness Conversions";
+"[CLANG_WARN_IMPLICIT_SIGN_CONVERSION]-description" = "Warn about implicit integer conversions that change the signedness of an integer value.  [CLANG_WARN_IMPLICIT_SIGN_CONVERSION, -Wsign-conversion]";
+"[CLANG_WARN_IMPLICIT_SIGN_CONVERSION]-value-[NO]" = "No";
+"[CLANG_WARN_IMPLICIT_SIGN_CONVERSION]-value-[YES]" = "Yes";
+
 "[GCC_WARN_64_TO_32_BIT_CONVERSION]-name" = "Implicit Conversion to 32 Bit Type";
-"[GCC_WARN_64_TO_32_BIT_CONVERSION]-description" = "Warn if a value is implicitly converted from a 64 bit type to a 32 bit type.  [GCC_WARN_64_TO_32_BIT_CONVERSION, -Wshorten-64-to-32]";
+"[GCC_WARN_64_TO_32_BIT_CONVERSION]-description" = "Warn if a value is implicitly converted from a 64 bit type to a 32 bit type.  This is a subset
+of the warnings provided by -Wconversion.  [GCC_WARN_64_TO_32_BIT_CONVERSION, -Wshorten-64-to-32]";
 "[GCC_WARN_64_TO_32_BIT_CONVERSION]-value-[NO]" = "No";
 "[GCC_WARN_64_TO_32_BIT_CONVERSION]-value-[YES]" = "Yes";
+
+"[CheckerOptions]-category" = "Checkers";
+
+"[CLANG_ANALYZER_DEADCODE_DEADSTORES]-name" = "Dead stores";
+"[CLANG_ANALYZER_DEADCODE_DEADSTORES]-description" = "Check for values stored to variables that are never read afterwards";
+"[CLANG_ANALYZER_DEADCODE_DEADSTORES]-value-[NO]" = "No";
+"[CLANG_ANALYZER_DEADCODE_DEADSTORES]-value-[YES]" = "Yes";
+
+"[CLANG_ANALYZER_DEADCODE_IDEMPOTENT_OPERATIONS]-name" = "Idempotent operations";
+"[CLANG_ANALYZER_DEADCODE_IDEMPOTENT_OPERATIONS]-description" =
+"This checker is a form of dead code analysis, and flags various \"idempotent operations\" (operations that effectively
+  do nothing).  Examples include always assigning a value to variable that
+  never changes the original value, always adding 0 to a variable, etc.";
+
+"[CLANG_ANALYZER_DEADCODE_IDEMPOTENT_OPERATIONS]-value-[NO]" = "No";
+"[CLANG_ANALYZER_DEADCODE_IDEMPOTENT_OPERATIONS]-value-[YES]" = "Yes";
+
+"[CLANG_ANALYZER_SECURITY_BUFFER_OVERFLOW_EXPERIMENTAL]-name" = "*EXPERIMENTAL* Buffer overflows";
+"[CLANG_ANALYZER_SECURITY_BUFFER_OVERFLOW_EXPERIMENTAL]-description" = "Check for potential buffer overflows";
+"[CLANG_ANALYZER_SECURITY_BUFFER_OVERFLOW_EXPERIMENTAL]-value-[NO]" = "No";
+"[CLANG_ANALYZER_SECURITY_BUFFER_OVERFLOW_EXPERIMENTAL]-value-[YES]" = "Yes";
+
+"[CLANG_ANALYZER_OBJC_SELF_INIT]-name" = "Objective-C 'self = [super init]'";
+"[CLANG_ANALYZER_OBJC_SELF_INIT]-description" = "Check that [super init] is properly called within an Objective-C initialization method.";
+"[CLANG_ANALYZER_OBJC_SELF_INIT]-value-[NO]" = "No";
+"[CLANG_ANALYZER_OBJC_SELF_INIT]-value-[YES]" = "Yes";
+
