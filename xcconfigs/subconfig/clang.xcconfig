@@ -30,3 +30,5 @@ WB_COMPILER_WARNING_CFLAGS = -Wimplicit-atomic-properties -Wno-idiomatic-parenth
 // override GCC specifics flags
 WB_COMPILER_OTHER_CFLAGS =
 WB_COMPILER_OTHER_CPLUSPLUSFLAGS =
+
+CLANG_WARN_OBJCPP_ARC_ABI = YES
