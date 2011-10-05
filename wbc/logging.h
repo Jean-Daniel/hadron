@@ -249,9 +249,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 
 #define WBTrace() do { \
   __WBLogPrintLinePrefix(stderr); \
-  char *__file = strdup(__FILE__); \
-  wb_printf("[%s:%li]: %s\n", __file ? basename(__file) : "", (long)__LINE__, __PRETTY_FUNCTION__); \
-  if (__file) free(__file); \
+  wb_printf("[%s:%li]: %s\n", strrchr("/" __FILE__, '/') + 1, (long)__LINE__, __PRETTY_FUNCTION__); \
 } while(0)
 
 // MARK: ============= Objective-C =============
@@ -320,14 +318,12 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
 OBJC_EXPORT const char * class_getName(Class cls);
 SC_INLINE
 void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
-  __WBLogPrintLinePrefix(stderr);
-  char *__file = strdup(filename);
   Class cls = [self class];
-  wb_printf("[%s:%li]: %c[%s %s]\n", __file ? basename(__file) : "", line, self == (id)cls ? '+' : '-', class_getName(cls), sel_getName(_cmd));
-  if (__file) free(__file);
+  __WBLogPrintLinePrefix(stderr);
+  wb_printf("[%s:%li]: %c[%s %s]\n", filename, line, self == (id)cls ? '+' : '-', class_getName(cls), sel_getName(_cmd));
 }
 
-#define WBDTrace() __WBDTrace(self, _cmd, __FILE__, __LINE__)
+#define WBDTrace() __WBDTrace(self, _cmd, strrchr("/" __FILE__, '/') + 1, __LINE__)
 
 // Property Accessor checking
 #define WBProperty(propName)    NSStringFromSelector(@selector(propName))
@@ -408,11 +404,9 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
  @param exception An id representing the Exception to log.
  */
 #define WBLogException(exception) do { \
-  char *__file = strdup(__FILE__); \
   WBLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s (%s:%li): %@", \
         [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
-        __func__, __file ? basename(__file) : "", (long)__LINE__, exception); \
-  if (__file) free(__file); \
+        __func__, strrchr("/" __FILE__, '/') + 1, (long)__LINE__, exception); \
 } while(0)
 
 /*!
@@ -422,11 +416,9 @@ void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list a
  @param exception An id representing the Exception to log.
  */
 #define WBCLogException(exception) do { \
-  char *__file = strdup(__FILE__); \
   WBLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s() [%s:%li]: %@", \
         [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
-        __func__, __file ? basename(__file) : "", (long)__LINE__, exception); \
-  if (__file) free(__file); \
+        __func__, strrchr("/" __FILE__, '/') + 1, (long)__LINE__, exception); \
 } while(0)
 
 #endif
