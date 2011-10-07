@@ -616,6 +616,11 @@ incompatible with compiling code to use Objective-C Garbage Collection.";
 "[GCC_ENABLE_SSE42_EXTENSIONS]-value-[NO]" = "No";
 "[GCC_ENABLE_SSE42_EXTENSIONS]-value-[YES]" = "Yes";
 
+"[CLANG_ENABLE_AVX_EXTENSIONS]-name" = "Enable Intel AVX Extensions";
+"[CLANG_ENABLE_AVX_EXTENSIONS]-description" = "Enables the use of instructions in the AVX extended instruction set.  Only used when targeting Intel architectures. [CLANG_ENABLE_AVX_EXTENSIONS, -mavx]";
+"[CLANG_ENABLE_AVX_EXTENSIONS]-value-[NO]" = "No";
+"[CLANG_ENABLE_AVX_EXTENSIONS]-value-[YES]" = "Yes";
+
 "[GCC_SYMBOLS_PRIVATE_EXTERN]-name" = "Symbols Hidden by Default";
 "[GCC_SYMBOLS_PRIVATE_EXTERN]-description" = "When enabled, all symbols are declared 'private extern' unless explicitly marked to be exported using '__attribute__((visibility(\"default\")))' in code. If not enabled, all symbols are exported unless explicitly marked as 'private extern'.
 
