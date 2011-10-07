@@ -33,11 +33,9 @@ INFOPLIST_OUTPUT_FORMAT = binary
 PLIST_FILE_OUTPUT_FORMAT = binary
 STRINGS_FILE_OUTPUT_ENCODING = binary
 
-
 // MARK: Search Path
 // Is enabled by default for backward compatibility, but shouldn't be.
 ALWAYS_SEARCH_USER_PATHS = NO
-
 
 // MARK: Versioning
 VERSIONING_SYSTEM = apple-generic
@@ -103,8 +101,6 @@ GCC_WARN_ABOUT_MISSING_NEWLINE = YES
 GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES
 
 // WARNING_CFLAGS = #merged
-// -Wsign-conversion
-WB_BASE_WARNING_CFLAGS = -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls
 
 GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES
 GCC_WARN_ABOUT_POINTER_SIGNEDNESS = YES
@@ -124,18 +120,23 @@ GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES
 
 // MARK: Interface Buidler XIB Compiler
 IBC_FLATTEN_NIBS = YES
-// IBC_OTHER_FLAGS = #merged
+// IBC_OTHER_FLAGS =
 
 IBC_ERRORS = YES
 IBC_NOTICES = YES
 IBC_WARNINGS = YES
 
-WB_BASE_COMPILE_FLAGS = -fstack-protector-all
+// Stack protection
+WB_BASE_OTHER_FLAGS = -fstack-protector-all
+WB_BASE_OTHER_CFLAGS =
+WB_BASE_OTHER_CPLUSPLUSFLAGS =
 
-// Stack protection + warning flags that do not apply to c++
-WB_BASE_OTHER_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
+// -Wsign-conversion
+WB_BASE_WARNING_FLAGS = -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls
+WB_BASE_WARNING_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
+WB_BASE_WARNING_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo
 
-// C++ Only Warnings
-WB_BASE_OTHER_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo
-WB_COMPILER_OTHER_CPLUSPLUSFLAGS = -Wstrict-null-sentinel -Wabi -Weffc++
-
+// GCC Specifics
+WB_COMPILER_WARNING_FLAGS =
+WB_COMPILER_WARNING_CFLAGS =
+WB_COMPILER_WARNING_CPLUSPLUSFLAGS = -Wstrict-null-sentinel -Wabi -Weffc++
