@@ -17,7 +17,6 @@
  INITIALIZER(initialize)
  {
  // Initilization Code
- // atexit(finalize); // If destructor needed
  }
  */
 #ifdef _MSC_VER
