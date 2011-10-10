@@ -46,7 +46,7 @@
 #endif
 
 #if defined(__cplusplus)
-  template<typename T> // CF_RETURNS_RETAINED // (buggy with template)
+  template<typename T> CF_RETURNS_RETAINED
   inline T WBCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
 #else
   SC_INLINE CF_RETURNS_RETAINED
@@ -60,9 +60,7 @@ void WBCFRelease(CF_CONSUMED CFTypeRef aValue) { if (aValue) CFRelease(aValue); 
 SC_INLINE
 Boolean WBCFEqual(CFTypeRef obj1, CFTypeRef obj2) {
   if (!obj1) return !obj2;
-  if (obj2)
-    return CFEqual(obj1, obj2);
-  return false;
+  return obj2 ? CFEqual(obj1, obj2) : false;
 }
 
 #endif /* __WBC_CFUTILS_H__ */
