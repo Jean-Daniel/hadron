@@ -1,5 +1,7 @@
 
 
+GCC_C_LANGUAGE_STANDARD = c99
+
 // if (nightly)
   GCC_VERSION = com.apple.compilers.llvm.clang.nightly
   CLANG = /opt/llvm/nightly/bin/clang
@@ -18,10 +20,13 @@
   // GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 // endif
 
+// Usefull thanks to -Wno-idiomatic-parentheses
+GCC_WARN_MISSING_PARENTHESES = NO
+
 // Work even in debug build in clang :-)
 GCC_WARN_UNINITIALIZED_AUTOS = YES
 
-// override GCC specifics flags
+// clang specifics flags
 WB_COMPILER_OTHER_FLAGS = -fcatch-undefined-behavior -ferror-limit=50
 WB_COMPILER_OTHER_CFLAGS =
 WB_COMPILER_OTHER_CPLUSPLUSFLAGS =
