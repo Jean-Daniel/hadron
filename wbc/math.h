@@ -20,6 +20,44 @@
 SC_INLINE
 bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
 
+// Do not rely on macros defined NSObjCRuntime because they are not safe to use with ANSI C (they do not use temp variable)
+#if !defined(__cplusplus)
+  #if !defined(WB_MIN)
+    #define WB_MIN(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
+  #endif
+
+  #if !defined(WB_MAX)
+    #define WB_MAX(A,B) ({ __typeof__(A) __x = (A); __typeof__(B) __y = (B); __x < __y ? __y : __x; })
+  #endif
+
+  #if !defined(WB_ABS)
+    #define WB_ABS(A)   ({ __typeof__(A) __z = (A); __z < 0 ? -__z : __z; })
+  #endif
+#else
+  namespace wbcfg {
+    template<typename T>
+    SC_INLINE T min(T a, T b) { return (a < b) ? a : b; }
+
+    template<typename T>
+    SC_INLINE T max(T a, T b) { return (a > b) ? a : b; }
+
+    template<typename T>
+    SC_INLINE T abs(T a) { return (a < 0) ? -a : a; }
+  }
+
+  #if !defined(WB_MIN)
+    #define WB_MIN(A,B) wbcfg::min(A, B)
+  #endif
+
+  #if !defined(WB_MAX)
+    #define WB_MAX(A,B) wbcfg::max(A, B)
+  #endif
+
+  #if !defined(WB_ABS)
+    #define WB_ABS(A)   wbcfg::abs(A)
+  #endif
+#endif
+
 SC_INLINE
 int32_t WBIntSaturate(double x) {
   return x <= (double)INT32_MIN ? INT32_MIN : (double)INT32_MAX <= x ? (int32_t)INT32_MAX : (int32_t)x;
