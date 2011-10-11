@@ -77,9 +77,8 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 
 #if defined (__OBJC__)
 
-#pragma mark Generic Macros
-
-SC_INLINE __attribute__((__noreturn__))
+// MARK: Generic Macros
+SC_INLINE SC_NORETURN
 void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
   NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
   NSException *except = [NSException exceptionWithName:name reason:wb_autorelease(str) userInfo:userInfo];
@@ -100,7 +99,7 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 //void WBThrowException(NSString *name, NSString *fmt, ...)
 #define WBThrowException(name, fmt, args...) WBThrowExceptionWithInfo(name, nil, fmt, ##args)
 
-#pragma mark Assert
+// MARK: Assert
 // we directly invoke the NSAssert handler so we can pass on the varargs
 // (NSAssert doesn't have a macro we can use that takes varargs)
 #if !defined(NS_BLOCK_ASSERTIONS)
@@ -117,8 +116,8 @@ do { \
 #endif // !defined(NS_BLOCK_ASSERTIONS)
 
 /*!
- @defined WBClusterException
- @abstract   Raise an invalig argument exception.
+ @defined  WBAbstractMethodException
+ @abstract Raise an invalig argument exception.
  */
 #define WBAbstractMethodException()    WBThrowException(NSInvalidArgumentException, \
                                                         @"-%@ only defined for abstract class. Define -[%@ %@]!", \
