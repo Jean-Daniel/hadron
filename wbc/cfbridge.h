@@ -36,13 +36,15 @@ SC_INLINE id WBCFToNSType(CFTypeRef inValue) {
   return (__bridge id)inValue;
 }
 
-#define __WBNSCFTypeBridge(Ty) \
-  SC_INLINE CF##Ty##Ref WBNSToCF##Ty(NS##Ty *inValue) { \
-    return (__bridge CF##Ty##Ref)inValue; \
+#define __WBNSCFTypeBridge2(NSTy, CFTy) \
+  SC_INLINE CF##CFTy##Ref WBNSToCF##CFTy(NS##NSTy *inValue) { \
+    return (__bridge CF##CFTy##Ref)inValue; \
   } \
-  SC_INLINE NS##Ty *WBCFToNS##Ty(CF##Ty##Ref inValue) { \
-    return (__bridge NS##Ty *)inValue; \
-  } \
+  SC_INLINE NS##NSTy *WBCFToNS##NSTy(CF##CFTy##Ref inValue) { \
+    return (__bridge NS##NSTy *)inValue; \
+  }
+
+#define __WBNSCFTypeBridge(Ty) __WBNSCFTypeBridge2(Ty, Ty)
 
 __WBNSCFTypeBridge(URL)
 __WBNSCFTypeBridge(Date)
@@ -78,12 +80,13 @@ __WBNSCFTypeBridge(Calendar)
 __WBNSCFTypeBridge(CharacterSet)
 __WBNSCFTypeBridge(MutableCharacterSet)
 
-/* other type:
- - CFReadStreamRef
- - CFWriteStreamRef
- - CFRunLoopTimerRef
- */
+// Type with ≠ names
+__WBNSCFTypeBridge2(Timer, RunLoopTimer)
 
+__WBNSCFTypeBridge2(InputStream, ReadStream)
+__WBNSCFTypeBridge2(OutputStream, WriteStream)
+
+#undef __WBNSCFTypeBridge2
 #undef __WBNSCFTypeBridge
 
 #if __has_feature(objc_arc)
