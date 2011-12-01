@@ -31,9 +31,10 @@ WB_COMPILER_OTHER_FLAGS = -fcatch-undefined-behavior -ferror-limit=50
 WB_COMPILER_OTHER_CFLAGS =
 WB_COMPILER_OTHER_CPLUSPLUSFLAGS =
 
+// -Wmissing-noreturn
 // -Wunreachable-code
 // -Wused-but-marked-unused
 // -Wno-idiomatic-parentheses: assignement used as condition with method starting by -init or with -nextObject.
-WB_COMPILER_WARNING_FLAGS = -Wimplicit-atomic-properties -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wmissing-noreturn -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
+WB_COMPILER_WARNING_FLAGS = -Wimplicit-atomic-properties -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
 WB_COMPILER_WARNING_CFLAGS =
 WB_COMPILER_WARNING_CPLUSPLUSFLAGS = -Woverloaded-virtual
