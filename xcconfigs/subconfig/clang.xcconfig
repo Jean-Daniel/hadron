@@ -6,9 +6,9 @@ GCC_C_LANGUAGE_STANDARD = c99
   GCC_VERSION = com.apple.compilers.llvm.clang.nightly
   CLANG = /opt/llvm/nightly/bin/clang
   
-  GCC_C_LANGUAGE_STANDARD = c1x
+  GCC_C_LANGUAGE_STANDARD = c11
 
-  CLANG_CXX_LANGUAGE_STANDARD = c++0x
+  CLANG_CXX_LANGUAGE_STANDARD = c++11
   CLANG_CXX_LIBRARY = libc++
 
   CLANG_WARN_OBJCPP_ARC_ABI = YES

@@ -134,8 +134,8 @@
                     gnu89,
                     c99,
                     gnu99,
-                    c1x,
-                    gnu1x,
+                    c11,
+                    gnu11,
                     "compiler-default",
                 );
                 DefaultValue = "compiler-default";
@@ -160,14 +160,14 @@
                 AllowedValues = (
                     "c++98",
                     "gnu++98",
-                    "c++0x",
-                    "gnu++0x",
+                    "c++11",
+                    "gnu++11",
                     "compiler-default",
                 );
                 DefaultValue = "compiler-default";
                 CommandLineArgs = {
-                    "c++0x" = (
-                        "-std=c++0x",
+                    "c++11" = (
+                        "-std=c++11",
                         "-U__STRICT_ANSI__",
                     );
                     "compiler-default" = ();
@@ -908,8 +908,8 @@
                 Type = Boolean;
                 DefaultValue = YES;
                 CommandLineArgs = {
-                    YES = ( "-Wc++0x-extensions", );
-                    NO = ( "-Wno-c++0x-extensions", ) ;
+                    YES = ( "-Wc++11-extensions", );
+                    NO = ( "-Wno-c++11-extensions", ) ;
                 };
                 FileTypes = (
                   "sourcecode.cpp.cpp",
