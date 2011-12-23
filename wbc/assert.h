@@ -14,11 +14,11 @@
 #define __WBC_ASSERT_H__ 1
 
 #if defined(_MSC_VER)
-  #define wb_probable(x)    (x)
-  #define wb_improbable(x)  (x)
+  #define wb_likely(x)    (x)
+  #define wb_unlikely(x)  (x)
 #else
-  #define wb_probable(x)    __builtin_expect((x), 1)
-  #define wb_improbable(x)  __builtin_expect((x), 0)
+  #define wb_likely(x)    __builtin_expect((x), 1)
+  #define wb_unlikely(x)  __builtin_expect((x), 0)
 #endif
 
 static SC_NORETURN inline
