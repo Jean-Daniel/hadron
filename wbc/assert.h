@@ -107,8 +107,6 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
                                                         @"-%@ only defined for abstract class. Define -[%@ %@]!", \
                                                         NSStringFromSelector(_cmd), NSStringFromClass([self class]), NSStringFromSelector(_cmd))
 
-#define wb_abstract __attribute__((noreturn))
-
 #endif /* __OBJC__ */
 
 #endif /* __WBC_ASSERT_H__ */
