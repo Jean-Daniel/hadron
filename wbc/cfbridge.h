@@ -36,13 +36,51 @@ SC_INLINE id WBCFToNSType(CFTypeRef inValue) {
   return (__bridge id)inValue;
 }
 
+/* Generate function using the following pattern:
+
+ static inline
+ CFType WBNSToCFType(NSType inValue) {
+   return (__bridge CFType)inValue;
+ }
+ static inline
+ id WBCFToNSType(CFType inValue) {
+   return (__bridge NSType)inValue;
+ }
+ // And ARC compliant methods:
+ static inline CF_RETURNS_RETAINED CFType WBCFTypeBridgingRetain(NSType X) {
+   return (__bridge_retained CFType)X;
+ }
+ static inline NSType WBCFTypeBridgingRelease(CFType CF_CONSUMED X) {
+   return (__bridge_transfer id)X;
+ }
+ */
+
+#if __has_feature(objc_arc)
+#define __WBNSCFTypeBridging(NSTy, CFTy) \
+  SC_INLINE CF_RETURNS_RETAINED CF##CFTy##Ref WBCF##CFTy##BridgingRetain(NS##NSTy *X) { \
+    return (__bridge_retained CF##CFTy##Ref)X; \
+  } \
+  SC_INLINE NS##NSTy *WBCF##CFTy##BridgingRelease(CF##CFTy##Ref CF_CONSUMED X) { \
+    return (__bridge_transfer NS##NSTy *)X; \
+  }
+#else
+#define __WBNSCFTypeBridging(NSTy, CFTy) \
+  SC_INLINE CF##CFTy##Ref WBCF##CFTy##BridgingRetain(NS##NSTy *X) { \
+    return (CF##CFTy##Ref)X; \
+  } \
+  SC_INLINE NS_RETURNS_RETAINED NS##NSTy *WBCF##CFTy##BridgingRelease(CF##CFTy##Ref CF_CONSUMED X) { \
+    return (NS##NSTy *)X; \
+  }
+#endif
+
 #define __WBNSCFTypeBridge2(NSTy, CFTy) \
   SC_INLINE CF##CFTy##Ref WBNSToCF##CFTy(NS##NSTy *inValue) { \
     return (__bridge CF##CFTy##Ref)inValue; \
   } \
   SC_INLINE NS##NSTy *WBCFToNS##NSTy(CF##CFTy##Ref inValue) { \
     return (__bridge NS##NSTy *)inValue; \
-  }
+  } \
+  __WBNSCFTypeBridging(NSTy, CFTy)
 
 #define __WBNSCFTypeBridge(Ty) __WBNSCFTypeBridge2(Ty, Ty)
 
