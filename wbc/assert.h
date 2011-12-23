@@ -99,22 +99,6 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 //void WBThrowException(NSString *name, NSString *fmt, ...)
 #define WBThrowException(name, fmt, args...) WBThrowExceptionWithInfo(name, nil, fmt, ##args)
 
-// MARK: Assert
-// we directly invoke the NSAssert handler so we can pass on the varargs
-// (NSAssert doesn't have a macro we can use that takes varargs)
-#if !defined(NS_BLOCK_ASSERTIONS)
-#define WBAssert(condition, desc, args...) \
-do { \
-  if (wb_improbable(!(condition))) \
-    [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithUTF8String:__func__] \
-                                                            file:[NSString stringWithUTF8String:__FILE__ ] \
-                                                      lineNumber:__LINE__ \
-                                                     description:desc, ##args]; \
-  } while(0)
-#else // !defined(NS_BLOCK_ASSERTIONS)
-  #define WBAssert(condition, ...) do { } while (0)
-#endif // !defined(NS_BLOCK_ASSERTIONS)
-
 /*!
  @defined  WBAbstractMethodException
  @abstract Raise an invalig argument exception.
