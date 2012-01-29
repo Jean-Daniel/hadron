@@ -77,6 +77,14 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 
 #if defined (__OBJC__)
 
+// Workaround bug in SDK. NSAssert is defined variadic when assertion enabled, and not variadic when disabled.
+#if defined(NS_BLOCK_ASSERTIONS) && defined(NSAssert)
+  #undef NSAssert
+  #define NSAssert(...)
+#else
+
+#endif
+
 // MARK: Generic Macros
 SC_INLINE SC_NORETURN
 void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
