@@ -33,10 +33,10 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 
 #if __has_extension(cxx_static_assert)
   // C++11 static assert supported
-  #define WBStaticAssert(test, msg)  static_assert(test, #msg)
+  #define wb_static_assert(test, msg)  static_assert(test, #msg)
 #elif __has_extension(c_static_assert)
   // C1x _Static_assert supported
-  #define WBStaticAssert(test, msg)  _Static_assert(test, #msg)
+  #define wb_static_assert(test, msg)  _Static_assert(test, #msg)
 #else
   // WBStaticAssert
   // WBStaticAssert is an assert that is meant to fire at Static time if you
@@ -52,7 +52,7 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
   #define _WBStaticAssertSymbolInner(line, msg) WBSTATICASSERT ## line ## __ ## msg
   #define _WBStaticAssertSymbol(line, msg) _WBStaticAssertSymbolInner(line, msg)
 
-  #define WBStaticAssert(test, msg) typedef char _WBStaticAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
+  #define wb_static_assert(test, msg) typedef char _WBStaticAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
 #endif
 
 // Assert
