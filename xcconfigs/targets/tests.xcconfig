@@ -1,0 +1,6 @@
+
+// GCC_DYNAMIC_NO_PIC = $(LD_NO_PIE)
+
+HEADER_SEARCH_PATHS = $(inherited) "$(WBC_PATH)/gtest/include"
+
+// OTHER_LDFLAGS = $(inherited) "$(WBC_PATH)/gtest/libgtest.a" "$(WBC_PATH)/gtest/libgtest_main.a"
