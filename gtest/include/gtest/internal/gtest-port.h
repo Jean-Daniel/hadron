@@ -36,6 +36,12 @@
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 
+#pragma GCC system_header
+
+#ifndef __has_include
+  #define __has_include(x) 0
+#endif
+
 // The user can define the following macros in the build script to
 // control Google Test's behavior.  If the user doesn't define a macro
 // in this list, Google Test will define it.
@@ -79,6 +85,8 @@
 //   GTEST_CREATE_SHARED_LIBRARY
 //                            - Define to 1 when compiling Google Test itself
 //                              as a shared library.
+
+#define GTEST_HAS_RTTI 0
 
 // This header defines the following utilities:
 //
@@ -481,7 +489,7 @@
 #  define BOOST_TR1_DETAIL_CONFIG_HPP_INCLUDED
 #  include <tuple>
 
-# elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40000)
+# elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40000) && !__has_include(<tuple>)
 // GCC 4.0+ implements tr1/tuple in the <tr1/tuple> header.  This does
 // not conform to the TR1 spec, which requires the header to be <tuple>.
 
@@ -503,6 +511,12 @@
 // If the compiler is not GCC 4.0+, we assume the user is using a
 // spec-conforming TR1 implementation.
 #  include <tuple>  // NOLINT
+namespace std { namespace tr1 {
+  using ::std::get;
+  using ::std::tuple;
+  using ::std::tuple_size;
+  using ::std::tuple_element;
+}}
 # endif  // GTEST_USE_OWN_TR1_TUPLE
 
 #endif  // GTEST_HAS_TR1_TUPLE

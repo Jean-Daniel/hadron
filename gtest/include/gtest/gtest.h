@@ -54,6 +54,9 @@
 #include <limits>
 #include <vector>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wweak-vtables"
+
 #include "gtest/internal/gtest-internal.h"
 #include "gtest/internal/gtest-string.h"
 #include "gtest/gtest-death-test.h"
@@ -2151,5 +2154,7 @@ bool StaticAssertTypeEq() {
   (::testing::UnitTest::GetInstance()->Run())
 
 }  // namespace testing
+
+#pragma clang diagnostic pop
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_H_

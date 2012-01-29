@@ -34,6 +34,8 @@
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
 #define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
 
+#pragma GCC system_header
+
 #include <iterator>
 #include <utility>
 #include <vector>

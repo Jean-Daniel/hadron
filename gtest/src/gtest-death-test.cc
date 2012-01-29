@@ -63,7 +63,7 @@
 // prevent a user from accidentally including gtest-internal-inl.h in
 // his code.
 #define GTEST_IMPLEMENTATION_ 1
-#include "src/gtest-internal-inl.h"
+#include "gtest-internal-inl.h"
 #undef GTEST_IMPLEMENTATION_
 
 namespace testing {
@@ -210,6 +210,7 @@ enum DeathTestOutcome { IN_PROGRESS, DIED, LIVED, RETURNED, THREW };
 // message is propagated back to the parent process.  Otherwise, the
 // message is simply printed to stderr.  In either case, the program
 // then exits with status 1.
+static
 void DeathTestAbort(const String& message) {
   // On a POSIX system, this function may be called from a threadsafe-style
   // death test child process, which operates on a very small stack.  Use
@@ -936,17 +937,18 @@ static int ExecDeathTestChildMain(void* child_arg) {
 // GTEST_NO_INLINE_ is required to prevent GCC 4.6 from inlining
 // StackLowerThanAddress into StackGrowsDown, which then doesn't give
 // correct answer.
+#  if GTEST_HAS_CLONE
 bool StackLowerThanAddress(const void* ptr) GTEST_NO_INLINE_;
 bool StackLowerThanAddress(const void* ptr) {
   int dummy;
   return &dummy < ptr;
 }
-
+static
 bool StackGrowsDown() {
   int dummy;
   return StackLowerThanAddress(&dummy);
 }
-
+#endif
 // A threadsafe implementation of fork(2) for threadsafe-style death tests
 // that uses clone(2).  It dies with an error message if anything goes
 // wrong.

@@ -129,7 +129,7 @@
 // prevent a user from accidentally including gtest-internal-inl.h in
 // his code.
 #define GTEST_IMPLEMENTATION_ 1
-#include "src/gtest-internal-inl.h"
+#include "gtest-internal-inl.h"
 #undef GTEST_IMPLEMENTATION_
 
 #if GTEST_OS_WINDOWS
@@ -602,6 +602,7 @@ extern const TypeId kTestTypeIdInGoogleTest = GetTestTypeId();
 // This predicate-formatter checks that 'results' contains a test part
 // failure of the given type and that the failure message contains the
 // given substring.
+static
 AssertionResult HasOneFailure(const char* /* results_expr */,
                               const char* /* type_expr */,
                               const char* /* substr_expr */,
@@ -1469,6 +1470,9 @@ char* CodePointToUtf8(UInt32 code_point, char* str) {
 // uses UTF-16 for wide string encoding. All supported systems
 // with 16 bit wchar_t (Windows, Cygwin, Symbian OS) do use UTF-16.
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunreachable-code"
+
 // Determines if the arguments constitute UTF-16 surrogate pair
 // and thus should be combined into a single Unicode code point
 // using CreateCodePointFromUtf16SurrogatePair.
@@ -1487,6 +1491,8 @@ inline UInt32 CreateCodePointFromUtf16SurrogatePair(wchar_t first,
       // false, but we provide a sensible default in case it is.
       static_cast<UInt32>(first);
 }
+
+#pragma clang diagnostic pop
 
 // Converts a wide string to a narrow string in UTF-8 encoding.
 // The wide string is assumed to have the following encoding:
@@ -2509,8 +2515,8 @@ static const char * TestPartResultTypeToString(TestPartResult::Type type) {
 #else
       return "Failure\n";
 #endif
-    default:
-      return "Unknown result type";
+//    default:
+//      return "Unknown result type";
   }
 }
 
@@ -2570,6 +2576,7 @@ WORD GetColorAttribute(GTestColor color) {
 
 // Returns the ANSI color code for the given color.  COLOR_DEFAULT is
 // an invalid input.
+static
 const char* GetAnsiColorCode(GTestColor color) {
   switch (color) {
     case COLOR_RED:     return "1";
@@ -2617,6 +2624,7 @@ bool ShouldUseColor(bool stdout_is_tty) {
 // cannot simply emit special characters and have the terminal change colors.
 // This routine must actually emit the characters rather than return a string
 // that would be colored when printed, as can be done on Linux.
+static
 void ColoredPrintf(GTestColor color, const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
@@ -2663,6 +2671,7 @@ void ColoredPrintf(GTestColor color, const char* fmt, ...) {
   va_end(args);
 }
 
+static
 void PrintFullTestCommentIfPresent(const TestInfo& test_info) {
   const char* const type_param = test_info.type_param();
   const char* const value_param = test_info.value_param();
@@ -4557,6 +4566,7 @@ bool SkipPrefix(const char* prefix, const char** pstr) {
 // part can be omitted.
 //
 // Returns the value of the flag, or NULL if the parsing failed.
+static
 const char* ParseFlagValue(const char* str,
                            const char* flag,
                            bool def_optional) {
@@ -4595,6 +4605,7 @@ const char* ParseFlagValue(const char* str,
 //
 // On success, stores the value of the flag in *value, and returns
 // true.  On failure, returns false without changing *value.
+static
 bool ParseBoolFlag(const char* str, const char* flag, bool* value) {
   // Gets the value of the flag as a string.
   const char* const value_str = ParseFlagValue(str, flag, true);
@@ -4629,6 +4640,7 @@ bool ParseInt32Flag(const char* str, const char* flag, Int32* value) {
 //
 // On success, stores the value of the flag in *value, and returns
 // true.  On failure, returns false without changing *value.
+static
 bool ParseStringFlag(const char* str, const char* flag, String* value) {
   // Gets the value of the flag as a string.
   const char* const value_str = ParseFlagValue(str, flag, false);
