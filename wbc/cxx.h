@@ -36,16 +36,17 @@
 /* we can't use __has_extension to test for features in code, as only clang support it. */
 
 /* rvalue references */
-#if __has_extension(cxx_rvalue_references) || defined(_MSC_VER)
+#if __has_extension(cxx_rvalue_references)
+  #if __has_include(<mutex>) // make sure this is a c++11 compliant std library
+    #define has_cxx_rvalue_references 1
+  #endif
+#elif defined(_MSC_VER)
   #define has_cxx_rvalue_references 1
 #endif
 
-/* declaration for move, swap, forward, ... */
-#if __has_include(<utility>)
-  #include <utility>
-#endif
-
 #if has_cxx_rvalue_references
+  /* declaration for move, swap, forward, ... */
+  #include <utility>
   #define cxx_move(arg) std::move(arg)
   #define cxx_forward(Ty, arg) std::forward<Ty>(arg)
 #else
