@@ -77,12 +77,39 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 
 #if defined (__OBJC__)
 
+// Workaround bug in NSAssert which ignored varidiacs macros in c++
+#if !defined(__STDC_VERSION__) && !defined(NS_BLOCK_ASSERTIONS) && defined(NSAssert)
+#undef NSAssert
+#define NSAssert(condition, desc, ...) \
+do { \
+  if (!(condition)) { \
+    [[NSAssertionHandler currentHandler] handleFailureInMethod:_cmd \
+          object:self file:[NSString stringWithUTF8String:__FILE__] \
+            lineNumber:__LINE__ description:(desc), ##__VA_ARGS__]; \
+  } \
+} while(0)
+
+#undef NSParameterAssert
+#define NSParameterAssert(condition) NSAssert((condition), @"Invalid parameter not satisfying: %s", #condition)
+
+#undef NSCAssert
+#define NSCAssert(condition, desc, ...) \
+do { \
+  if (!(condition)) { \
+    [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithUTF8String:__PRETTY_FUNCTION__] \
+                                                            file:[NSString stringWithUTF8String:__FILE__] \
+                                                      lineNumber:__LINE__ description:(desc), ##__VA_ARGS__]; \
+  } \
+} while(0)
+
+#undef NSCParameterAssert
+#define NSCParameterAssert(condition) NSCAssert((condition), @"Invalid parameter not satisfying: %s", #condition)
+#endif
+
 // Workaround bug in SDK. NSAssert is defined variadic when assertion enabled, and not variadic when disabled.
-#if defined(NS_BLOCK_ASSERTIONS) && defined(NSAssert)
+#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_7 && defined(NS_BLOCK_ASSERTIONS) && defined(NSAssert)
   #undef NSAssert
   #define NSAssert(...)
-#else
-
 #endif
 
 // MARK: Generic Macros
