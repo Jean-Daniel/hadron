@@ -23,6 +23,31 @@
   #define _GNU_SOURCE 1
 #endif
 
+// MARK: Clang
+#ifndef __has_builtin
+  #define __has_builtin(x) 0
+#endif
+
+#ifndef __has_feature
+  #define __has_feature(x) 0
+#endif
+
+#ifndef __has_extension
+  #define __has_extension(x) __has_feature(x)
+#endif
+
+#ifndef __has_attribute
+  #define __has_attribute(x) 0
+#endif
+
+#ifndef __has_include
+  #define __has_include(x) 0
+#endif
+
+#ifndef __has_include_next
+  #define __has_include_next(x) 0
+#endif
+
 #if defined(__WIN32__) || defined(_WIN32)
   #include "win32\core.h"
 #elif defined(__linux__)
@@ -32,7 +57,11 @@
 #if defined(__APPLE__)
 
 #if defined(__OBJC__)
-  #import <Cocoa/Cocoa.h>
+  #if __has_feature(objc_modules)
+    @import Cocoa
+  #else
+    #import <Cocoa/Cocoa.h>
+  #endif
 #else
   #include <CoreServices/CoreServices.h>
 #endif
@@ -154,30 +183,6 @@
   #endif /* No inline */
 #endif
 
-// MARK: Clang
-#ifndef __has_builtin
-  #define __has_builtin(x) 0
-#endif
-
-#ifndef __has_feature
-  #define __has_feature(x) 0
-#endif
-
-#ifndef __has_extension
-  #define __has_extension(x) __has_feature(x)
-#endif
-
-#ifndef __has_attribute
-  #define __has_attribute(x) 0
-#endif
-
-#ifndef __has_include
-  #define __has_include(x) 0
-#endif
-
-#ifndef __has_include_next
-  #define __has_include_next(x) 0
-#endif
 
 // MARK: -
 // We need a compile time constant for byte order
