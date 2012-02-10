@@ -61,7 +61,7 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 #else
   #define WBCAssert(assertion, message) \
   do { \
-    if (wb_improbable(!(assertion))) { \
+    if (wb_unlikely(!(assertion))) { \
       DEBUG_ASSERT_MESSAGE( \
         DEBUG_ASSERT_COMPONENT_NAME_STRING, \
         #assertion, 0, message, __FILE__, __LINE__, 0); \
