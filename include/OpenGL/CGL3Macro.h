@@ -6,6 +6,10 @@
   #error Can not include both gl.h and CGL3Macro.h simultaneously
 #endif
 
+#ifndef __APPLE__
+  #error CGL3Macro is only supported on Apple plateform.
+#endif
+
 #include <OpenGL/CGLTypes.h>
 #include <OpenGL/CGLContext.h>
 #include <OpenGL/gl3.h>
