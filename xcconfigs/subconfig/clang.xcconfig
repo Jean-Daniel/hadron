@@ -20,11 +20,15 @@ GCC_C_LANGUAGE_STANDARD = c99
   // GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 // endif
 
+CLANG_X86_VECTOR_INSTRUCTIONS[arch=x86_64] = ssse3
+
 // Usefull thanks to -Wno-idiomatic-parentheses
 GCC_WARN_MISSING_PARENTHESES = NO
 
 // Work even in debug build in clang :-)
 GCC_WARN_UNINITIALIZED_AUTOS = YES
+
+// CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES
 
 // clang specifics flags
 WB_COMPILER_OTHER_FLAGS = -fcatch-undefined-behavior -ferror-limit=50

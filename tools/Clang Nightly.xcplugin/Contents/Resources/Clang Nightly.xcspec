@@ -29,6 +29,7 @@
         BuiltinJambaseRuleName = ProcessC;
         ExecPath = "$(CLANG)";
         UseCPlusPlusCompilerDriverWhenBundlizing = Yes;
+//        CommandOutputParser = "XCSimpleBufferedCommandOutputParser";
         CommandOutputParser = "XCClangCommandOutputParser";
         SupportsHeadermaps = Yes;
         DashIFlagAcceptsHeadermaps = Yes;
@@ -51,7 +52,7 @@
             {
                 Name = CLANG;
                 Type = Path;
-                DefaultValue = "$(DEVELOPER_BIN_DIR)/clang";
+                DefaultValue = "clang";
                 Category = Base;
             },
             {
@@ -170,6 +171,10 @@
                         "-std=c++11",
                         "-U__STRICT_ANSI__",
                     );
+                    "gnu++11" = (
+                        "-std=gnu++11",
+                        "-U__STRICT_ANSI__",
+                    );
                     "compiler-default" = ();
                     "<<otherwise>>" = (
                         "-std=$(value)",
@@ -249,7 +254,6 @@
                     "sourcecode.c.objc",
                     "sourcecode.cpp.objcpp",
                 );
-                Condition = "$(GCC_ENABLE_OBJC_GC) == unsupported";
                 Category = Language;
             },
             {
@@ -590,7 +594,9 @@
                     YES = (
                         "-Wmissing-field-initializers",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-missing-field-initializers",
+                    );
                 };
                 Category = Warnings;
             },
@@ -602,7 +608,9 @@
                     YES = (
                         "-Wmissing-prototypes",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-missing-prototypes",
+                    );
                 };
                 Category = Warnings;
             },
@@ -625,8 +633,12 @@
                 Type = Boolean;
                 DefaultValue = NO;
                 CommandLineArgs = {
-		  YES = ( "-Wimplicit-atomic-properties" );
-		  NO = ();
+                    YES = (
+                        "-Wimplicit-atomic-properties"
+                    );
+                    NO = (
+                       "-Wno-implicit-atomic-properties"
+                    );
 		};
 		FileTypes = (
 		    "sourcecode.c.objc",
@@ -642,7 +654,9 @@
                     YES = (
                         "-Wnon-virtual-dtor",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-non-virtual-dtor",
+                    );
                 };
                 FileTypes = (
                     "sourcecode.cpp.cpp",
@@ -658,7 +672,9 @@
                     YES = (
                         "-Woverloaded-virtual",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-overloaded-virtual",
+                    );
                 };
                 FileTypes = (
                     "sourcecode.cpp.cpp",
@@ -667,11 +683,28 @@
                 Category = Warnings;
             },
             {
+		/* The "__" is intentional. */
+		Name = "CLANG_WARN__EXIT_TIME_DESTRUCTORS";
+                Type = Boolean;
+		DefaultValue = NO;
+		CommandLineArgs = {
+		    YES = ("-Wexit-time-destructors");
+		    NO  = ("-Wno-exit-time-destructors");
+		};
+                FileTypes = (
+                    "sourcecode.cpp.cpp",
+                    "sourcecode.cpp.objcpp",
+                );
+                Category = Warnings;
+	    },
+            {
                 Name = "GCC_WARN_TYPECHECK_CALLS_TO_PRINTF";
                 Type = Boolean;
                 DefaultValue = YES;
                 CommandLineArgs = {
-                    YES = ();
+                    YES = (
+                        "-Wformat",
+                    );
                     NO = (
                         "-Wno-format",
                     );
@@ -686,7 +719,9 @@
                     YES = (
                         "-Wmissing-braces",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-missing-braces",
+                    );
                 };
                 Category = Warnings;
             },
@@ -726,7 +761,9 @@
                     YES = (
                         "-Wunused-function",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-unused-function",
+                    );
                 };
                 Category = Warnings;
             },
@@ -738,7 +775,9 @@
                     YES = (
                         "-Wunused-label",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-unused-label",
+                    );
                 };
                 Category = Warnings;
             },
@@ -750,7 +789,9 @@
                     YES = (
                         "-Wuninitialized",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-uninitialized",
+                    );
                 };
                 Category = Warnings;
             },
@@ -762,7 +803,9 @@
                     YES = (
                         "-Wunknown-pragmas",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-unknown-pragmas",
+                    );
                 };
                 Category = Warnings;
             },
@@ -798,7 +841,9 @@
                     YES = (
                         "-Wshadow",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-shadow",
+                    );
                 };
                 Category = Warnings;
             },
@@ -810,7 +855,9 @@
                     YES = (
                         "-Wfour-char-constants",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-four-char-constants",
+                    );
                 };
                 Category = Warnings;
             },
@@ -822,7 +869,9 @@
                     YES = (
                         "-Wsign-compare",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-sign-compare",
+                    );
                 };
                 Category = Warnings;
             },
@@ -834,7 +883,9 @@
                     YES = (
                         "-Wselector",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-selector",
+                    );
                 };
                 FileTypes = (
                     "sourcecode.c.objc",
@@ -850,7 +901,9 @@
                     YES = (
                         "-Wstrict-selector-match",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-strict-selector-match",
+                    );
                 };
                 FileTypes = (
                     "sourcecode.c.objc",
@@ -866,7 +919,9 @@
                     YES = (
                         "-Wundeclared-selector",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-undeclared-selector",
+                    );
                 };
                 FileTypes = (
                     "sourcecode.c.objc",
@@ -882,7 +937,9 @@
                     YES = (
                         "-Wdeprecated-implementations",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-deprecated-implementations",
+                    );
                 };
                 FileTypes = (
                     "sourcecode.c.objc",
@@ -1197,7 +1254,9 @@
                 Type = Boolean;
                 DefaultValue = YES;
                 CommandLineArgs = {
-                    YES = ();
+                    YES = (
+                        "-Wprotocol",
+                    );
                     NO = (
                         "-Wno-protocol",
                     );
@@ -1213,7 +1272,9 @@
                 Type = Boolean;
                 DefaultValue = YES;
                 CommandLineArgs = {
-                    YES = ();
+                    YES = (
+                        "-Wdeprecated-declarations",
+                    );
                     NO = (
                         "-Wno-deprecated-declarations",
                     );
@@ -1229,7 +1290,9 @@
                     "sourcecode.cpp.objcpp",
                 );
                 CommandLineArgs = {
-                    YES = ();
+                    YES = (
+                        "-Winvalid-offsetof",
+                    );
                     NO = (
                         "-Wno-invalid-offsetof",
                     );
@@ -1256,10 +1319,10 @@
                 );
                 CommandLineArgs = {
                     dwarf = (
-                        "-gdwarf-2",
+                        "-g",
                     );
                     "dwarf-with-dsym" = (
-                        "-gdwarf-2",
+                        "-g",
                     );
                     "<<otherwise>>" = ();
                 };
@@ -1268,99 +1331,97 @@
                 CommonOption = NO;
             },
             {
+                /* Old build setting.  Kept around for old project compatibility.  Forwards to CLANG_X86_VECTOR_INSTRUCTIONS. */
                 Name = "GCC_ENABLE_SSE3_EXTENSIONS";
                 Type = Boolean;
                 DefaultValue = NO;
-                CommandLineArgs = {
-                    YES = (
-                        "-msse3",
-                    );
-                    NO = ();
-                };
-                Architectures = (
-                    i386,
-                    "x86_64",
-                );
-                AppearsAfter = "GCC_AUTO_VECTORIZATION";
-                Category = CodeGeneration;
-                DisplayName = "Enable SSE3 Extensions";
-                Description = "Enables the use of instructions in the SSE3 extended instruction set.  Only used when targeting Intel architectures. [GCC_ENABLE_SSE3_EXTENSIONS, -msse3]";
+                CommandLineArgs = { YES = (); NO = (); };
+                Architectures = ( i386, "x86_64", );
             },
             {
+                /* Old build setting.  Kept around for old project compatibility.  Forwards to CLANG_X86_VECTOR_INSTRUCTIONS. */
                 Name = "GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS";
                 Type = Boolean;
                 DefaultValue = NO;
-                CommandLineArgs = {
-                    YES = (
-                        "-mssse3",
-                    );
-                    NO = ();
-                };
-                Architectures = (
-                    i386,
-                    "x86_64",
-                );
-                AppearsAfter = "GCC_ENABLE_SSE3_EXTENSIONS";
-                Category = CodeGeneration;
-                DisplayName = "Enable Supplemental SSE3 Instructions";
-                Description = "Enables the use of instructions in the MMX, SSE, SSE2, and SSE3 extensions of the instruction set.  Only used when targeting Intel architectures. [GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS, -mssse3]";
+                CommandLineArgs = { YES = (); NO = (); };
+                Architectures = ( i386, "x86_64", );
             },
             {
+                /* Old build setting.  Kept around for old project compatibility.  Forwards to CLANG_X86_VECTOR_INSTRUCTIONS. */
                 Name = "GCC_ENABLE_SSE41_EXTENSIONS";
                 Type = Boolean;
                 DefaultValue = NO;
-                CommandLineArgs = {
-                    YES = (
-                        "-msse4.1",
-                    );
-                    NO = ();
-                };
-                Architectures = (
-                    i386,
-                    "x86_64",
-                );
-                AppearsAfter = "GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS";
-                Category = CodeGeneration;
-                DisplayName = "Enable SSE4.1 Extensions";
-                Description = "Enables the use of instructions in the SSE4.1 extended instruction set.  Only used when targeting Intel architectures. [GCC_ENABLE_SSE41_EXTENSIONS, -msse4.1]";
+                CommandLineArgs = { YES = (); NO = (); };
+                Architectures = ( i386, "x86_64", );
             },
             {
+                /* Old build setting.  Kept around for old project compatibility.  Forwards to CLANG_X86_VECTOR_INSTRUCTIONS. */
                 Name = "GCC_ENABLE_SSE42_EXTENSIONS";
                 Type = Boolean;
                 DefaultValue = NO;
-                CommandLineArgs = {
-                    YES = (
-                        "-msse4.2",
-                    );
-                    NO = ();
-                };
-                Architectures = (
-                    i386,
-                    "x86_64",
-                );
-                AppearsAfter = "GCC_ENABLE_SSE41_EXTENSIONS";
-                Category = CodeGeneration;
-                DisplayName = "Enable SSE4.2 Extensions";
-                Description = "Enables the use of instructions in the SSE4.2 extended instruction set.  Only used when targeting Intel architectures. [GCC_ENABLE_SSE42_EXTENSIONS, -msse42]";
+                CommandLineArgs = { YES = (); NO = (); };
+                Architectures = ( i386, "x86_64", );
             },
             {
-                Name = "CLANG_ENABLE_AVX_EXTENSIONS";
-                Type = Boolean;
-                DefaultValue = NO;
+                Name = DEFAULT_SSE_LEVEL_3_YES;
+                Type = String;
+                DefaultValue = "sse3";
+            },
+            {
+                Name = DEFAULT_SSE_LEVEL_3_NO;
+                Type = String;
+                DefaultValue = "default";
+            },
+            {
+                Name = DEFAULT_SSE_LEVEL_3_SUPPLEMENTAL_YES;
+                Type = String;
+                DefaultValue = "ssse3";
+            },
+            {
+                Name = DEFAULT_SSE_LEVEL_3_SUPPLEMENTAL_NO;
+                Type = String;
+                DefaultValue = "$(DEFAULT_SSE_LEVEL_3_$(GCC_ENABLE_SSE3_EXTENSIONS))";
+            },
+            {
+                /* Forwards old build settings to CLANG_X86_VECTOR_INSTRUCTIONS. */
+                Name = DEFAULT_SSE_LEVEL_4_1_YES;
+                Type = String;
+                DefaultValue = "sse4.1";
+            },
+            {
+                /* Forwards old build settings to CLANG_X86_VECTOR_INSTRUCTIONS. */
+                Name = DEFAULT_SSE_LEVEL_4_1_NO;
+                Type = String;
+                DefaultValue = "$(DEFAULT_SSE_LEVEL_3_SUPPLEMENTAL_$(GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS))";
+            },
+            {
+                /* Forwards old build settings to CLANG_X86_VECTOR_INSTRUCTIONS. */
+                Name = DEFAULT_SSE_LEVEL_4_2_YES;
+                Type = String;
+                DefaultValue = "sse4.2";
+            },
+            {
+                /* Forwards old build settings to CLANG_X86_VECTOR_INSTRUCTIONS. */
+                Name = DEFAULT_SSE_LEVEL_4_2_NO;
+                Type = String;
+                DefaultValue = "$(DEFAULT_SSE_LEVEL_4_1_$(GCC_ENABLE_SSE41_EXTENSIONS))";
+            },
+            {
+                Name = "CLANG_X86_VECTOR_INSTRUCTIONS";
+                Type = Enumeration;
+                AllowedValues = (default, "sse3", "ssse3", "sse4.1", "sse4.2", "avx" );
+                DisplayName = "Enable Additional Vector Extensions";
+                DefaultValue = "$(DEFAULT_SSE_LEVEL_4_2_$(GCC_ENABLE_SSE42_EXTENSIONS))";
                 CommandLineArgs = {
-                    YES = (
-                        "-mavx",
-                    );
-                    NO = ();
+                    default = ();
+                    "<<otherwise>>" = ( "-m$(value)" );
                 };
                 Architectures = (
                     i386,
                     "x86_64",
                 );
-                AppearsAfter = "GCC_ENABLE_SSE42_EXTENSIONS";
                 Category = CodeGeneration;
-                DisplayName = "Enable Intel AVX Extensions";
-                Description = "Enables the use of instructions in the AVX extended instruction set. Only used when targeting Intel architectures. [CLANG_ENABLE_AVX_EXTENSIONS, -mavx]";
+                Description = "Enables the use of extended vector instructions.  Only used when targeting Intel architectures. [CLANG_X86_VECTOR_INSTRUCTIONS]";
             },
             {
                 Name = "GCC_SYMBOLS_PRIVATE_EXTERN";
@@ -1420,7 +1481,9 @@
                 Type = Boolean;
                 DefaultValue = YES;
                 CommandLineArgs = {
-                    YES = ();
+                    YES = (
+                        "-Wpointer-sign",
+                    );
                     NO = (
                         "-Wno-pointer-sign",
                     );
@@ -1443,7 +1506,9 @@
                     YES = (
                         "-Wnewline-eof",
                     );
-                    NO = ();
+                    NO = (
+                        "-Wno-newline-eof",
+                    );
                 };
                 AppearsAfter = "GCC_WARN_ABOUT_POINTER_SIGNEDNESS";
                 Category = Warnings;
@@ -1459,7 +1524,9 @@
                   YES = (
                     "-Wconversion",
                   );
-                  NO = ();
+                  NO = (
+                    "-Wno-conversion",
+                  );
                 };
                 CommonOption = NO;
                 Category = Warnings;
@@ -1500,7 +1567,7 @@
             {
                 Name = "GCC_THUMB_SUPPORT";
                 Type = Boolean;
-                DefaultValue = YES;
+                DefaultValue = NO;
                 CommandLineArgs = {
                     YES = (
                         "-mthumb",
@@ -1653,6 +1720,8 @@
         Architectures = (
             i386,
             "x86_64",
+            armv6,
+            armv7,
         );
         "OptionConditionFlavors" = (
             arch,
@@ -1677,6 +1746,8 @@
         Architectures = (
             i386,
             "x86_64",
+            armv6,
+            armv7,
         );
         ExecPath = "$(CLANG)";
         RuleName = "Analyze $(InputFile)";
@@ -1704,8 +1775,13 @@
             {
                 Name = CLANG;
                 Type = Path;
-                DefaultValue = "$(DEVELOPER_BIN_DIR)/clang";
+                DefaultValue = "clang";
                 Category = Base;
+            },
+            {
+                Name = CLANG_ANALYZER_FLAGS;
+                Type = StringList;
+                Category = CheckerOptions;
             },
             {
                 Name = "CLANG_ANALYZER_DEADCODE_DEADSTORES";
@@ -1723,7 +1799,7 @@
     {
                 Name = "CLANG_ANALYZER_DEADCODE_IDEMPOTENT_OPERATIONS";
                 Type = Boolean;
-                DefaultValue = YES;
+                DefaultValue = NO;
                 CommandLineArgs = {
                     YES = ();
                     NO = (
@@ -1731,7 +1807,7 @@
                         "-Xclang", "deadcode.IdempotentOperations"
                     );
                 };
-                Category = CheckerOptions;
+                // Category is hidden.
             },
             {
                Name = "CLANG_ANALYZER_OBJC_SELF_INIT";
