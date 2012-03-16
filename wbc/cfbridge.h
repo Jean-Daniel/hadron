@@ -55,7 +55,7 @@ SC_INLINE id WBCFToNSType(CFTypeRef inValue) {
  }
  */
 
-#if __has_feature(objc_arc)
+#if __has_feature(__objc_arc__)
 #define __WBNSCFTypeBridging(NSTy, CFTy) \
   SC_INLINE CF_RETURNS_RETAINED CF##CFTy##Ref WBCF##CFTy##BridgingRetain(NS##NSTy *X) { \
     return (__bridge_retained CF##CFTy##Ref)X; \
@@ -127,7 +127,7 @@ __WBNSCFTypeBridge2(OutputStream, WriteStream)
 #undef __WBNSCFTypeBridge2
 #undef __WBNSCFTypeBridge
 
-#if __has_feature(objc_arc)
+#if __has_feature(__objc_arc__)
   #define WBCFAutorelease(nstype, cfvalue) WBCFTo##nstype(cfvalue)
 #else
   #define WBCFAutorelease(nstype, cfvalue) [WBCFTo##nstype(cfvalue) autorelease]

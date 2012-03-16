@@ -26,10 +26,6 @@
   #include "wbc/cfbridge.h"
 #endif
 
-#if defined(__cplusplus)
-  #include "wbc/cxx.h"
-#endif
-
 #include "wbc/link.h"
 #include "wbc/unix.h"
 #include "wbc/assert.h"

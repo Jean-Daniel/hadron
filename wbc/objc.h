@@ -17,71 +17,7 @@
   #error This File should not be include in non objective-c code.
 #endif
 
-#ifndef NS_UNUSED_IVAR
-  #if __has_extension(attribute_objc_ivar_unused)
-    #define NS_UNUSED_IVAR __attribute__((unused))
-  #else
-    #define NS_UNUSED_IVAR
-  #endif
-#endif
-
-#ifndef NS_CONSUMED
-  #if __has_attribute(ns_consumed)
-    #define NS_CONSUMED __attribute__((ns_consumed))
-  #else
-    #define NS_CONSUMED
-  #endif
-#endif
-
-#ifndef NS_CONSUMES_SELF
-  #if __has_attribute(ns_consumes_self)
-    #define NS_CONSUMES_SELF __attribute__((ns_consumes_self))
-  #else
-    #define NS_CONSUMES_SELF
-  #endif
-#endif
-
-#ifndef NS_RETURNS_RETAINED
-  #if __has_attribute(ns_returns_retained)
-    #define NS_RETURNS_RETAINED __attribute__((ns_returns_retained))
-  #else
-    #define NS_RETURNS_RETAINED
-  #endif
-#endif
-
-#ifndef NS_RETURNS_NOT_RETAINED
-  #if __has_attribute(ns_returns_not_retained)
-    #define NS_RETURNS_NOT_RETAINED __attribute__((ns_returns_not_retained))
-  #else
-    #define NS_RETURNS_NOT_RETAINED
-  #endif
-#endif
-
-#ifndef NS_RETURNS_AUTORELEASED
-  #if __has_attribute(ns_returns_autoreleased)
-    #define NS_RETURNS_AUTORELEASED __attribute__((ns_returns_autoreleased))
-  #else
-    #define NS_RETURNS_AUTORELEASED
-  #endif
-#endif
-
-/* Method Family */
-#ifndef NS_METHOD_FAMILY
-  /* supported families are: none, alloc, copy, init, mutableCopy, and new. */
-  #if __has_attribute(ns_returns_autoreleased)
-    #define NS_METHOD_FAMILY(family) __attribute__((objc_method_family(family)))
-  #else
-    #define NS_METHOD_FAMILY(arg)
-  #endif
-#endif
-
-// gracefully degrade
-#if !__has_feature(objc_instancetype)
-  #define instancetype id
-#endif
-
-
-#if !__has_feature(objc_arc)
+#if !__has_feature(__objc_arc__)
 /* Objective-C ARC keywords */
   #if !defined(__bridge)
     #define __bridge
@@ -104,13 +40,7 @@
 #endif
 
 /* Hybrid mode */
-#if !__has_feature(objc_arc) || __has_feature(objc_arc_weak)
-  #define wb_weak __weak
-#else
-  #define wb_weak __unsafe_unretained
-#endif
-
-#if __has_feature(objc_arc)
+#if __has_feature(__objc_arc__)
   #define wb_dealloc() do {} while(0)
   #define wb_retain(arg) arg
   #define wb_release(arg) do {} while(0)
@@ -140,7 +70,7 @@
 
 // MARK: Accessors
 /* For safety we retain var before releasing ivar (ivar can contain the last reference on var). */
-#if !__has_feature(objc_arc)
+#if !__has_feature(__objc_arc__)
 #define WBSetterRetainAndDo(ivar, var, statement) do { \
   id __var = var; \
   if (ivar != __var) { \

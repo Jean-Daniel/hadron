@@ -23,30 +23,8 @@
   #define _GNU_SOURCE 1
 #endif
 
-// MARK: Clang
-#ifndef __has_builtin
-  #define __has_builtin(x) 0
-#endif
-
-#ifndef __has_feature
-  #define __has_feature(x) 0
-#endif
-
-#ifndef __has_extension
-  #define __has_extension(x) __has_feature(x)
-#endif
-
-#ifndef __has_attribute
-  #define __has_attribute(x) 0
-#endif
-
-#ifndef __has_include
-  #define __has_include(x) 0
-#endif
-
-#ifndef __has_include_next
-  #define __has_include_next(x) 0
-#endif
+// MARK: Common definitions
+#include "scdefine.h"
 
 #if defined(__WIN32__) || defined(_WIN32)
   #include "win32\core.h"
@@ -57,7 +35,7 @@
 #if defined(__APPLE__)
 
 #if defined(__OBJC__)
-  #if __has_feature(objc_modules)
+  #if __has_feature(__objc_modules__)
     @import Cocoa
   #else
     #import <Cocoa/Cocoa.h>
@@ -95,6 +73,11 @@
 
 #endif // Apple
 
+#if defined(__cplusplus) && __has_feature(__cxx_rvalue_references__)
+  /* declaration for move, swap, forward, ... */
+  #include <utility>
+#endif
+
 /* Compilation on older SDK */
 #if !defined (kCFCoreFoundationVersionNumber10_5)
   #define kCFCoreFoundationVersionNumber10_5 476.00
@@ -107,82 +90,6 @@
 #if !defined (kCFCoreFoundationVersionNumber10_7)
   #define kCFCoreFoundationVersionNumber10_7 635.0
 #endif
-
-// MARK: Attributes
-#if !defined(SC_UNUSED)
-  #if defined(_MSC_VER)
-    #define SC_UNUSED
-  #else
-    #define SC_UNUSED __attribute__((unused))
-  #endif
-#endif
-
-#if !defined(SC_REQUIRES_NIL_TERMINATION)
-  #if defined(_MSC_VER)
-    #define SC_REQUIRES_NIL_TERMINATION
-  #else
-    #if defined(__APPLE_CC__) && (__APPLE_CC__ >= 5549)
-      #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel(0,1)))
-    #else
-      #define SC_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
-    #endif
-  #endif
-#endif
-
-#if !defined(SC_REQUIRED_ARGS)
-  #if defined(_MSC_VER)
-    #define SC_REQUIRED_ARGS(idx, ...)
-  #else
-    #define SC_REQUIRED_ARGS(idx, args...) __attribute__((nonnull(idx, ##args)))
-  #endif
-#endif
-
-// MARK: Visibility
-#if !defined(SC_EXTERN)
-  #if defined(__cplusplus)
-    #define SC_EXTERN extern "C"
-  #else
-    #define SC_EXTERN extern
-  #endif
-#endif
-
-#if !defined(SC_VISIBLE)
-  #define SC_VISIBLE __attribute__((visibility("default")))
-#endif
-
-#if !defined(SC_HIDDEN)
-  #define SC_HIDDEN __attribute__((visibility("hidden")))
-#endif
-
-#define SC_PRIVATE SC_EXTERN SC_HIDDEN
-#define SC_EXPORT SC_EXTERN SC_VISIBLE
-
-// noreturn is defined in <stdnoreturn.h> in C1x
-#if !defined(SC_NORETURN)
-  #if defined(_MSC_VER)
-    #define SC_NORETURN __declspec(noreturn)
-  #else
-    #define SC_NORETURN __attribute__((noreturn))
-  #endif
-#endif
-
-// MARK: Inlining
-#if defined(__cplusplus)
-  #define __inline__ inline
-#endif
-
-#if !defined(SC_INLINE)
-  #if !defined(__NO_INLINE__)
-    #if defined(_MSC_VER)
-      #define SC_INLINE __forceinline static
-    #else
-      #define SC_INLINE __inline__ __attribute__((always_inline)) static
-    #endif
-  #else
-    #define SC_INLINE __inline__ static
-  #endif /* No inline */
-#endif
-
 
 // MARK: -
 // We need a compile time constant for byte order

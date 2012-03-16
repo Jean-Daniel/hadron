@@ -31,10 +31,10 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 }
 #define wb_abort(msg) _wb_abort(msg, __FILE__, __LINE__)
 
-#if __has_extension(cxx_static_assert)
+#if __has_extension(__cxx_static_assert__)
   // C++11 static assert supported
   #define wb_static_assert(test, msg)  static_assert(test, #msg)
-#elif __has_extension(c_static_assert)
+#elif __has_extension(__c_static_assert__)
   // C1x _Static_assert supported
   #define wb_static_assert(test, msg)  _Static_assert(test, #msg)
 #else

@@ -1733,6 +1733,8 @@
         ExecCPlusPlusLinkerPath = "$(CLANG)++";
         SupportsGeneratePreprocessedFile = YES;
         SupportsGenerateAssemblyFile = YES;
+        CommandResultsPostprocessor = "XCClangResultsPostprocessor";
+        SupportsSerializedDiagnostics = YES;
         Options = ();
     },
 

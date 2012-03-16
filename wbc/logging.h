@@ -13,24 +13,6 @@
 #if !defined(__WBC_LOGGING_H__)
 #define __WBC_LOGGING_H__ 1
 
-#if defined(__clang__)
-  #define __cfloglike(i, j) __attribute__((format(CFString, i, j)))
-  #define __nsloglike(i, j) __attribute__((format(NSString, i, j)))
-  #if !defined(__printflike)
-    #define __printflike(i, j) __attribute__((format(printf, i, j)))
-  #endif
-#else
-  #define __cfloglike(i, j)
-  #define __nsloglike(i, j)
-  #if !defined(__printflike)
-    #if defined(_MSC_VER)
-      #define __printflike(fmtarg, firstvararg)
-    #else
-      #define __printflike(fmtarg, firstvararg) __attribute__((__format__ (__printf__, fmtarg, firstvararg)))
-    #endif
-  #endif
-#endif
-
 // MARK: Logging
 #if !defined(__APPLE__)
 
@@ -255,8 +237,8 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 // MARK: ============= Objective-C =============
 #if defined (__OBJC__)
 
-static __attribute__((unused))
-__nsloglike(1, 2)
+static __attribute__((__unused__))
+SC_NS_FORMAT(1, 2)
 CFStringRef __WBNSStringCreateWithFormat(NSString *fmt, ...) {
   va_list args;
   va_start(args, fmt);
@@ -265,7 +247,7 @@ CFStringRef __WBNSStringCreateWithFormat(NSString *fmt, ...) {
   return str;
 }
 
-SC_INLINE __cfloglike(1, 0)
+SC_INLINE SC_CF_FORMAT(1, 0)
 CFStringRef __WBCFStringCreateWithFormatAndArguments(CFStringRef fmt, va_list args) {
   return CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, fmt, args);
 }
@@ -280,7 +262,7 @@ CFStringRef __WBCFStringCreateWithFormatAndArguments(CFStringRef fmt, va_list ar
 } while(0)
 
 SC_INLINE
-__nsloglike(1, 0)
+SC_NS_FORMAT(1, 0)
 void DLogv(NSString *format, va_list args) {
   CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, WBNSToCFString(format), args);
   if (__str) {
@@ -291,7 +273,7 @@ void DLogv(NSString *format, va_list args) {
 }
 
 SC_INLINE
-__nsloglike(4, 0)
+SC_NS_FORMAT(4, 0)
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
   CFStringRef __str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, NULL, WBNSToCFString(format), args);
   if (__str) {
