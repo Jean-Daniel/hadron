@@ -581,6 +581,11 @@ incompatible with compiling code to use Objective-C Garbage Collection.";
 "[CLANG_ENABLE_OBJC_ARC]-value-[YES]" = "Use automated reference counting";
 "[CLANG_ENABLE_OBJC_ARC]-value-[NO]" = "Use manual (traditional) reference counting";
 
+"[CLANG_ENABLE_ADDRESS_SANITIZER]-name" = "Enable Address Sanitizer";
+"[CLANG_ENABLE_ADDRESS_SANITIZER]-description" = "Enable Clang Address Sanitizer. Generate extra code to detect memory errors.";
+"[CLANG_ENABLE_ADDRESS_SANITIZER]-value-[YES]" = "Yes";
+"[CLANG_ENABLE_ADDRESS_SANITIZER]-value-[NO]" = "No";
+
 "[GCC_ENABLE_EXCEPTIONS]-name" = "Enable Exceptions";
 "[GCC_ENABLE_EXCEPTIONS]-description" = "Enable exception handling.  Generates extra code needed to propagate exceptions.  For some targets, this implies GCC will generate frame unwind information for all functions, which can produce significant data size overhead, although it does not affect execution.  If you do not specify this option, GCC will enable it by default for languages like C++ and Objective-C which normally require exception handling, and disable it for languages like C that do not normally require it.  However, you may need to enable this option when compiling C code that needs to interoperate properly with exception handlers written in other languages.  You may also wish to disable this option if you are compiling older programs that don't use exception handling.  [GCC_ENABLE_EXCEPTIONS, -fexceptions]";
 "[GCC_ENABLE_EXCEPTIONS]-value-[NO]" = "No";

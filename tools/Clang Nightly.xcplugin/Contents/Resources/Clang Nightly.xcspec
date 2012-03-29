@@ -257,6 +257,25 @@
                 Category = Language;
             },
             {
+                Name = "CLANG_ENABLE_ADDRESS_SANITIZER";
+                Type = Boolean;
+                DefaultValue = NO;
+                CommandLineArgs = {
+                  YES = (
+                      "-faddress-sanitizer",
+                  );
+                  NO = ();
+                };
+                AdditionalLinkerArgs = {
+                  YES = (
+                      "-faddress-sanitizer",
+		      // libclang_rt.asan_osx.a
+                  );
+                  NO = ();
+                };
+                Category = CodeGeneration;
+            },
+            {
                 Name = "GCC_CHAR_IS_UNSIGNED_CHAR";
                 Type = Boolean;
                 DefaultValue = NO;
