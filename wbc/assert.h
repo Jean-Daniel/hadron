@@ -31,28 +31,18 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 }
 #define wb_abort(msg) _wb_abort(msg, __FILE__, __LINE__)
 
-#if __has_extension(__cxx_static_assert__)
-  // C++11 static assert supported
-  #define wb_static_assert(test, msg)  static_assert(test, #msg)
-#elif __has_extension(__c_static_assert__)
-  // C1x _Static_assert supported
-  #define wb_static_assert(test, msg)  _Static_assert(test, #msg)
-#else
-  // WBStaticAssert
-  // WBStaticAssert is an assert that is meant to fire at Static time if you
-  // want to check things at Static instead of runtime. For example if you
-  // want to check that a wchar is 4 bytes instead of 2 you would use
-  // WBStaticAssert(sizeof(wchar_t) == 4, wchar_t_is_4_bytes_on_OS_X)
-  // Note that the second "arg" is not in quotes, and must be a valid processor
-  // symbol in it's own right (no spaces, punctuation etc).
-
-  // Wrapping this in an #ifndef allows external groups to define their own Static time assert scheme.
+#if __has_extension(__c_static_assert__)
+// We are in C11 mode, or something compatible. static_assert may already be defined.
+  #if !defined(static_assert)
+    #define static_assert(test, msg)  _Static_assert(test, msg)
+  #endif
+#elif !defined(__cplusplus) || !__has_extension(__cxx_static_assert__)
   // We got this technique from here:
   // http://unixjunkie.blogspot.com/2007/10/better-compile-time-asserts_29.html
-  #define _WBStaticAssertSymbolInner(line, msg) WBSTATICASSERT ## line ## __ ## msg
-  #define _WBStaticAssertSymbol(line, msg) _WBStaticAssertSymbolInner(line, msg)
+  #define _SCStaticAssertSymbolInner(line) __SC_STATIC_ASSERT ## line
+  #define _SCStaticAssertSymbol(line) _SCStaticAssertSymbolInner(line)
 
-  #define wb_static_assert(test, msg) typedef char _WBStaticAssertSymbol(__LINE__, msg) [ ((test) ? 1 : -1) ]
+  #define static_assert(test, msg) typedef char _SCStaticAssertSymbol(__LINE__) [ ((test) ? 1 : -1) ]
 #endif
 
 // Assert
