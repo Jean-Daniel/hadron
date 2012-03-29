@@ -221,4 +221,24 @@ SC_INLINE int ffs64(uint64_t value) { return __builtin_ffsll(value); }
 
 #endif
 
+// MARK: Bit Hacks
+/*
+ min/max: r = (x < y) ? x : y; -> r = y ^ ((x ^ y) & -(x < y))
+ Note: -(x < y) is -1 or 0, so the expression is either (y ^ x ^ y), or (y ^ 0).
+
+ (x + y) mod n when 0 <= x < n and 0 <= y < n:
+ t = x + y
+ r = t - (n & -(t >= n))
+
+ round n to next power of 2.
+ n--; // 001xxxxxxxxxxxxx
+ n |= n >> 1;  // 0011xxxxxxxxxxxx
+ n |= n >> 2;  // 001111xxxxxxxxxx
+ n |= n >> 4;  // 0011111111xxxxxx
+ n |= n >> 8;  // …
+ n |= n >> 16; // …
+ n |= n >> 32;  (for 64 bits only)
+ n++; // 0100000000000000
+ */
+
 #endif /* __WBC_BITFIELDS_H__ */
