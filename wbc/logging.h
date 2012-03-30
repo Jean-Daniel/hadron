@@ -219,7 +219,7 @@ while (0)
 } while (0)
 
 SC_INLINE
-__printflike(4, 0)
+SC_FORMAT(4, 0)
 void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
   char *str = NULL;
   if (vasprintf(&str, format, args) >= 0 && str) {
@@ -320,7 +320,7 @@ void __WBDTrace(id self, SEL _cmd, const char *filename, long line) {
 
 #define WBCLog(client, msg, level, format, ...) asl_log(client, msg, level, format, ## __VA_ARGS__)
 SC_INLINE
-__printflike(4, 0)
+SC_FORMAT(4, 0)
 void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_list args) {
   asl_vlog(client, msg, level, format, args);
 }
@@ -340,7 +340,7 @@ void WBCLogv(aslclient client, aslmsg msg, int level, const char *format, va_lis
 #define DLogv(format, args)   do {} while (0)
 
 SC_INLINE
-__nsloglike(4, 0)
+SC_NS_FORMAT(4, 0)
 void WBLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list args) {
   NSString *__str = [[NSString alloc] initWithFormat:format arguments:args];
   if (__str) {

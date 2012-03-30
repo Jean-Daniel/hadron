@@ -114,8 +114,8 @@ static __forceinline int ftruncate(int fd, __int64 size) {
 	return -1;
 }
 
-static __forceinline off_t ftello(FILE *stream) { return _ftelli64(stream); }
-static __forceinline int fseeko(FILE *stream, off_t offset, int whence) { return _fseeki64(stream, offset, whence); }
+static __forceinline __int64 ftello(FILE *stream) { return _ftelli64(stream); }
+static __forceinline int fseeko(FILE *stream, __int64 offset, int whence) { return _fseeki64(stream, offset, whence); }
 
 // May conflict with open and close function defined afterwards (member function for instance)
 // #define open(path, mode, ...) _open(path, mode | O_BINARY, ##__VA_ARGS__)

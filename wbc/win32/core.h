@@ -47,11 +47,6 @@
   #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 #endif
 
-// Important: We expect 64 bit off_t, so we have to define it ourself
-typedef long _off_t; // expected and used by Windows (so we declare it compatible with the Win32 API)
-typedef __int64 off_t;
-#define _OFF_T_DEFINED // prevent redefinition
-
 // MARK: System Include
 // If you wish to build your application for a previous Windows platform,
 // set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
@@ -102,13 +97,5 @@ typedef double CFAbsoluteTime;
 // Missing types
 #include "libc.h"
 #include "stdbool.h"
-
-#define SC_HIDDEN
-
-#if defined(SC_SYMBOLS_EXPORTS)
-  #define SC_VISIBLE __declspec(dllexport)
-#else
-  #define SC_VISIBLE __declspec(dllimport)
-#endif
 
 #endif /* __WBC_WIN32_CORE_H__ */

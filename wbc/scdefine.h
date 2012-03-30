@@ -27,7 +27,7 @@
 #endif
 
 #ifndef __has_include
-  #define __has_include(x) __has_include ## x
+  #define __has_include(x) 0
 #endif
 
 #ifndef __has_include_next
@@ -41,7 +41,7 @@
   #if defined(SC_STATIC_LIBRARY)
       #define SC_VISIBLE
   #else
-    #if defined(SHAREDPREFIX_DLL_EXPORT)
+    #if defined(SC_SYMBOLS_EXPORTS)
       #define SC_VISIBLE __declspec(dllexport)
     #else
       #define SC_VISIBLE __declspec(dllimport)
@@ -88,7 +88,7 @@
 #endif
 
 // MARK: Inline
-#if defined(__cplusplus)
+#if defined(__cplusplus) && !defined(__inline__)
   #define __inline__ inline
 #endif
 

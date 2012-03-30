@@ -46,7 +46,7 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 #endif
 
 // Assert
-#if DEBUG_ASSERT_PRODUCTION_CODE
+#if DEBUG_ASSERT_PRODUCTION_CODE || defined(_WIN32)
   #define WBCAssert(assertion, message) do { } while (0)
 #else
   #define WBCAssert(assertion, message) \
