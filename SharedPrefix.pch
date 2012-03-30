@@ -15,7 +15,11 @@
 
 #include "wbc/core.h" // must be before all others
 
-#include "wbc/math.h" // must be include in second
+#if defined(__cplusplus)
+  #include "wbc/cxx.h" // must come soon
+#endif
+
+#include "wbc/math.h"
 
 #ifdef __COREFOUNDATION__
   #include "wbc/cfutils.h"

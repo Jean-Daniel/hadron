@@ -21,41 +21,67 @@ SC_INLINE
 bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
 
 // Do not rely on macros defined NSObjCRuntime because they are not safe to use with ANSI C (they do not use temp variable)
+#undef MIN
+#undef MAX
+#undef ABS
+
 #if !defined(__cplusplus)
-  #if !defined(WB_MIN)
-    #define WB_MIN(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
-  #endif
-
-  #if !defined(WB_MAX)
-    #define WB_MAX(A,B) ({ __typeof__(A) __x = (A); __typeof__(B) __y = (B); __x < __y ? __y : __x; })
-  #endif
-
-  #if !defined(WB_ABS)
-    #define WB_ABS(A)   ({ __typeof__(A) __z = (A); __z < 0 ? -__z : __z; })
-  #endif
+  #define MIN(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
+  #define MAX(A,B) ({ __typeof__(A) __x = (A); __typeof__(B) __y = (B); __x < __y ? __y : __x; })
+  #define ABS(A)   ({ __typeof__(A) __z = (A); __z < 0 ? -__z : __z; })
 #else
+  #include <cmath>
+  // FIXME: Version number is wrong. should be the first one that introduce std compliant cmath
+  #if defined(__GLIBCXX__) && __GLIBCXX__ <= 20070719
+    #include <tr1/cmath>
+    namespace std {
+      using tr1::fmin;
+      using tr1::fmax;
+    }
+  #endif
+
   namespace wbcfg {
-    template<typename T>
-    SC_INLINE T min(T a, T b) { return (a < b) ? a : b; }
+    // min
+    template <class T> SC_INLINE
+    typename std::enable_if<std::is_floating_point<T>::value, T>::type
+    min(T a, T b) { return std::fmin(a, b); }
 
-    template<typename T>
-    SC_INLINE T max(T a, T b) { return (a > b) ? a : b; }
+    // min/max: r = (x < y) ? x : y; -> r = y ^ ((x ^ y) & -(x < y))
+    // Note: -(x < y) is -1 or 0, so the expression is either (y ^ x ^ y), or (y ^ 0).
+    template <class T> SC_INLINE
+    typename std::enable_if<std::is_integral<T>::value, T>::type
+    min(T a, T b) { return b ^ ((a ^ b) & -(a < b)); }
 
-    template<typename T>
-    SC_INLINE T abs(T a) { return (a < 0) ? -a : a; }
+    template <class T> SC_INLINE
+    typename std::enable_if<!std::is_arithmetic<T>::value, T>::type
+    min(T a, T b) { return (a < b) ? a : b; }
+
+    // max
+    template <class T> SC_INLINE
+    typename std::enable_if<std::is_floating_point<T>::value, T>::type
+    max(T a, T b) { return std::fmax(a, b); }
+
+    template <class T> SC_INLINE
+    typename std::enable_if<std::is_integral<T>::value, T>::type
+    max(T a, T b) { return b ^ ((a ^ b) & -(a > b)); }
+
+    template <class T> SC_INLINE
+    typename std::enable_if<!std::is_arithmetic<T>::value, T>::type
+    max(T a, T b) { return (a > b) ? a : b; }
+
+    // abs
+    template <class T> SC_INLINE
+    typename std::enable_if<std::is_floating_point<T>::value, T>::type
+    abs(T a) { return std::fabs(a); }
+
+    template <class T> SC_INLINE
+    typename std::enable_if<std::is_integral<T>::value, T>::type
+    abs(T a) { T mask = (a >> (sizeof(T) * CHAR_BIT - 1)); return (a + mask) ^ mask; }
   }
 
-  #if !defined(WB_MIN)
-    #define WB_MIN(A,B) wbcfg::min(A, B)
-  #endif
-
-  #if !defined(WB_MAX)
-    #define WB_MAX(A,B) wbcfg::max(A, B)
-  #endif
-
-  #if !defined(WB_ABS)
-    #define WB_ABS(A)   wbcfg::abs(A)
-  #endif
+  #define MIN(A,B) wbcfg::min(A, B)
+  #define MAX(A,B) wbcfg::max(A, B)
+  #define ABS(A)   wbcfg::abs(A)
 #endif
 
 SC_INLINE
@@ -210,8 +236,8 @@ __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !_
 #undef __SC_TG_FLOAT
 #undef __SC_TG_DECL
 
-// We have to include tgmath after defining you function to be able to use
-// math functions directly (for instance, round() must not be expanded as a tgmath macros)
+// We have to include tgmath after defining our functions to be able to use
+// math functions directly (for instance, round() must not be expanded to tgmath equivalent)
 #if !defined(__cplusplus)
   #include <tgmath.h>
 #else
