@@ -84,31 +84,10 @@ bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
   #define ABS(A)   wbcfg::abs(A)
 #endif
 
-SC_INLINE
-int32_t WBIntSaturate(double x) {
-  return x <= (double)INT32_MIN ? INT32_MIN : (double)INT32_MAX <= x ? (int32_t)INT32_MAX : (int32_t)x;
-}
-
-#if !defined(__APPLE__)
-  typedef int32_t Fixed;
-  #define fixed1 ((Fixed) 0x00010000L)
-  #define positiveInfinity ((Fixed)0x7FFFFFFFL)
-  #define negativeInfinity ((Fixed)(-0x7FFFFFFFL - 1))
-#endif
-
 /* Windows math.h lacks a lot of standards functions */
 #if defined(_WIN32)
   #include "win32/math.h"
 #endif
-
-SC_INLINE
-Fixed WBFloatToFixed(double aFloat) { return WBIntSaturate(aFloat * fixed1); }
-SC_INLINE
-double WBFixedToFloat(Fixed aValue) {
-  if (positiveInfinity == aValue) return INFINITY;
-	if (negativeInfinity == aValue) return -INFINITY;
-  return (double)aValue / fixed1;
-}
 
 // 64 bits to 32 bits safe casts
 SC_INLINE
