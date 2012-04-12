@@ -97,9 +97,16 @@ do { \
 #endif
 
 // Workaround bug in SDK. NSAssert is defined variadic when assertion enabled, and not variadic when disabled.
-#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_7 && defined(NS_BLOCK_ASSERTIONS) && defined(NSAssert)
-  #undef NSAssert
-  #define NSAssert(...)
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_7 && defined(NS_BLOCK_ASSERTIONS)
+  #if defined(NSAssert)
+    #undef NSAssert
+    #define NSAssert(...)
+  #endif
+
+  #if defined(NSCAssert)
+    #undef NSCAssert
+    #define NSCAssert(...)
+  #endif
 #endif
 
 // MARK: Generic Macros
