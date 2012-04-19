@@ -21,14 +21,14 @@
  */
 #ifdef _MSC_VER
   /* Initializer */
-  #pragma section(".CRT$XCU",read)
+  #pragma section(".CRT$XCU",long,read)
   #define INITIALIZER(f) \
     static void __cdecl f(void); \
     __declspec(allocate(".CRT$XCU")) void (__cdecl*f##_)(void) = f; \
     static void __cdecl f(void)
 
   /* Terminators */
-  #pragma section(".CRT$XTU",read)
+  #pragma section(".CRT$XTU",long,read)
   #define TERMINATOR(f) \
   static void __cdecl f(void); \
   __declspec(allocate(".CRT$XTU")) void (__cdecl*f##_)(void) = f; \
