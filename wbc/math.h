@@ -13,9 +13,6 @@
 #if !defined(__WBC_MATH_H__)
 #define __WBC_MATH_H__ 1
 
-#if defined(__TGMATH_H)
-  #error tgmath.h must not be included at this point
-#endif
 
 SC_INLINE
 bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
@@ -103,6 +100,10 @@ uint32_t WBUInt64To32(uint64_t value) {
 
 // MARK: -
 // MARK: Math Macros
+#if defined(__TGMATH_H)
+  #error tgmath.h must not be included at this point
+#endif
+
 #if defined(__clang__) && !defined(__cplusplus)
   // Clang use a special attribute to make a function overloadable (like C++),
   #define __SC_TG_DECL(type) static __inline__ type __attribute__((__overloadable__, __always_inline__))

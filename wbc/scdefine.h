@@ -238,7 +238,7 @@
   #define sc_forward(Ty, arg) arg
 #endif
 
-#if __has_extension(cxx_deleted_functions)
+#if __has_extension(__cxx_deleted_functions__)
   #define sc_deleted = delete
 #else
   #define sc_deleted
