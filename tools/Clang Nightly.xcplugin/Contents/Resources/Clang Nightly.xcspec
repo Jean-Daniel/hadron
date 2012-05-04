@@ -1,7 +1,7 @@
 /**
     Clang Nightly build task
 
-    Copyright (c) 2000-2011 Apple Inc.  All rights reserved.
+    Copyright (c) 2000-2012 Apple Inc.  All rights reserved.
 */
 
 (
@@ -72,22 +72,13 @@
                 CommandLinePrefixFlag = "-fmessage-length=";
             },
             {
-                Name = "print_source_range_info";
+                Name = "print_note_include_stack";
                 Type = Boolean;
-                DefaultValue = YES;
-                CommandLineFlag = "-fdiagnostics-print-source-range-info";
-            },
-            {
-                Name = "print_message_category_id";
-                Type = Boolean;
-                DefaultValue = YES;
-                CommandLineFlag = "-fdiagnostics-show-category=id";
-            },
-            {
-                Name = "print_parseable_fixits";
-                Type = Boolean;
-                DefaultValue = YES;
-                CommandLineFlag = "-fdiagnostics-parseable-fixits";
+                DefaultValue = NO;
+                CommandLineArgs = {
+                    YES = ("-fdiagnostics-show-note-include-stack");
+                    NO = ();
+                };
             },
             {
                 Name = "GCC_INPUT_FILETYPE";
@@ -135,8 +126,6 @@
                     gnu89,
                     c99,
                     gnu99,
-                    c11,
-                    gnu11,
                     "compiler-default",
                 );
                 DefaultValue = "compiler-default";
@@ -161,25 +150,28 @@
                 AllowedValues = (
                     "c++98",
                     "gnu++98",
-                    "c++11",
-                    "gnu++11",
+                    "c++0x",
+                    "gnu++0x",
                     "compiler-default",
                 );
                 DefaultValue = "compiler-default";
                 CommandLineArgs = {
-                    "c++11" = (
+                    /* We need these two entries that reference c++0x to
+                       maintain compatibility of old build settings. */
+                    "c++0x" = (
                         "-std=c++11",
                         "-U__STRICT_ANSI__",
                     );
-                    "gnu++11" = (
+                    "gnu++0x" = (
                         "-std=gnu++11",
                         "-U__STRICT_ANSI__",
                     );
                     "compiler-default" = ();
+                    /* Default for everything else. */
                     "<<otherwise>>" = (
                         "-std=$(value)",
                     );
-				};
+                };
                 FileTypes = (
                     "sourcecode.cpp.cpp",
                     "sourcecode.cpp.objcpp",
@@ -232,7 +224,6 @@
                     "sourcecode.c.objc",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Language;
             },
             {
                 Name = "CLANG_ENABLE_OBJC_ARC";
@@ -274,6 +265,27 @@
                   NO = ();
                 };
                 Category = CodeGeneration;
+            },
+            {
+                Name = "CLANG_LINK_OBJC_RUNTIME";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = ();
+                    NO = ();
+                };
+                // This option is passed for linking to inform the compiler
+                // that the ObjC runtime must be linked in (with possible
+                // backwards compatibility libraries linked in).
+                AdditionalLinkerArgs = {
+                  YES = ( "-fobjc-link-runtime" );
+                  NO = ();
+                };
+                FileTypes = (
+                    "sourcecode.c.objc",
+                    "sourcecode.cpp.objcpp",
+                );
+                Category = Language;
             },
             {
                 Name = "GCC_CHAR_IS_UNSIGNED_CHAR";
@@ -648,7 +660,7 @@
                 Category = Warnings;
             },
             {
-		Name = "CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES";
+                Name = "CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES";
                 Type = Boolean;
                 DefaultValue = NO;
                 CommandLineArgs = {
@@ -658,12 +670,12 @@
                     NO = (
                        "-Wno-implicit-atomic-properties"
                     );
-		};
-		FileTypes = (
-		    "sourcecode.c.objc",
-		    "sourcecode.cpp.objcpp",
-                    );
-                Category = Warnings;
+                };
+                FileTypes = (
+                "sourcecode.c.objc",
+                "sourcecode.cpp.objcpp",
+                );
+                Category = WarningsObjC;
             },
             {
                 Name = "GCC_WARN_NON_VIRTUAL_DESTRUCTOR";
@@ -681,7 +693,7 @@
                     "sourcecode.cpp.cpp",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsCXX;
             },
             {
                 Name = "GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS";
@@ -699,23 +711,53 @@
                     "sourcecode.cpp.cpp",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsCXX;
             },
             {
-		/* The "__" is intentional. */
-		Name = "CLANG_WARN__EXIT_TIME_DESTRUCTORS";
+                /* The "__" is intentional. */
+                Name = "CLANG_WARN__EXIT_TIME_DESTRUCTORS";
                 Type = Boolean;
-		DefaultValue = NO;
-		CommandLineArgs = {
-		    YES = ("-Wexit-time-destructors");
-		    NO  = ("-Wno-exit-time-destructors");
-		};
+                DefaultValue = NO;
+                CommandLineArgs = {
+                  YES = ("-Wexit-time-destructors");
+                  NO  = ("-Wno-exit-time-destructors");
+                };
                 FileTypes = (
                     "sourcecode.cpp.cpp",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
-	    },
+                Category = WarningsCXX;
+            },
+            {
+                /* The "__" is intentional. */
+                Name = "CLANG_WARN__ARC_BRIDGE_CAST_NONARC";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                  YES = ();
+                  NO  = ("-Wno-arc-bridge-casts-disallowed-in-nonarc");
+                };
+                FileTypes = (
+                    "sourcecode.c.objc",
+                    "sourcecode.cpp.objcpp",
+                );
+                Category = WarningsObjC;
+            },
+            {
+                /* The "__" is intentional. */
+                Name = "CLANG_WARN__DUPLICATE_METHOD_MATCH";
+                Type = Boolean;
+                DefaultValue = NO;
+                CommandLineArgs = {
+                  YES = ("-Wduplicate-method-match");
+                  NO  = ();
+                };
+                FileTypes = (
+                  "sourcecode.c.objc",
+                  "sourcecode.cpp.objcpp",
+                );
+                Category = WarningsObjC;
+            },
             {
                 Name = "GCC_WARN_TYPECHECK_CALLS_TO_PRINTF";
                 Type = Boolean;
@@ -880,6 +922,27 @@
                 };
                 Category = Warnings;
             },
+            /* This needs to appear in the xcspec before GCC_WARN_64_TO_32_BIT_CONVERSION.
+               This is because -Wno-conversion would turn that warning off.  By having
+               GCC_WARN_64_TO_32_BIT_CONVERSION appear later, it generates a
+               compiler flag later in the command line, and the compiler
+               honors the last flag last.  We need explicit -Wno-XXX for
+               each warning to have it work with -Weverything. */
+            {
+                Name = "CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION";
+                Type = Boolean;
+                DefaultValue = NO;
+                CommandLineArgs = {
+                  YES = (
+                    "-Wconversion",
+                  );
+                  NO = (
+                    "-Wno-conversion",
+                  );
+                };
+                CommonOption = NO;
+                Category = Warnings;
+            },
             {
                 Name = "GCC_WARN_SIGN_COMPARE";
                 Type = Boolean;
@@ -910,9 +973,9 @@
                     "sourcecode.c.objc",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsObjC;
             },
-						{
+            {
                 Name = "GCC_WARN_STRICT_SELECTOR_MATCH";
                 Type = Boolean;
                 DefaultValue = NO;
@@ -928,7 +991,7 @@
                     "sourcecode.c.objc",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsObjC;
             },
             {
                 Name = "GCC_WARN_UNDECLARED_SELECTOR";
@@ -946,7 +1009,7 @@
                     "sourcecode.c.objc",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsObjC;
             },
             {
                 Name = "CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS";
@@ -961,10 +1024,10 @@
                     );
                 };
                 FileTypes = (
-                    "sourcecode.c.objc",
-                    "sourcecode.cpp.objcpp",
+                  "sourcecode.c.objc",
+                  "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsObjC;
             },
             {
                 Name = "CLANG_WARN_OBJCPP_ARC_ABI";
@@ -976,8 +1039,8 @@
                 };
                 FileTypes = (
                   "sourcecode.cpp.objcpp",
-                    );
-                Category = Warnings;
+                );
+                Category = WarningsObjC;
             },
             {
                 Name = "CLANG_WARN_CXX0X_EXTENSIONS";
@@ -989,9 +1052,9 @@
                 };
                 FileTypes = (
                   "sourcecode.cpp.cpp",
-                    "sourcecode.cpp.objcpp",
+                  "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsCXX;
             },
             {
                 Name = "WARNING_CFLAGS";
@@ -1203,7 +1266,7 @@
                 CommandLineArgs = {
                     YES = (
                         "-funroll-loops",
-                );
+                    );
                     NO = ();
                 };
                 Category = CodeGeneration;
@@ -1284,7 +1347,7 @@
                     "sourcecode.c.objc",
                     "sourcecode.cpp.objcpp",
                 );
-                Category = Warnings;
+                Category = WarningsObjC;
             },
             {
                 Name = "GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS";
@@ -1316,7 +1379,7 @@
                         "-Wno-invalid-offsetof",
                     );
                 };
-                Category = Warnings;
+                Category = WarningsCXX;
             },
             {
                 Name = "GCC_MACOSX_VERSION_MIN";
@@ -1536,21 +1599,6 @@
                 Description = "Warn when a source file does not end with a newline.  [GCC_WARN_ABOUT_MISSING_NEWLINE, -Wnewline-eof]";
             },
             {
-                Name = "CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION";
-                Type = Boolean;
-                DefaultValue = NO;
-                CommandLineArgs = {
-                  YES = (
-                    "-Wconversion",
-                  );
-                  NO = (
-                    "-Wno-conversion",
-                  );
-                };
-                CommonOption = NO;
-                Category = Warnings;
-            },
-            {
                 Name = "CLANG_WARN_IMPLICIT_SIGN_CONVERSION";
                 Type = Boolean;
                 DefaultValue = NO;
@@ -1582,21 +1630,6 @@
                 CommonOption = NO;
                 DisplayName = "Implicit Conversion to 32 Bit Type";
                 Description = "Warn if a value is implicitly converted from a 64 bit type to a 32 bit type.  [GCC_WARN_64_TO_32_BIT_CONVERSION, -Wshorten-64-to-32]";
-            },
-            {
-                Name = "GCC_THUMB_SUPPORT";
-                Type = Boolean;
-                DefaultValue = NO;
-                CommandLineArgs = {
-                    YES = (
-                        "-mthumb",
-                    );
-                    NO = ();
-                };
-                Architectures = (
-                    armv6,
-                    armv7,
-                );
             },
             {
                 Name = "GCC_OBJC_ABI_VERSION";
@@ -1692,7 +1725,7 @@
                 AllowedValues = (
                     donothing,
                     precheck,
-        );
+                );
                 DefaultValue = donothing;
                 CommandLineArgs = {
                     donothing = ();
@@ -1700,12 +1733,17 @@
                         "-ccc-arcmt-check",
                     );
                 };
-    },
+            },
             {
                 Name = "CLANG_ARC_MIGRATE_DIR";
                 Type = Path;
                 CommandLineFlag = "-ccc-arcmt-migrate";
                 // Category is hidden.
+            },
+            {
+                 Name = "CLANG_OBJC_MIGRATE_DIR";
+                 Type = Path;
+                 CommandLineFlag = "-ccc-objcmt-migrate";
             },
             {
                 Name = "CLANG_ARC_MIGRATE_EMIT_ERROR";
@@ -1754,7 +1792,6 @@
         SupportsGenerateAssemblyFile = YES;
         CommandResultsPostprocessor = "XCClangResultsPostprocessor";
         SupportsSerializedDiagnostics = YES;
-        Options = ();
     },
 
     {
@@ -1792,6 +1829,9 @@
             "sourcecode.cpp.cpp",
             "sourcecode.cpp.objcpp",
         );
+        OverridingProperties = {
+          "OTHER_PRECOMP_CFLAGS" = "$(inherited) -D__clang_analyzer__";
+        };
         Options = (
             {
                 Name = CLANG;
@@ -1805,6 +1845,20 @@
                 Category = CheckerOptions;
             },
             {
+                Name = "CLANG_ANALYZER_OUTPUT";
+                Type = Enumeration;
+                AllowedValues = (
+                  default,
+                  "plist-multi-file",
+                );
+                DefaultValue = default;
+                CommandLineArgs = {
+                  default = ();
+                  "<<otherwise>>" = ( "-Xclang", "-analyzer-output=$(value)", );
+                };
+                // Category is hidden.
+            },
+            {
                 Name = "CLANG_ANALYZER_DEADCODE_DEADSTORES";
                 Type = Boolean;
                 DefaultValue = YES;
@@ -1813,11 +1867,11 @@
                     NO = (
                         "-Xclang", "-analyzer-disable-checker",
                         "-Xclang", "deadcode.DeadStores"
-        );
+                    );
                 };
                 Category = CheckerOptions;
-    },
-    {
+            },
+            {
                 Name = "CLANG_ANALYZER_DEADCODE_IDEMPOTENT_OPERATIONS";
                 Type = Boolean;
                 DefaultValue = NO;
@@ -1835,10 +1889,9 @@
                Type = Boolean;
                DefaultValue = YES;
                CommandLineArgs = {
-                  YES = ( "-Xclang", "-analyzer-checker",
-                          "-Xclang", "osx.cocoa.experimental.SelfInit"
-                  );
-                  NO = ();
+                  YES = ();
+                  NO = ( "-Xclang", "-analyzer-disable-checker",
+                         "-Xclang", "osx.cocoa.SelfInit" );
                };
                FileTypes = (
                   "sourcecode.c.objc",
@@ -1865,6 +1918,40 @@
             },
         );
     },
+
+    {
+               Identifier = "com.apple.compilers.llvm.clang.1_0.migrator";
+               Type = Compiler;
+               BasedOn = "com.apple.compilers.llvm.clang.1_0";
+               Name = "ObjC Migrator";
+               Description = "Apple Clang ObjC Migrator 3.0";
+               Architectures = (
+                       i386,
+                       "x86_64",
+                       armv6,
+                       armv7,
+               );
+               ExecPath = "$(CLANG)";
+               OutputDir = "$(TEMP_DIR)/Migrator";
+               OutputFileExtension = remap;
+               OutputsAreProducts = YES;
+               IsAbstract = YES;
+               "ShowInCompilerSelectionPopup" = NO;
+               "ShowOnlySelfDefinedProperties" = YES;
+               SoftError = YES;
+               SourceFileOption = "--migrate";
+               FileTypes = (
+                       "sourcecode.c.objc",
+                       "sourcecode.cpp.objcpp",
+              );
+               Options = (
+                       {
+                               Name = CLANG;
+                               Type = Path;
+                               DefaultValue = clang;
+                       },
+               );
+      },
 
     {
         Identifier = "com.apple.compilers.llvm.clang.1_0.astbuilder";
