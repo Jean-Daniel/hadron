@@ -12,6 +12,8 @@
 #if !defined(__WBC_CXX_H__)
 #define _WBC_CXX_H__ 1
 
+#include <cstddef> // set __GLIBCXX__ if libstdc++. Also define nullptr_t
+
 #if __has_include(<type_traits>) || defined(_MSC_VER)
   #include <type_traits>
 
@@ -24,9 +26,7 @@
   #endif
 
 #else
-  // GCC with libstdc++
-  #include <cstddef> // set __GLIBCXX__ if libstdc++.
-
+  // Clang/GCC with libstdc++
   #if defined(__GLIBCXX__) && __GLIBCXX__ <= 20070719
     #include <tr1/type_traits>
     namespace std {
