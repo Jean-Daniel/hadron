@@ -3,6 +3,12 @@ GCC_VERSION = com.apple.compilers.llvmgcc42
 
 GCC_C_LANGUAGE_STANDARD = gnu99
 
+GCC_ENABLE_SYMBOL_SEPARATION = NO
+
+// All supported 64 bit procs have SSE3
+GCC_ENABLE_SSE3_EXTENSIONS[arch=x86_64] = YES
+GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS[arch=x86_64] = YES
+
 // Warning that produce too much noise with GCC but are useful with clang.
 GCC_WARN_MISSING_PARENTHESES = NO
 GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = NO

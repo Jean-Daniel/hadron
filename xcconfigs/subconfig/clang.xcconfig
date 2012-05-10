@@ -28,6 +28,12 @@ GCC_WARN_MISSING_PARENTHESES = NO
 // Work even in debug build in clang :-)
 GCC_WARN_UNINITIALIZED_AUTOS = YES
 
+CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES
+
+// Should be true but cause duplicate class warning at runtime.
+CLANG_LINK_OBJC_RUNTIME = NO
+
+
 // CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES
 
 // clang specifics flags
@@ -39,6 +45,6 @@ WB_COMPILER_OTHER_CPLUSPLUSFLAGS =
 // -Wunreachable-code
 // -Wused-but-marked-unused
 // -Wno-idiomatic-parentheses: assignement used as condition with method starting by -init or with -nextObject.
-WB_COMPILER_WARNING_FLAGS = -Wimplicit-atomic-properties -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
+WB_COMPILER_WARNING_FLAGS = -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
 WB_COMPILER_WARNING_CFLAGS =
 WB_COMPILER_WARNING_CPLUSPLUSFLAGS = -Woverloaded-virtual
