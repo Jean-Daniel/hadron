@@ -156,6 +156,7 @@
                 );
                 DefaultValue = "compiler-default";
                 CommandLineArgs = {
+                    "compiler-default" = ();
                     /* We need these two entries that reference c++0x to
                        maintain compatibility of old build settings. */
                     "c++0x" = (
@@ -166,7 +167,6 @@
                         "-std=gnu++11",
                         "-U__STRICT_ANSI__",
                     );
-                    "compiler-default" = ();
                     /* Default for everything else. */
                     "<<otherwise>>" = (
                         "-std=$(value)",
@@ -394,18 +394,6 @@
                 Category = Language;
             },
             {
-                Name = "GCC_FORCE_CPU_SUBTYPE_ALL";
-                Type = Boolean;
-                DefaultValue = NO;
-                CommandLineArgs = {
-                    YES = (
-                        "-force_cpusubtype_ALL",
-                    );
-                    NO = ();
-                };
-                Category = Language;
-            },
-            {
                 Name = "GCC_LINK_WITH_DYNAMIC_LIBRARIES";
                 Type = Boolean;
                 DefaultValue = YES;
@@ -585,7 +573,7 @@
                     );
                     NO = ();
                 };
-                Category = Warnings;
+                Category = WarningsPolicy;
             },
             {
                 Name = "GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS";
@@ -672,10 +660,24 @@
                     );
                 };
                 FileTypes = (
-                "sourcecode.c.objc",
-                "sourcecode.cpp.objcpp",
+                    "sourcecode.c.objc",
+                    "sourcecode.cpp.objcpp",
                 );
                 Category = WarningsObjC;
+            },
+            {
+               Name = "CLANG_WARN_OBJC_RECEIVER_WEAK";
+               Type = Boolean;
+               DefaultValue = NO;
+               CommandLineArgs = {
+                  YES = ( "-Wreceiver-is-weak" );
+                  NO  = ( "-Wno-receiver-is-weak" );
+               };
+               FileTypes = (
+                   "sourcecode.c.objc",
+                   "sourcecode.cpp.objcpp",
+               );
+               Category = WarningsObjC;
             },
             {
                 Name = "GCC_WARN_NON_VIRTUAL_DESTRUCTOR";
@@ -880,7 +882,7 @@
                     );
                     NO = ();
                 };
-                Category = Warnings;
+                Category = WarningsPolicy;
             },
             {
                 Name = "GCC_WARN_PEDANTIC";
@@ -892,7 +894,7 @@
                     );
                     NO = ();
                 };
-                Category = Warnings;
+                Category = WarningsPolicy;
             },
             {
                 Name = "GCC_WARN_SHADOW";
@@ -1851,7 +1853,7 @@
                   default,
                   "plist-multi-file",
                 );
-                DefaultValue = default;
+                DefaultValue = "plist-multi-file";
                 CommandLineArgs = {
                   default = ();
                   "<<otherwise>>" = ( "-Xclang", "-analyzer-output=$(value)", );
