@@ -1,13 +1,13 @@
 /*
- *  SCBase.h
+ *  SCDefine.h
  *  SharedPrefix
  *
  *  Created by Jean-Daniel Dupas.
  *  Copyright © 2012 Jean-Daniel Dupas. All rights reserved.
  */
 
-#if !defined(__SC_BASE_H__)
-#define __SC_BASE_H__ 1
+#if !defined(__SC_DEFINE_H__)
+#define __SC_DEFINE_H__ 1
 
 // MARK: Clang Macros
 #ifndef __has_builtin
@@ -75,18 +75,6 @@
   #define SC_PRIVATE SC_EXTERN SC_HIDDEN
 #endif
 
-/* SC_CXX_EXPORT and SC_CXX_PRIVATE can be used
- to define C++ classes visibility. */
-#if defined(__cplusplus)
-  #if !defined(SC_CXX_PRIVATE)
-    #define SC_CXX_PRIVATE SC_HIDDEN
-  #endif
-
-  #if !defined(SC_CXX_EXPORT)
-    #define SC_CXX_EXPORT SC_VISIBLE
-  #endif
-#endif
-
 // MARK: Inline
 #if defined(__cplusplus) && !defined(__inline__)
   #define __inline__ inline
@@ -145,7 +133,7 @@
   #if defined(_MSC_VER)
     #define SC_REQUIRED_ARGS(idx, ...)
   #else
-    #define SC_REQUIRED_ARGS(idx, args...) __attribute__((__nonnull__(idx, ##args)))
+    #define SC_REQUIRED_ARGS(idx, ...) __attribute__((__nonnull__(idx, ##__VA_ARGS__)))
   #endif
 #endif
 
@@ -176,7 +164,7 @@
 // MARK: -
 // MARK: Static Analyzer
 #ifndef CF_CONSUMED
-  #if __has_attribute(cf_consumed)
+  #if __has_attribute(__cf_consumed__)
     #define CF_CONSUMED __attribute__((__cf_consumed__))
   #else
     #define CF_CONSUMED
@@ -184,7 +172,7 @@
 #endif
 
 #ifndef CF_RETURNS_RETAINED
-  #if __has_attribute(cf_returns_retained)
+  #if __has_attribute(__cf_returns_retained__)
     #define CF_RETURNS_RETAINED __attribute__((__cf_returns_retained__))
   #else
     #define CF_RETURNS_RETAINED
@@ -192,7 +180,7 @@
 #endif
 
 #ifndef CF_RETURNS_NOT_RETAINED
-	#if __has_attribute(cf_returns_not_retained)
+	#if __has_attribute(__cf_returns_not_retained__)
 		#define CF_RETURNS_NOT_RETAINED __attribute__((__cf_returns_not_retained__))
 	#else
 		#define CF_RETURNS_NOT_RETAINED
@@ -202,23 +190,55 @@
 
 #if defined(__cplusplus)
 
-// FIXME: compiler version
-#if _MSC_VER > 1
+/* SC_CXX_EXPORT and SC_CXX_PRIVATE can be used
+ to define C++ classes visibility. */
+#if defined(__cplusplus)
+  #if !defined(SC_CXX_PRIVATE)
+    #define SC_CXX_PRIVATE SC_HIDDEN
+  #endif
+
+  #if !defined(SC_CXX_EXPORT)
+    #define SC_CXX_EXPORT SC_VISIBLE
+  #endif
+#endif
+
+// VisualStudio 2010
+#if defined(_MSC_VER) && _MSC_VER >= 1600
+  #define __has_feature__cxx_nullptr__ 1
+  #define __has_feature__cxx_auto_type__ 1
   #define __has_feature__cxx_static_assert__ 1
+  #define __has_feature__cxx_trailing_return__ 1
   #define __has_feature__cxx_override_control__ 1
   #define __has_feature__cxx_rvalue_references__ 1
+  #define __has_feature__cxx_local_type_template_args__ 1
+#endif
+
+// VisualStudio 2011
+#if defined(_MSC_VER) && _MSC_VER >= 1700
+  #define __has_feature__cxx_lambdas__ 1
+  #define __has_feature__cxx_decltype__ 1
+  #define __has_feature__cxx_range_for__ 1
 #endif
 
 // MARK: C++ 2011
-#if _MSC_VER
-  #define sc_final sealed
-  #define sc_override override
-#elif __has_extension(__cxx_override_control__)
-  #define sc_final final
+#if __has_extension(__cxx_override_control__)
+  #if !defined(_MSC_VER) || _MSC_VER >= 1700
+    #define sc_final final
+  #else
+    #define sc_final sealed
+  #endif
   #define sc_override override
 #else
+  // not supported
   #define sc_final
   #define sc_override
+#endif
+
+#if __has_extension(__cxx_nullptr__)
+  #undef NULL
+  #define NULL nullptr
+#else
+  // use the standard declaration
 #endif
 
 #if __has_extension(__cxx_noexcept__)
@@ -227,6 +247,12 @@
 #else
   #define sc_noexcept
   #define sc_noexcept_(arg)
+#endif
+
+#if __has_extension(__cxx_constexpr__)
+  #define sc_constexpr constexpr
+#else
+  #define sc_constexpr
 #endif
 
 #if __has_extension(__cxx_rvalue_references__)
@@ -361,4 +387,4 @@
 #endif /* ObjC */
 
 
-#endif /* __SC_BASE_H__ */
+#endif /* __SC_DEFINE_H__ */
