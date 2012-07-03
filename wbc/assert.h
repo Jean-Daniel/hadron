@@ -33,7 +33,7 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 
 #if __has_extension(__c_static_assert__)
 // We are in C11 mode, or something compatible. static_assert may already be defined.
-  #if !defined(static_assert)
+  #if !__has_extension(__cxx_static_assert__) && !defined(static_assert)
     #define static_assert(test, msg)  _Static_assert(test, msg)
   #endif
 #elif !defined(__cplusplus) || !__has_extension(__cxx_static_assert__)
