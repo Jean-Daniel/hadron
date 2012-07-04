@@ -22,12 +22,15 @@ bool XOR(bool a, bool b) { return (a || b) && !(a && b); }
 #undef MAX
 #undef ABS
 
-#if !defined(__cplusplus)
+#if defined(__cplusplus)
+  #include <cmath> // define __GLIBCXX__ if needed
+#endif
+
+#if !defined(__cplusplus) || (defined(__GLIBCXX__) && __GLIBCXX__ <= 20050421)
   #define MIN(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
   #define MAX(A,B) ({ __typeof__(A) __x = (A); __typeof__(B) __y = (B); __x < __y ? __y : __x; })
   #define ABS(A)   ({ __typeof__(A) __z = (A); __z < 0 ? -__z : __z; })
 #else
-  #include <cmath>
   // FIXME: Version number is wrong. should be the first one that introduce std compliant cmath
   #if defined(__GLIBCXX__) && __GLIBCXX__ <= 20070719
     #include <tr1/cmath>
@@ -220,8 +223,6 @@ __SC_TG_DECL(bool) __SC_TG_LONG_DOUBLE(__tg_fnonzero)(long double f) { return !_
 // math functions directly (for instance, round() must not be expanded to tgmath equivalent)
 #if !defined(__cplusplus)
   #include <tgmath.h>
-#else
-  #include <cmath>
 #endif
 
 #if defined(__cplusplus)

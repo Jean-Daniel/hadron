@@ -27,7 +27,7 @@
 
 #else
   // Clang/GCC with libstdc++
-  #if defined(__GLIBCXX__) && __GLIBCXX__ <= 20070719
+  #if !defined(__GLIBCXX__) || __GLIBCXX__ <= 20070719
     #include <tr1/type_traits>
     namespace std {
       // enable_if<bool, type>
