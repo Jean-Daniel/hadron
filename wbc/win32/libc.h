@@ -147,11 +147,12 @@ int _NSGetExecutablePath(char *filename, uint32_t *length) {
 
 static
 int vasprintf( char **sptr, const char *fmt, va_list argv )  {
-    int wanted = vsnprintf_s( *sptr = NULL, 0, 0, fmt, argv );
-    if( (wanted > 0) && ((*sptr = (char *)malloc( 1 + wanted )) != NULL) )
-        return vsnprintf_s( *sptr, 1 + wanted, 1 + wanted, fmt, argv );
+  va_list backup = argv;
+  int wanted = vsnprintf( *sptr = NULL, 0, fmt, argv ); // vsnprintf_s does not return the expected length when passing a NULL buffer, so use "unsafe" variant here.
+  if( (wanted > 0) && ((*sptr = (char *)malloc( 1 + wanted )) != NULL) )
+    return vsnprintf_s( *sptr, 1 + wanted, 1 + wanted, fmt, backup );
 
-    return wanted;
+  return wanted;
 }
 
 static
