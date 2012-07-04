@@ -72,7 +72,7 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 #undef NSAssert
 #define NSAssert(condition, desc, ...) \
 do { \
-  if (!(condition)) { \
+  if (wb_unlikely(!(condition))) { \
     [[NSAssertionHandler currentHandler] handleFailureInMethod:_cmd \
           object:self file:[NSString stringWithUTF8String:__FILE__] \
             lineNumber:__LINE__ description:(desc), ##__VA_ARGS__]; \
@@ -85,7 +85,7 @@ do { \
 #undef NSCAssert
 #define NSCAssert(condition, desc, ...) \
 do { \
-  if (!(condition)) { \
+  if (wb_unlikely(!(condition))) { \
     [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithUTF8String:__PRETTY_FUNCTION__] \
                                                             file:[NSString stringWithUTF8String:__FILE__] \
                                                       lineNumber:__LINE__ description:(desc), ##__VA_ARGS__]; \
@@ -110,7 +110,7 @@ do { \
 #endif
 
 // MARK: Generic Macros
-SC_INLINE SC_NORETURN
+SC_INLINE SC_NORETURN SC_NS_FORMAT(3, 0)
 void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
   NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
   NSException *except = [NSException exceptionWithName:name reason:wb_autorelease(str) userInfo:userInfo];
@@ -124,12 +124,12 @@ void WBThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString 
 
 //SC_INLINE __attribute__((__noreturn__))
 //void WBThrowExceptionWithInfo(NSString *name, NSDictionary *userInfo, NSString *fmt, ...)
-#define WBThrowExceptionWithInfo(name, info, fmt, args...) \
-  @throw [NSException exceptionWithName:name reason:[NSString stringWithFormat:fmt, ##args] userInfo:info]
+#define WBThrowExceptionWithInfo(name, info, fmt, ...) \
+  @throw [NSException exceptionWithName:name reason:[NSString stringWithFormat:fmt, ##__VA_ARGS__] userInfo:info]
 
 //SC_INLINE __attribute__((__noreturn__))
 //void WBThrowException(NSString *name, NSString *fmt, ...)
-#define WBThrowException(name, fmt, args...) WBThrowExceptionWithInfo(name, nil, fmt, ##args)
+#define WBThrowException(name, fmt, ...) WBThrowExceptionWithInfo(name, nil, fmt, ##__VA_ARGS__)
 
 /*!
  @defined  WBAbstractMethodException
