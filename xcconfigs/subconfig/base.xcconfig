@@ -119,7 +119,7 @@ IBC_ERRORS = YES
 IBC_NOTICES = YES
 IBC_WARNINGS = YES
 
-// Stack protection
+// Stack protection (disabled by default for 10.4)
 WB_BASE_OTHER_FLAGS = -fstack-protector-all -I$(WBC_PATH)/include
 WB_BASE_OTHER_CFLAGS =
 WB_BASE_OTHER_CPLUSPLUSFLAGS =

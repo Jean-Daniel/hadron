@@ -46,10 +46,10 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
 #endif
 
 // Assert
-#if DEBUG_ASSERT_PRODUCTION_CODE || defined(_WIN32)
+#if DEBUG_ASSERT_PRODUCTION_CODE
   #define WBCAssert(assertion, message) do { } while (0)
-#else
-  #define WBCAssert(assertion, message) \
+#elif defined(__APPLE__)
+  #define WBCAssert(assertion, message)
   do { \
     if (wb_unlikely(!(assertion))) { \
       DEBUG_ASSERT_MESSAGE( \
@@ -57,6 +57,8 @@ void _wb_abort(const char *msg, const char *file, uint32_t line) {
         #assertion, 0, message, __FILE__, __LINE__, 0); \
     } \
   } while (0)
+#else
+  #define WBCAssert(assertion, message) assert((assertion) && message)
 #endif /* DEBUG_ASSERT_PRODUCTION_CODE */
 
 #if DEBUG_ASSERT_PRODUCTION_CODE

@@ -19,15 +19,13 @@
 
   #if defined(_MSC_VER)
   namespace std {
-    template <class _Tp> struct add_lvalue_reference {
-      typedef typename add_reference<_Tp>::type type;
-    };
+    using tr1::add_lvalue_reference;
   }
   #endif
 
 #else
   // Clang/GCC with libstdc++
-  #if !defined(__GLIBCXX__) || __GLIBCXX__ <= 20070719
+  #if !defined(__GLIBCXX__) || __GLIBCXX__ <= 20101114
     #include <tr1/type_traits>
     namespace std {
       // enable_if<bool, type>
