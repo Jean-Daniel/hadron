@@ -14,6 +14,7 @@
 
 #include <cstddef> // set __GLIBCXX__ if libstdc++. Also define nullptr_t
 
+// FIXME: is there a libstdc++ version that provide <type_traits> ?
 #if __has_include(<type_traits>) || defined(_MSC_VER)
   #include <type_traits>
 
@@ -25,7 +26,7 @@
 
 #else
   // Clang/GCC with libstdc++
-  #if !defined(__GLIBCXX__) || __GLIBCXX__ <= 20101114
+//  #if !defined(__GLIBCXX__) || __GLIBCXX__ <= 20101114
     #include <tr1/type_traits>
     namespace std {
       // enable_if<bool, type>
@@ -117,7 +118,7 @@
       /// @brief  other transformations [4.8].
       using tr1::aligned_storage;
     }
-  #endif
+//  #endif
 #endif
 
 #endif /* _WBC_CXX_H__ */
