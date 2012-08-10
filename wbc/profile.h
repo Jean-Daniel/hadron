@@ -55,7 +55,7 @@ double _WBHostTimeToNanoFactor(void) {
 #if defined(__APPLE__)
   static double sFactor = -1;
   if (sFactor < 0) {
-    mach_timebase_info_data_t sTimebaseInfo = {0, 0};
+    mach_timebase_info_data_t sTimebaseInfo = {};
     mach_timebase_info(&sTimebaseInfo);
     sFactor = ((double)sTimebaseInfo.numer / (double)sTimebaseInfo.denom);
   }
