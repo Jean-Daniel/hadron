@@ -29,8 +29,7 @@
         BuiltinJambaseRuleName = ProcessC;
         ExecPath = "$(CLANG)";
         UseCPlusPlusCompilerDriverWhenBundlizing = Yes;
-//        CommandOutputParser = "XCSimpleBufferedCommandOutputParser";
-        CommandOutputParser = "XCClangCommandOutputParser";
+        CommandOutputParser = "XCSimpleBufferedCommandOutputParser";
         SupportsHeadermaps = Yes;
         DashIFlagAcceptsHeadermaps = Yes;
         SupportsIsysroot = Yes;
@@ -664,6 +663,20 @@
                     "sourcecode.cpp.objcpp",
                 );
                 Category = WarningsObjC;
+            },
+            {
+               Name = "CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS";
+               Type = Boolean;
+               DefaultValue = NO;
+               CommandLineArgs = {
+                   YES = ( "-Wobjc-missing-property-synthesis" );
+                   NO = ();
+               };
+               FileTypes = (
+                   "sourcecode.c.objc",
+                   "sourcecode.cpp.objcpp",
+               );
+               Category = WarningsObjC;
             },
             {
                Name = "CLANG_WARN_OBJC_RECEIVER_WEAK";
@@ -1871,7 +1884,63 @@
                         "-Xclang", "deadcode.DeadStores"
                     );
                 };
-                Category = CheckerOptions;
+                Category = SACheckers;
+            },
+            {
+                Name = "CLANG_ANALYZER_OBJC_COLLECTIONS";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = ();
+                    NO = (
+                        "-Xclang", "-analyzer-disable-checker",
+                        "-Xclang", "osx.coreFoundation.containers.PointerSizedValues",
+                        "-Xclang", "-analyzer-disable-checker",
+                        "-Xclang", "osx.cocoa.VariadicMethodTypes"
+                    );
+                };
+                Category = SAObjCCheckers;
+            },
+            {
+                Name = "CLANG_ANALYZER_OBJC_NSCFERROR";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = ();
+                    NO = (
+                        "-Xclang", "-analyzer-disable-checker",
+                        "-Xclang", "osx.coreFoundation.CFError",
+                        "-Xclang", "-analyzer-disable-checker",
+                        "-Xclang", "osx.cocoa.NSError"
+                    );
+                };
+                Category = SAObjCCheckers;
+            },
+            {
+                Name = "CLANG_ANALYZER_OBJC_CFNUMBER";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = ();
+                    NO = (
+                        "-Xclang", "-analyzer-disable-checker",
+                        "-Xclang", "osx.coreFoundation.CFNumber"
+                    );
+                };
+                Category = SAObjCCheckers;
+            },
+            {
+                Name = "CLANG_ANALYZER_OBJC_INCOMP_METHOD_TYPES";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = ();
+                    NO = (
+                        "-Xclang", "-analyzer-disable-checker",
+                        "-Xclang", "osx.cocoa.IncompatibleMethodTypes"
+                    );
+                };
+                Category = SAObjCCheckers;
             },
             {
                 Name = "CLANG_ANALYZER_DEADCODE_IDEMPOTENT_OPERATIONS";
@@ -1887,6 +1956,75 @@
                 // Category is hidden.
             },
             {
+                Name = "CLANG_ANALYZER_OBJC_UNUSED_IVARS";
+                Type = Boolean;
+                DefaultValue = YES;
+                CommandLineArgs = {
+                    YES = ();
+                    NO = (
+                        "-Xclang", "-analyzer-disable-checker",
+                        "-Xclang", "osx.cocoa.UnusedIvars"
+                    );
+                };
+	         	Category = SAObjCCheckers;
+            },
+			{
+			     Name = "CLANG_ANALYZER_MALLOC";
+			     Type = Boolean;
+			     DefaultValue = YES;
+			     CommandLineArgs = {
+			         YES = ();
+			         NO = (
+			             "-Xclang", "-analyzer-disable-checker",
+			             "-Xclang", "unix.Malloc",
+			             "-Xclang", "-analyzer-disable-checker",
+			             "-Xclang", "unix.MallocSizeof"
+			         );
+			     };
+			     Category = SACheckers;
+			},
+		    {
+		         Name = "CLANG_ANALYZER_OBJC_RETAIN_COUNT";
+		         Type = Boolean;
+		         DefaultValue = YES;
+		         CommandLineArgs = {
+		           YES = ();
+		           NO = (
+		               "-Xclang", "-analyzer-disable-checker",
+		               "-Xclang", "osx.cocoa.RetainCount",
+		               "-Xclang", "-analyzer-disable-checker",
+		               "-Xclang", "osx.cocoa.ClassRelease"
+		           );
+		       };
+		       Category = SAObjCCheckers;
+		    },
+		    {
+		         Name = "CLANG_ANALYZER_OBJC_ATSYNC";
+		         Type = Boolean;
+		         DefaultValue = YES;
+		         CommandLineArgs = {
+		             YES = ();
+		             NO = (
+		                 "-Xclang", "-analyzer-disable-checker",
+		                 "-Xclang", "osx.cocoa.AtSync"
+		             );
+		         };
+		         Category = SAObjCCheckers;
+		    },
+		    {
+		         Name = "CLANG_ANALYZER_GCD";
+		         Type = Boolean;
+		         DefaultValue = YES;
+		         CommandLineArgs = {
+		             YES = ();
+		             NO = (
+		                 "-Xclang", "-analyzer-disable-checker",
+		                 "-Xclang", "osx.API"
+		             );
+		         };
+		         Category = SACheckers;
+		    },
+            {
                Name = "CLANG_ANALYZER_OBJC_SELF_INIT";
                Type = Boolean;
                DefaultValue = YES;
@@ -1899,7 +2037,103 @@
                   "sourcecode.c.objc",
                   "sourcecode.cpp.objcpp",
                );
-               Category = CheckerOptions;
+               Category = SAObjCCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_KEYCHAIN_API";
+               Type = Boolean;
+               DefaultValue = YES;
+               CommandLineArgs = {
+                  YES = ();
+                  NO = ( "-Xclang", "-analyzer-disable-checker",
+                         "-Xclang", "macosx.SecKeychainAPI" );
+               };
+               FileTypes = (
+                  "sourcecode.c.objc",
+                  "sourcecode.cpp.objcpp",
+               );
+               Category = SASecurityCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER";
+               Type = Boolean;
+               DefaultValue = NO;
+               CommandLineArgs = {
+                  YES = ( "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.FloatLoopCounter" );
+                  NO = ();
+               };
+               Category = SASecurityCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_INSECUREAPI_UNCHECKEDRETURN";
+               Type = Boolean;
+               DefaultValue = YES;
+               CommandLineArgs = {
+                  YES = ( "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.UncheckedReturn" );
+                  NO = ();
+               };
+               Category = SASecurityCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_INSECUREAPI_GETPW_GETS";
+               Type = Boolean;
+               DefaultValue = YES;
+               CommandLineArgs = {
+                  YES = ( "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.getpw",
+                          "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.gets" );
+                  NO = ();
+               };
+               Category = SASecurityCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_INSECUREAPI_MKSTEMP";
+               Type = Boolean;
+               DefaultValue = YES;
+               CommandLineArgs = {
+                  YES = ( "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.mkstemp",
+                          "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.mktemp" );
+                  NO = ();
+               };
+               Category = SASecurityCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND";
+               Type = Boolean;
+               DefaultValue = NO;
+               CommandLineArgs = {
+                  YES = ( "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.rand" );
+                  NO = ();
+               };
+               Category = SASecurityCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY";
+               Type = Boolean;
+               DefaultValue = NO;
+               CommandLineArgs = {
+                  YES = ( "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.strcpy" );
+                  NO = ();
+               };
+               Category = SASecurityCheckers;
+            },
+            {
+               Name = "CLANG_ANALYZER_SECURITY_INSECUREAPI_VFORK";
+               Type = Boolean;
+               DefaultValue = YES;
+               CommandLineArgs = {
+                  YES = ( "-Xclang", "-analyzer-checker",
+                          "-Xclang", "security.insecureAPI.vfork" );
+                  NO = ();
+               };
+               Category = SASecurityCheckers;
             },
             {
                 Name = "CLANG_ANALYZER_SECURITY_BUFFER_OVERFLOW_EXPERIMENTAL";
@@ -1938,9 +2172,10 @@
                OutputFileExtension = remap;
                OutputsAreProducts = YES;
                IsAbstract = YES;
+               CommandResultsPostprocessor = "XCClangResultsPostprocessor";
+               SupportsSerializedDiagnostics = YES;
                "ShowInCompilerSelectionPopup" = NO;
                "ShowOnlySelfDefinedProperties" = YES;
-               SoftError = YES;
                SourceFileOption = "--migrate";
                FileTypes = (
                        "sourcecode.c.objc",
