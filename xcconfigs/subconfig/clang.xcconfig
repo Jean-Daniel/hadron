@@ -1,24 +1,21 @@
 
-
 GCC_C_LANGUAGE_STANDARD = c99
 
-// if (nightly)
-  GCC_VERSION = com.apple.compilers.llvm.clang.nightly
-  CLANG = /opt/llvm/nightly/bin/clang
-  
-  GCC_C_LANGUAGE_STANDARD = c11
 
-  CLANG_CXX_LANGUAGE_STANDARD = c++0x
-  CLANG_CXX_LIBRARY = libc++
+GCC_VERSION = com.apple.compilers.llvm.clang.nightly
+CLANG = /opt/llvm/nightly/bin/clang
+CLANG_ANALYZER_EXEC = $(CLANG)
 
-  CLANG_WARN_OBJCPP_ARC_ABI = YES
+GCC_C_LANGUAGE_STANDARD = c11
 
-  CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO
-  // -Wconversion does not have an useless semantic in clang
-  CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO
-// else
-  // GCC_VERSION = com.apple.compilers.llvm.clang.1_0
-// endif
+CLANG_CXX_LANGUAGE_STANDARD = c++0x
+CLANG_CXX_LIBRARY = libc++
+
+CLANG_WARN_OBJCPP_ARC_ABI = YES
+
+CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO
+// -Wconversion does not have an useless semantic in clang
+CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = NO
 
 CLANG_X86_VECTOR_INSTRUCTIONS[arch=x86_64] = ssse3
 
@@ -41,7 +38,7 @@ CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 // CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES
 
 // clang specifics flags
-WB_COMPILER_OTHER_FLAGS = -fcatch-undefined-behavior -ferror-limit=50
+WB_COMPILER_OTHER_FLAGS = -ferror-limit=50
 WB_COMPILER_OTHER_CFLAGS =
 WB_COMPILER_OTHER_CPLUSPLUSFLAGS =
 
