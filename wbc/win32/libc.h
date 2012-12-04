@@ -14,6 +14,7 @@
 #define __WBC_WIN32_LIBC_H__ 1
 
 #include <io.h>
+#include <math.h>
 #include <fcntl.h>
 #include <stdarg.h>
 
@@ -36,6 +37,24 @@ static __inline
 DWORD GetLastErrorOrDefault() {
   DWORD err = GetLastError();
   return err ? err : -1;
+}
+
+static __forceinline
+double round(double value) {
+  return floor(value + 0.5);
+}
+static __forceinline
+long lround(double value) {
+  return (long)floor(value + 0.5);
+}
+static __forceinline
+__int64 llround(double value) {
+  return (__int64)floor(value + 0.5);
+}
+
+static __forceinline
+__int64 strtoll(const char *nptr, char **endptr, int base) {
+  return _strtoi64(nptr, endptr, base);
 }
 
 static __inline
@@ -128,6 +147,7 @@ static __forceinline int fseeko(FILE *stream, __int64 offset, int whence) { retu
 
 static __forceinline int strcasecmp(const char *string1, const char *string2) { return _stricmp(string1, string2); }
 static __forceinline int strncasecmp(const char *string1, const char *string2, size_t count) { return _strnicmp(string1, string2, count); }
+
 /* Date Time */
 static __forceinline time_t timegm(struct tm * const tmtime) { return _mkgmtime(tmtime); }
 static __forceinline struct tm *gmtime_r(const time_t *clock, struct tm *result) { return (0 == gmtime_s(result, clock)) ? result : NULL; }

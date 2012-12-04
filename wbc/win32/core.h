@@ -50,8 +50,9 @@
 // MARK: System Include
 // If you wish to build your application for a previous Windows platform,
 // set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
-
-#define _WIN32_WINNT 0x501 // Target WinXP by default
+#ifndef _WIN32_WINNT
+  #define _WIN32_WINNT 0x501 // Target WinXP by default
+#endif
 #include <SDKDDKVer.h>
 
 #include <tchar.h>

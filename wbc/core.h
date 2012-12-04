@@ -63,6 +63,10 @@
   #define MAC_OS_X_VERSION_10_7 1070
 #endif
 
+#if !defined(MAC_OS_X_VERSION_10_8)
+  #define MAC_OS_X_VERSION_10_8 1080
+#endif
+
 #else
 
 /* Mac OS Compatibility */

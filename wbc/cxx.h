@@ -18,7 +18,7 @@
 #if __has_include(<type_traits>) || defined(_MSC_VER)
   #include <type_traits>
 
-  #if defined(_MSC_VER)
+  #if defined(_MSC_VER) && _MSC_VER < 1700
   namespace std {
     using tr1::add_lvalue_reference;
   }
@@ -106,6 +106,8 @@
       template <class _Tp> struct add_lvalue_reference {
         typedef typename tr1::add_reference<_Tp>::type type;
       };
+      template <class _Tp> struct is_lvalue_reference       : public false_type {};
+      template <class _Tp> struct is_lvalue_reference<_Tp&> : public true_type {};
 
       /// @brief  array modifications [4.7.3].
       using tr1::remove_extent;
