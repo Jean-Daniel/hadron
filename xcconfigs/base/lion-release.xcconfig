@@ -2,7 +2,7 @@
 // Pull in the general settings
 #include "../subconfig/base.xcconfig"
 
-// Tiger or later
+// Lion or later
 #include "../subconfig/lion.xcconfig"
 
 // Debug settings

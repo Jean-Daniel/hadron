@@ -2,7 +2,7 @@
 // Pull in the general settings
 #include "../subconfig/base.xcconfig"
 
-// Tiger or later
+// Snow Leopard or later
 #include "../subconfig/snowleopard.xcconfig"
 
 // Debug settings

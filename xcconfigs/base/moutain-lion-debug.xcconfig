@@ -2,8 +2,8 @@
 // Pull in the general settings
 #include "../subconfig/base.xcconfig"
 
-// Tiger or later
-#include "../subconfig/leopard.xcconfig"
+// Moutain Lion or later
+#include "../subconfig/moutain-lion.xcconfig"
 
 // Debug settings
 #include "../subconfig/debug.xcconfig"
