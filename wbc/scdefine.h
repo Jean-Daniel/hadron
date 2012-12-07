@@ -4,6 +4,8 @@
  *
  *  Created by Jean-Daniel Dupas.
  *  Copyright © 2012 Jean-Daniel Dupas. All rights reserved.
+ *
+ * File Generated using “basegen --name=SharedPrefix --prefix=sc --objc --cxx”.
  */
 
 #if !defined(__SC_DEFINE_H__)
@@ -32,6 +34,10 @@
 
 #ifndef __has_include_next
   #define __has_include_next(x) 0
+#endif
+
+#ifndef __has_warning
+  #define __has_warning(x) 0
 #endif
 
 // MARK: Visibility
@@ -268,6 +274,12 @@
   #define sc_deleted = delete
 #else
   #define sc_deleted
+#endif
+
+#if __has_feature(__cxx_attributes__) && __has_warning("-Wimplicit-fallthrough")
+  #define sc_fallthrough [[clang::fallthrough]]
+#else
+  #define sc_fallthrough do {} while (0)
 #endif
 
 // MARK: Other C++ macros
