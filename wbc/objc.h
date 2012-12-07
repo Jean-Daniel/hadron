@@ -52,15 +52,7 @@
   #define wb_autorelease(arg) [arg autorelease]
 #endif
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-  #define NSIntegerHashCallBacks NSIntHashCallBacks
-  #define NSIntegerMapKeyCallBacks NSIntMapKeyCallBacks
-  #define NSIntegerMapValueCallBacks NSIntMapValueCallBacks
-
-  #define WBAutoreleasePoolDrain(pool) [pool release]
-#else
-  #define WBAutoreleasePoolDrain(pool) [pool drain]
-#endif
+#define WBAutoreleasePoolDrain(pool) [pool drain]
 
 #if DEBUG
   #define WBProperty(propName)    NSStringFromSelector(@selector(propName))
@@ -135,6 +127,7 @@
 #define WBSetterRetain(ivar, var) WBSetterRetainAndDo(ivar, var, do {} while(0))
 #define WBSetterMutableCopy(ivar, var) WBSetterMutableCopyAndDo(ivar, var, do {} while(0))
 
+#if 0 // .Hack relying on implementation details.
 // MARK: Atomic Variants
 //extern id objc_getProperty(id self, SEL _cmd, ptrdiff_t offset, BOOL atomic);
 //extern void objc_copyStruct(void *dest, const void *src, ptrdiff_t size, BOOL atomic, BOOL hasStrong);
@@ -149,6 +142,8 @@ SC_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValue
 
 #define WBSetterRetainAtomic(ivar, var) \
   objc_setProperty(self, _cmd, (ptrdiff_t)(&ivar) - (ptrdiff_t)(self), var, YES, NO)
+
+#endif //.Hack
 
 // MARK: Delegate
 /*!
@@ -179,12 +174,10 @@ SC_INLINE bool __WBDelegateHandle(id<NSObject> delegate, SEL method) { return de
 
 // MARK: NSBundle
 /*!
- @defined WBCurrentBundle
  @result   Returns the bundle for the caller class.
  */
 #define WBCurrentBundle()         [NSBundle bundleForClass:[self class]]
 /*!
- @defined WBBundleForClass
  @param	aClass wrapper on bundleForClass:
  @result Returns the bundle for aClass.
  */
@@ -249,29 +242,11 @@ NSNumber* WBFloat(float value) { return [NSNumber numberWithFloat:value]; }
 SC_INLINE
 NSNumber* WBDouble(double value) { return [NSNumber numberWithDouble:value]; }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-SC_INLINE
-NSNumber* WBInteger(NSInteger value) { return [NSNumber numberWithInt:value]; }
-SC_INLINE
-NSNumber* WBUInteger(NSUInteger value) { return [NSNumber numberWithUnsignedInt:value]; }
-#else
 SC_INLINE
 NSNumber* WBInteger(NSInteger value) { return [NSNumber numberWithInteger:value]; }
 SC_INLINE
 NSNumber* WBUInteger(NSUInteger value) { return [NSNumber numberWithUnsignedInteger:value]; }
-#endif
 
-/* Integer value compatibility */
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-SC_INLINE
-NSInteger WBIntegerValue(id object) { return [object intValue]; }
-SC_INLINE
-NSUInteger WBUIntegerValue(NSNumber *object) { return [object unsignedIntValue]; }
-SC_INLINE
-void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInt:value forKey:key]; }
-SC_INLINE
-NSInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntForKey:key]; }
-#else
 SC_INLINE
 NSInteger WBIntegerValue(id object) { return [object integerValue]; }
 SC_INLINE
@@ -280,6 +255,5 @@ SC_INLINE
 void WBEncodeInteger(NSCoder *coder, NSInteger value, NSString *key) { [coder encodeInteger:value forKey:key]; }
 SC_INLINE
 NSInteger WBDecodeInteger(NSCoder *coder, NSString *key) { return [coder decodeIntegerForKey:key]; }
-#endif
 
 #endif /* __WBC_OBJC_H__ */

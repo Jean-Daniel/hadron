@@ -35,11 +35,7 @@
 #if defined(__APPLE__)
 
 #if defined(__OBJC__)
-  #if __has_feature(__objc_modules__)
-    @import Cocoa
-  #else
-    #import <Cocoa/Cocoa.h>
-  #endif
+  #import <Cocoa/Cocoa.h>
 #else
   #include <CoreServices/CoreServices.h>
 #endif
@@ -50,10 +46,6 @@
 #include <libgen.h>
 #include <uuid/uuid.h> // already included in 10.6 but not in 10.5
 #include <libkern/OSAtomic.h>
-
-#if !defined(MAC_OS_X_VERSION_10_5)
-  #define MAC_OS_X_VERSION_10_5 1050
-#endif
 
 #if !defined(MAC_OS_X_VERSION_10_6)
   #define MAC_OS_X_VERSION_10_6 1060
@@ -83,10 +75,6 @@
 #endif
 
 /* Compilation on older SDK */
-#if !defined (kCFCoreFoundationVersionNumber10_5)
-  #define kCFCoreFoundationVersionNumber10_5 476.00
-#endif
-
 #if !defined (kCFCoreFoundationVersionNumber10_6)
   #define kCFCoreFoundationVersionNumber10_6 550.0
 #endif
@@ -106,30 +94,5 @@ enum {
   #error undefined byte order
 #endif
 };
-
-// MARK: Convenient types
-#if !defined(__OBJC__) || (defined(__APPLE__) && (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)) // for C and C++
-  typedef long NSInteger;
-  #define NSIntegerMax LONG_MAX
-  #define NSIntegerMin LONG_MIN
-
-  typedef unsigned long NSUInteger;
-  #define NSUIntegerMAX ULONG_MAX
-#endif
-
-#if !defined(CGFLOAT_DEFINED)
-  #if defined(__LP64__) && __LP64__
-    typedef double CGFloat;
-    #define CGFLOAT_MIN DBL_MIN
-    #define CGFLOAT_MAX DBL_MAX
-    #define CGFLOAT_IS_DOUBLE 1
-  #else	/* !defined(__LP64__) || !__LP64__ */
-    typedef float CGFloat;
-    #define CGFLOAT_MIN FLT_MIN
-    #define CGFLOAT_MAX FLT_MAX
-    #define CGFLOAT_IS_DOUBLE 0
-  #endif	/* !defined(__LP64__) || !__LP64__ */
-  #define CGFLOAT_DEFINED 1
-#endif
 
 #endif /* __WBC_CORE_H__ */

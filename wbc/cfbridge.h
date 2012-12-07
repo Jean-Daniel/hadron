@@ -108,9 +108,7 @@ __WBNSCFTypeBridge(Dictionary)
 __WBNSCFTypeBridge(MutableDictionary)
 
 // Other Types
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
 __WBNSCFTypeBridge(Error)
-#endif
 __WBNSCFTypeBridge(Locale)
 __WBNSCFTypeBridge(TimeZone)
 __WBNSCFTypeBridge(Calendar)

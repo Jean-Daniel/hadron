@@ -37,6 +37,4 @@
 #include "wbc/logging.h"
 #include "wbc/bitfield.h"
 
-#include "wbc/wonderbox.h" // FIXME: Should be optional
-
 #endif /* __SHARED_PREFIX_H */
