@@ -1,0 +1,4 @@
+
+#include "../../../xcconfigs/project/lion-release.xcconfig"
+
+#include "project.xcconfig"
