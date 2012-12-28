@@ -5,3 +5,8 @@ CLANG_CXX_LIBRARY = libstdc++
 
 // System configuration Min: 10.6, Max: current
 MACOSX_DEPLOYMENT_TARGET = 10.6
+
+// When targetting 10.6 using 10.7 SDK or 10.8 SDK, we have to link using
+// libarc_lite (for subscript support) which contains weak symbols.
+HA_TARGET_LDFLAGS[sdk=macosx10.7] =
+HA_TARGET_LDFLAGS[sdk=macosx10.8] =

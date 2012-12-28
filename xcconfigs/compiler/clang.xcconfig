@@ -33,14 +33,14 @@ CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 // CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES
 
 // clang specifics flags
-WB_COMPILER_OTHER_FLAGS = -ferror-limit=50
-WB_COMPILER_OTHER_CFLAGS =
-WB_COMPILER_OTHER_CPLUSPLUSFLAGS =
+HA_COMPILER_OTHER_FLAGS = -ferror-limit=50
+HA_COMPILER_OTHER_CFLAGS =
+HA_COMPILER_OTHER_CPLUSPLUSFLAGS =
 
 // -Wmissing-noreturn
 // -Wunreachable-code
 // -Wused-but-marked-unused
 // -Wno-idiomatic-parentheses: assignement used as condition with method starting by -init or with -nextObject.
-WB_COMPILER_WARNING_FLAGS = -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
-WB_COMPILER_WARNING_CFLAGS =
-WB_COMPILER_WARNING_CPLUSPLUSFLAGS = -Woverloaded-virtual
+HA_COMPILER_WARNING_FLAGS = -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
+HA_COMPILER_WARNING_CFLAGS =
+HA_COMPILER_WARNING_CPLUSPLUSFLAGS = -Woverloaded-virtual

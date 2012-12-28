@@ -1,2 +1,2 @@
 
-OTHER_LDFLAGS = $(inherited) -Wl,-weak_reference_mismatches,error
+OTHER_LDFLAGS = $(inherited) $(HA_TARGET_LDFLAGS)

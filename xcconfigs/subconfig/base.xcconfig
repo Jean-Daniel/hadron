@@ -120,13 +120,14 @@ IBC_ERRORS = YES
 IBC_NOTICES = YES
 IBC_WARNINGS = YES
 
+HA_TARGET_LDFLAGS = -Wl,-weak_reference_mismatches,error
 // Stack protection (disabled by default for 10.4)
-WB_BASE_OTHER_FLAGS = -fstack-protector-all -I$(HADRON_PATH)/include
-WB_BASE_OTHER_CFLAGS =
-WB_BASE_OTHER_CPLUSPLUSFLAGS =
+HA_BASE_OTHER_FLAGS = -fstack-protector-all -I$(HADRON_PATH)/include
+HA_BASE_OTHER_CFLAGS =
+HA_BASE_OTHER_CPLUSPLUSFLAGS =
 
 // -Wsign-conversion
-WB_BASE_WARNING_FLAGS = -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls
-WB_BASE_WARNING_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
-WB_BASE_WARNING_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo
+HA_BASE_WARNING_FLAGS = -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls
+HA_BASE_WARNING_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
+HA_BASE_WARNING_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo
 

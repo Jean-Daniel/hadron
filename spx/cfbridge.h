@@ -35,7 +35,7 @@ SPX_INLINE id SPXCFToNSType(CFTypeRef cfref) {
 }
 
 #if __has_feature(objc_arc)
-#define SPXCFTypeBridgingRetain(id obj) {
+SPX_INLINE CFTypeRef SPXCFTypeBridgingRetain(id obj) {
   return (__bridge_retained CFTypeRef)obj;
 }
 SPX_INLINE id SPXCFTypeBridgingRelease(CFTypeRef CF_CONSUMED cfref) {
