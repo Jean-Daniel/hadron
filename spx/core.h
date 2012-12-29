@@ -19,9 +19,6 @@
   #define _GNU_SOURCE 1
 #endif
 
-// MARK: Common definitions
-#include "spxdefine.h"
-
 #if defined(__WIN32__) || defined(_WIN32)
   #include "win32\core.h"
 #elif defined(__linux__)
@@ -35,6 +32,9 @@
 #else
   #include <CoreServices/CoreServices.h>
 #endif
+
+// MARK: Common definitions
+#include "spxdefine.h"
 
 // Misc useful includes
 #include <unistd.h>
@@ -55,6 +55,8 @@
 #endif
 
 #else
+
+#include "spxdefine.h"
 
 /* Mac OS Compatibility */
 #include "os/macerrors.h"
