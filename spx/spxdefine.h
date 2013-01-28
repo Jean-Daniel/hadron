@@ -212,30 +212,58 @@
 #if defined(__GNUC__) && !defined(__clang__) && !defined(__gcc_features_defined)
 #define __gcc_features_defined 1
 
-#if __GNUC__ == 4
-// GCC 4.3
-#  if __GNUC_MINOR__ >= 3
-#    define __has_feature_cxx_rvalue_references 1
-#  endif
-// GCC 4.4
-#  if __GNUC_MINOR__ >= 4
-#    define __has_feature_cxx_auto_type 1
-#    define __has_feature_cxx_static_assert 1
-#  endif
-// GCC 4.5
-#  if __GNUC_MINOR__ >= 5
-#    define __has_feature_cxx_lambdas 1
-#    define __has_feature_cxx_decltype 1
-#  endif
-// GCC 4.6
-#  if __GNUC_MINOR__ >= 6
-#    define __has_feature_cxx_nullptr 1
-#  endif
-// GCC 4.7
-#  if __GNUC_MINOR__ >= 7
-#    define __has_feature_cxx_override_control 1
-#  endif
+#if defined(__GXX_RTTI)
+#  define __has_feature_cxx_rtti 1
 #endif
+
+#if defined(__EXCEPTIONS)
+#  define __has_feature_cxx_exceptions 1
+#endif
+
+#define SPX_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+
+// GCC 4.3
+#if SPX_GCC_VERSION >= 40300
+#  define __has_feature_cxx_static_assert 1
+#  define __has_feature_cxx_rvalue_references 1
+#endif
+
+// GCC 4.4
+#if SPX_GCC_VERSION >= 40400
+#  define __has_feature_cxx_auto_type 1
+#  define __has_feature_cxx_deleted_functions 1
+#  define __has_feature_cxx_defaulted_functions 1
+#endif
+
+// GCC 4.5
+#if SPX_GCC_VERSION >= 40500
+#  define __has_feature_cxx_alignof 1
+#  define __has_feature_cxx_lambdas 1
+#  define __has_feature_cxx_decltype 1
+#  define __has_feature_cxx_explicit_conversions 1
+#endif
+
+// GCC 4.6
+#if SPX_GCC_VERSION >= 40600
+#  define __has_feature_cxx_nullptr 1
+#  define __has_feature_cxx_noexcept 1
+#  define __has_feature_cxx_constexpr 1
+#  define __has_feature_cxx_range_for 1
+#endif
+
+// GCC 4.7
+#if SPX_GCC_VERSION >= 40700
+#  define __has_feature_cxx_override_control 1
+#  define __has_feature_cxx_delegating_constructors 1
+#endif
+
+// GCC 4.8
+#if SPX_GCC_VERSION >= 40800
+#  define __has_feature_cxx_alignas 1
+#  define __has_feature_cxx_inheriting_constructors 1
+#endif
+
+#undef SPX_GCC_VERSION
 
 #endif
 
