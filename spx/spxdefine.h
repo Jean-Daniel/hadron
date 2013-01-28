@@ -3,13 +3,13 @@
  *  SharedPrefix
  *
  *  Created by Jean-Daniel Dupas.
- *  Copyright © 2012 Jean-Daniel Dupas. All rights reserved.
+ *  Copyright © 2013 Jean-Daniel Dupas. All rights reserved.
  *
  * File Generated using “basegen --name=SharedPrefix --prefix=spx --objc --cxx”.
  */
 
-#if !defined(__SPX_DEFINE_H__)
-#define __SPX_DEFINE_H__ 1
+#if !defined(SPX_DEFINE_H__)
+#define SPX_DEFINE_H__ 1
 
 // MARK: Clang Macros
 #ifndef __has_builtin
@@ -47,7 +47,7 @@
   #if defined(SPX_STATIC_LIBRARY)
       #define SPX_VISIBLE
   #else
-    #if defined(SHAREDPREFIX_DLL_EXPORT)
+    #if defined(SPX_DLL_EXPORT)
       #define SPX_VISIBLE __declspec(dllexport)
     #else
       #define SPX_VISIBLE __declspec(dllimport)
@@ -208,7 +208,39 @@
   #endif
 #endif
 
-#if defined(_MSC_VER)
+// GCC 4.x C++11 support
+#if defined(__GNUC__) && !defined(__clang__) && !defined(__gcc_features_defined)
+#define __gcc_features_defined 1
+
+#if __GNUC__ == 4
+// GCC 4.3
+#  if __GNUC_MINOR__ >= 3
+#    define __has_feature_cxx_rvalue_references 1
+#  endif
+// GCC 4.4
+#  if __GNUC_MINOR__ >= 4
+#    define __has_feature_cxx_auto_type 1
+#    define __has_feature_cxx_static_assert 1
+#  endif
+// GCC 4.5
+#  if __GNUC_MINOR__ >= 5
+#    define __has_feature_cxx_lambdas 1
+#    define __has_feature_cxx_decltype 1
+#  endif
+// GCC 4.6
+#  if __GNUC_MINOR__ >= 6
+#    define __has_feature_cxx_nullptr 1
+#  endif
+// GCC 4.7
+#  if __GNUC_MINOR__ >= 7
+#    define __has_feature_cxx_override_control 1
+#  endif
+#endif
+
+#endif
+
+#if defined(_MSC_VER) && !defined(__msc_features_defined)
+#define __msc_features_defined 1
 
 #define __has_builtin___debugbreak 1
 
@@ -405,4 +437,4 @@
 #endif /* ObjC */
 
 
-#endif /* __SPX_DEFINE_H__ */
+#endif /* SPX_DEFINE_H__ */

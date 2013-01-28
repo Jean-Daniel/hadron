@@ -9,41 +9,44 @@
  @abstract Windows Logging
 */
 
+#include <time.h>
+
 // MARK: -
 // MARK: Windows logging
-#if !defined(_CONSOLE)
+#if defined(_CONSOLE)
+#  define spx_printf(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+#  define spx_vprintf(fmt, args) vfprintf(stderr, fmt, args)
+#else
 
 SPX_UNUSED static
-void _spx_vprintf(LPCTSTR fmt, va_list args) {
-  TCHAR stackbuf[256];
-  TCHAR *buffer = stackbuf;
-  
-  size_t len = _vtcprintf_s(fmt, args) + 1; // for '\0'
+void _spx_vprintf(const char *fmt, va_list args) {
+  char stackbuf[256];
+  char *buffer = stackbuf;
+
+  size_t len = _vcprintf_s(fmt, args) + 1; // for '\0'
   if (len > 256)
-    buffer = (TCHAR *)malloc(len);
-  
+    buffer = new char[len];
+
   /* write the string */
-  len = _vsntprintf_s(buffer, len, len, fmt, args);
+  len = vsnprintf_s(buffer, len, len, fmt, args);
   if (len > 0)
-    OutputDebugString(buffer);
-  
+    OutputDebugStringA(buffer);
+
   if (buffer != stackbuf)
-    free(buffer);
+    delete[] buffer;
 }
 
 static inline
-void _spx_printf(LPCTSTR fmt, ...) {
+void _spx_printf(const char *fmt, ...) {
   va_list args;
   va_start(args, fmt);
   _spx_vprintf(fmt, args);
   va_end(args);
 }
 
-#  define wb_printf(fmt, ...) _spx_printf(_T(fmt), ##__VA_ARGS__)
-#  define wb_vprintf(fmt, args) _spx_vprintf(_T(fmt), args)
-#else
-#  define wb_printf(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
-#  define wb_vprintf(fmt, args) vfprintf(stderr, fmt, args)
+#  define spx_printf(fmt, ...) _spx_printf(fmt, ##__VA_ARGS__)
+#  define spx_vprintf(fmt, args) _spx_vprintf(fmt, args)
+
 #endif
 
 static inline
@@ -55,18 +58,18 @@ double _time_from_filetime(const FILETIME *ft) {
 	return ret;
 }
 
-SPX_UNUSED static
-void __WBLogPrintLinePrefix(FILE *f) {
+static inline
+void __SPXLogGetLinePrefix(char *buffer, size_t length) {
   FILETIME ft;
   GetSystemTimeAsFileTime(&ft);
   double secs = _time_from_filetime(&ft);
   time_t t = (time_t)secs;
-  
+
   struct tm now;
   char dtime[32];
   localtime_s(&now, &t);
   strftime(dtime, 32, "%Y-%m-%d %H:%M:%S", &now);
-  
-  wb_printf("%s.%.3u [%d:%d] ", dtime, (unsigned)(fmod(secs, 1) * 1000), getpid(), GetCurrentThreadId());
+
+  _snprintf_s(buffer, length, _TRUNCATE, "%s.%.3u [%d:%d] ", dtime, (unsigned)(fmod(secs, 1) * 1000), getpid(), GetCurrentThreadId());
 }
 

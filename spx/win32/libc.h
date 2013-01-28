@@ -9,10 +9,13 @@
  @abstract Some standard functions
 */
 
+#pragma warning(disable:4995) // ignore deprecation warnings
+
 #include <io.h>
 #include <math.h>
 #include <fcntl.h>
 #include <stdarg.h>
+#include <strsafe.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -190,8 +193,17 @@ extern char *dirname(char *path);
 
 extern char *strcasestr(const char* phaystack, const char* pneedle);
 
-extern size_t strlcat(char *strDest, const char *strSource, size_t count);
-extern size_t strlcpy(char *strDest, const char *strSource, size_t count);
+// extern size_t strlcat(char *strDest, const char *strSource, size_t count);
+
+static inline
+size_t strlcpy(char *strDest, const char *strSource, size_t count) {
+  char *end = NULL;
+  HRESULT res = StringCchCopyExA(strDest, count, strSource, &end, NULL, 0);
+  if (SUCCEEDED(res))
+    return end - strDest - 1;
+  // on error, returns the lenght of the source string.
+  return strlen(strSource);
+}
 
 extern char *strptime(const char *buf, const char *format, struct tm *tm);
 // strftime is defined in windows.

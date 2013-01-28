@@ -2,6 +2,7 @@
 ARCHS = $(ARCHS_STANDARD_32_64_BIT)
 
 CLANG_CXX_LIBRARY = libstdc++
+CLANG_CXX_LANGUAGE_STANDARD = c++03
 
 // System configuration Min: 10.6, Max: current
 MACOSX_DEPLOYMENT_TARGET = 10.6

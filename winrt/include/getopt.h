@@ -52,7 +52,7 @@
 # define __P(args)      args
 #endif
 
-#include "SharedPrefix.pch"
+#include "SharedPrefix.h"
 
 /*
  * Gnu like getopt_long() and BSD4.4 getsubopt()/optreset extensions
@@ -76,21 +76,21 @@ struct option {
         int val;
 };
 
-SC_PRIVATE int getopt_long __P((int, char * const *, const char *, const struct option *, int *));
+SPX_PRIVATE int getopt_long __P((int, char * const *, const char *, const struct option *, int *));
 
 #endif
 
 #ifdef _WIN32
 /* These are global getopt variables */
 
-SC_PRIVATE int opterr; /* if error message should be printed */
-SC_PRIVATE int optind;   /* index into parent argv vector */
-SC_PRIVATE int optopt;   /* character checked for validity */
-SC_PRIVATE int optreset; /* reset getopt */
-SC_PRIVATE char* optarg;   /* argument associated with option */
+SPX_PRIVATE int opterr; /* if error message should be printed */
+SPX_PRIVATE int optind;   /* index into parent argv vector */
+SPX_PRIVATE int optopt;   /* character checked for validity */
+SPX_PRIVATE int optreset; /* reset getopt */
+SPX_PRIVATE char* optarg;   /* argument associated with option */
 
 /* Original getopt */
-SC_PRIVATE int getopt __P((int, char * const *, const char *));
+SPX_PRIVATE int getopt __P((int, char * const *, const char *));
 
 #endif
 

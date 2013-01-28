@@ -6,10 +6,6 @@
  *  Copyright © 2004 - 2012 Jean-Daniel Dupas. All rights reserved.
  */
 
-#if defined(__cplusplus) && !defined(__STDC_LIMIT_MACROS)
-  #define __STDC_LIMIT_MACROS
-#endif
-
 #ifdef _MSC_VER
   #if !defined(__cplusplus)
     // C support in MSVC is badly broken
@@ -36,7 +32,7 @@
 
 #define NOMINMAX // avoid declaration of min() max() macros which conflicts with c++ functions
 
-#ifndef SC_WIN32_FULL
+#ifndef SPX_WIN32_FULL
   #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 #endif
 
@@ -51,7 +47,7 @@
 #include <tchar.h>
 #include <windows.h>
 
-#if defined(SC_INCLUDE_CORE_FOUNDATION_H)
+#if defined(SPX_INCLUDE_CORE_FOUNDATION_H)
   #include <CoreFoundation\CoreFoundation.h>
 #else
 

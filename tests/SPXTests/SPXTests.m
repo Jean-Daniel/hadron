@@ -18,12 +18,12 @@
 
 SPX_INITIALIZER(__InitializeTests) {
   // should be run before main
-  
+
 }
 
 SPX_TERMINATOR(__FinalizeTests) {
   // should be run at exit
-  
+
 }
 
 - (void)setUp {
@@ -38,12 +38,12 @@ SPX_TERMINATOR(__FinalizeTests) {
 - (void)testCore {
   SPXTrace();
   spx_trace();
-  
+
   spx_debug("Hello %s", "World");
   spx_log_error("Hello %s", "World");
   spx_log_warning("Hello %s", "World");
   spx_log(NULL, NULL, ASL_LEVEL_CRIT, "Hello %s", "World");
-  
+
   SPXDebug(@"Hello %@", @"World");
   SPXLogError(@"Hello %@", @"World");
   SPXLogWarning(@"Hello %@", @"World");
@@ -65,7 +65,7 @@ SPX_TERMINATOR(__FinalizeTests) {
 //  void SPXBitClear32(uint32_t *value, uint32_t n);
 //  bool SPXBitIsSet64(uint64_t value, uint32_t n);
 //  bool SPXBitIsSet32(uint32_t value, uint32_t n);
-//  
+//
 //  SPXFlagSet(field, value);
 //  SPXFlagTestAndSet(field, value);
 }
@@ -74,7 +74,7 @@ SPX_TERMINATOR(__FinalizeTests) {
   // Population count
 //  SPX_INLINE int spx_popcount32(uint32_t value) { return __builtin_popcount(value); }
 //  SPX_INLINE int spx_popcount64(uint64_t value) { return __builtin_popcountll(value); }
-//  
+//
 //  // Count Leading Zeros (left)
 //  // returns 0 based index. If value zero, result is undefined.
 //  SPX_INLINE int spx_clz32(uint32_t value) { return __builtin_clz(value); }
@@ -82,7 +82,7 @@ SPX_TERMINATOR(__FinalizeTests) {
 //  // returns 1 based index. If value is 0, returns 0.
 //  SPX_INLINE int spx_fls32(uint32_t value) { return value ? __builtin_clz(value) + 1 : 0; }
 //  SPX_INLINE int spx_fls64(uint64_t value) { return value ? __builtin_clzll(value) + 1 : 0; }
-//  
+//
 //  // Count Trailing Zeros (right)
 //  // returns 0 based index. If value zero, result is undefined.
 //  SPX_INLINE int spx_ctz32(uint32_t value) { return __builtin_ctz(value); }

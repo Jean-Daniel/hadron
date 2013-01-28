@@ -54,7 +54,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-SC_PRIVATE char opterrmsg[128];
+SPX_PRIVATE char opterrmsg[128];
 char opterrmsg[128]; /* last error message is stored here */
 
 static void warnx(int print_error, const char *fmt, ...)

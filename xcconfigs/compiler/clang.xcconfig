@@ -3,8 +3,9 @@ GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 
 GCC_C_LANGUAGE_STANDARD = gnu99
 
-CLANG_CXX_LANGUAGE_STANDARD = c++0x
-CLANG_CXX_LIBRARY = libc++
+// defined based on the target system version.
+// CLANG_CXX_LANGUAGE_STANDARD = c++0x
+// CLANG_CXX_LIBRARY = libc++
 
 CLANG_WARN_OBJCPP_ARC_ABI = YES
 

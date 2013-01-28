@@ -42,24 +42,23 @@ typedef void *aslclient;
 /*! @/defineblock */
 
 #if defined(_WIN32)
-#  include <win32\logging.h>
+#  include "win32\logging.h"
 #  define asl_log(...) do {} while (0)
 #  define asl_vlog(...) do {} while (0)
-#else
+#elif defined(__linux__) && !defined(__ANDROID__)
 // Using syslog when asl not available
 #  include <sys/syslog.h>
 
 #  define asl_log(client, msg, level, format, ...) syslog(level, format, ## __VA_ARGS__)
 #  define asl_vlog(client, msg, level, format, args) vsyslog(level, format, args)
+#else
+#  define asl_log(client, msg, level, format, ...) do {} while(0)
+#  define asl_vlog(client, msg, level, format, args) do {} while(0)
 #endif /* _WIN32 */
 
 #endif /* __APPLE__ */
 
 #if defined(DEBUG)
-
-#include <sys/time.h>
-
-SPX_EXTERN pthread_t pthread_self(void);
 
 #if defined(__APPLE__)
 SPX_EXTERN mach_port_t pthread_mach_thread_np(pthread_t);
@@ -68,13 +67,13 @@ SPX_EXTERN void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
 #endif
 
 #ifndef _WIN32
-#  define spx_printf(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
-#  define spx_vprintf(fmt, args) vfprintf(stderr, fmt, args)
-#endif
 
-// Adding a static method here is not desirable, but this is for debug build only.
-// And we really don't want to use NSLog as it clutters the Console
-SPX_UNUSED static
+#include <sys/time.h>
+SPX_EXTERN pthread_t pthread_self(void);
+#define spx_printf(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
+#define spx_vprintf(fmt, args) vfprintf(stderr, fmt, args)
+
+static inline
 void __SPXLogGetLinePrefix(char *buffer, size_t length) {
   // This hacky call is from CoreFoundation.
   // This is the way CoreFoundation (and so NSLog) determines if it should log in stderr
@@ -90,18 +89,20 @@ void __SPXLogGetLinePrefix(char *buffer, size_t length) {
     return;
   }
 #endif
-  
+
   /* Print date first */
   char dtime[32];
   struct timeval nows;
   gettimeofday(&nows, NULL);
-  
+
   struct tm now;
   localtime_r(&nows.tv_sec, &now);
   strftime(dtime, 32, "%F %T", &now);
-  
+
   snprintf(buffer, length, "%s.%.3u %s[%u:%x] ", dtime, nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
 }
+
+#endif
 
 SPX_INLINE
 const char *__SPXASLLevelString(int level) {

@@ -36,13 +36,22 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* GCC does not tell us the target endianess, so try to guess it */
 #if !defined(__LITTLE_ENDIAN__) && !defined(__BIG_ENDIAN__)
-  #if defined(__i386__) || defined(__x86_64__) || defined(__amd64__)
-    #define __LITTLE_ENDIAN__ 1
-  #elif defined(__ppc__) || defined(__ppc64__)
-    #define __BIG_ENDIAN__ 1
-  #endif
+/* GCC defines __BYTE_ORDER__ */
+#  if defined(__BYTE_ORDER__)
+#    if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#      define __LITTLE_ENDIAN__ 1
+#    elif __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#      define __BIG_ENDIAN__ 1
+#    endif
+#  else
+/* Unsupported compiler. try to guess based on architecture */
+#    if defined(__i386__) || defined(__x86_64__) || defined(__amd64__)
+#      define __LITTLE_ENDIAN__ 1
+#    elif defined(__ppc__) || defined(__ppc64__)
+#      define __BIG_ENDIAN__ 1
+#    endif
+#  endif
 #endif
 
 typedef double CFTimeInterval;
@@ -52,10 +61,12 @@ typedef double CFAbsoluteTime;
 extern "C" {
 #endif
 
-/* Rely on libbsd to include missing functions */
-// .Hack to avoid bsd/md5.h inclusion. It conflicts with <openSSL/md5.h>
-#define _MD5_H_ 1
-#include <bsd/bsd.h> // Must be in extern "C" block
+#ifndef __ANDROID__
+  /* Rely on libbsd to include missing functions */
+  // .Hack to avoid bsd/md5.h inclusion. It conflicts with <openSSL/md5.h>
+  #define _MD5_H_ 1
+  #include <bsd/bsd.h> // Must be in extern "C" block
+#endif /* __ANDROID__ */
 
 static inline void *reallocf(void *ptr, size_t newSize) {
 	void *result = realloc(ptr, newSize);
