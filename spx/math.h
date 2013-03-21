@@ -27,7 +27,7 @@ bool spx_xor(bool a, bool b) { return (a || b) && !(a && b); }
   #define ABS(A)   ({ __typeof__(A) __z = (A); __z < 0 ? -__z : __z; })
 #else
   // FIXME: Version number is wrong. should be the first one that introduce std compliant cmath
-  #if defined(__GLIBCXX__) && __GLIBCXX__ < 20120106
+  #if defined(__GLIBCXX__) && __GLIBCXX__ < 20101114
     #include <tr1/cmath>
     namespace std {
       using tr1::fmin;
