@@ -35,18 +35,18 @@ SPX_INLINE id SPXCFToNSType(CFTypeRef cfref) {
 }
 
 #if __has_feature(objc_arc)
-SPX_INLINE CFTypeRef SPXCFTypeBridgingRetain(id obj) {
+SPX_INLINE CF_RETURNS_RETAINED CFTypeRef SPXCFTypeBridgingRetain(id obj) {
   return (__bridge_retained CFTypeRef)obj;
 }
 SPX_INLINE id SPXCFTypeBridgingRelease(CFTypeRef CF_CONSUMED cfref) {
   return (__bridge_transfer id)cfref;
 }
 #else
-SPX_INLINE CFTypeRef SPXCFTypeBridgingRetain(id obj) {
-  return (__bridge_retained CFTypeRef)obj;
+SPX_INLINE CF_RETURNS_RETAINED CFTypeRef SPXCFTypeBridgingRetain(id obj) {
+  return obj ? CFRetain((CFTypeRef)obj) : NULL;
 }
-SPX_INLINE NS_RETURNS_RETAINED id SPXCFTypeBridgingRelease(CFTypeRef CF_CONSUMED cfref) {
-  return (__bridge_transfer id)cfref;
+SPX_INLINE id SPXCFTypeBridgingRelease(CFTypeRef CF_CONSUMED cfref) {
+  return [(id)cfref autorelease];
 }
 #endif
 
@@ -138,9 +138,3 @@ __SPXNSCFTypeBridge2(OutputStream, WriteStream)
 
 #undef __SPXNSCFTypeBridge2
 #undef __SPXNSCFTypeBridge
-
-#if __has_feature(objc_arc)
-  #define SPXCFAutorelease(nstype, cfvalue) SPXCFTo##nstype(cfvalue)
-#else
-  #define SPXCFAutorelease(nstype, cfvalue) [SPXCFTo##nstype(cfvalue) autorelease]
-#endif
