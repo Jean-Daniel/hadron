@@ -50,26 +50,22 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
 #endif
 
 // MARK: Assertion
+
+#define spx_unreachable(msg) spx_abort(msg)
+
 /*!
  @define spx_assert(test, message)
  @abstract an assert() like macro, but that require a message string argument.
  */
-#if NDEBUG
+#ifdef NDEBUG
 #  define spx_assert(assertion, message) ((void)0)
-#elif defined(__APPLE__)
+#else
 #  define spx_assert(assertion, message) \
     do { \
-     if (spx_unlikely(!(assertion))) { \
-      DEBUG_ASSERT_MESSAGE( \
-       DEBUG_ASSERT_COMPONENT_NAME_STRING, \
-       #assertion, 0, message, __FILE__, __LINE__, 0); \
-      } \
+     if (spx_unlikely(!(assertion))) \
+      spx_abort("assertion failed (" #assertion ") : " message); \
     } while (0)
-#else
-#  define spx_assert(assertion, message) assert((assertion) && message)
 #endif
-
-#define spx_unreachable(msg) spx_abort(msg)
 
 #if defined (__OBJC__)
 
