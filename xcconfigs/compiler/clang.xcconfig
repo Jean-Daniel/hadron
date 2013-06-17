@@ -1,6 +1,8 @@
 
 GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 
+GCC_CW_ASM_SYNTAX = YES
+
 GCC_C_LANGUAGE_STANDARD = gnu99
 
 // defined based on the target system version.
@@ -53,3 +55,4 @@ HA_COMPILER_OTHER_CPLUSPLUSFLAGS =
 HA_COMPILER_WARNING_FLAGS = -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
 HA_COMPILER_WARNING_CFLAGS =
 HA_COMPILER_WARNING_CPLUSPLUSFLAGS = -Woverloaded-virtual
+
