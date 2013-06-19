@@ -31,6 +31,8 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
  */
 #define spx_abort(msg) _spx_abort(msg, __FILE__, __LINE__)
 
+#define spx_unreachable(msg) spx_abort(msg)
+
 /*!
  @defined static_assert(test, str)
  @abstract define a static_assert() replacement in case the compiler does not support it.
@@ -50,9 +52,6 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
 #endif
 
 // MARK: Assertion
-
-#define spx_unreachable(msg) spx_abort(msg)
-
 /*!
  @define spx_assert(test, message)
  @abstract an assert() like macro, but that require a message string argument.
@@ -68,6 +67,8 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
 #endif
 
 #if defined (__OBJC__)
+
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_7
 
 // Workaround bug in NSAssert which ignored varidiacs macros in c++
 #if !defined(__STDC_VERSION__) && !defined(NS_BLOCK_ASSERTIONS) && defined(NSAssert)
@@ -99,7 +100,7 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
 #endif
 
 // Workaround bug in SDK. NSAssert is defined variadic when assertion enabled, and not variadic when disabled.
-#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_7 && defined(NS_BLOCK_ASSERTIONS)
+#if defined(NS_BLOCK_ASSERTIONS)
 #  if defined(NSAssert)
 #    undef NSAssert
 #    define NSAssert(...)
@@ -110,6 +111,8 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
 #    define NSCAssert(...)
 #  endif
 #endif
+
+#endif // MAC_OS_X_VERSION_10_7
 
 // MARK: Objective-C Exceptions
 SPX_INLINE SPX_NORETURN SPX_NS_FORMAT(3, 0)
