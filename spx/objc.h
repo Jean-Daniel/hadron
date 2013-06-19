@@ -144,13 +144,13 @@ SPX_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValu
 #endif //.Hack
 
 // MARK: Delegate
+SPX_INLINE bool __SPXDelegateHandle(id<NSObject> delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
 /*!
  @defined SPXDelegateHandle
  @abstract Check if delegate implements a method
  @param delegate The Delegate to register.
  @param method	method name
  */
-SPX_INLINE bool __SPXDelegateHandle(id<NSObject> delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
 #define SPXDelegateHandle(delegate, method) __SPXDelegateHandle(delegate, @selector(method))
 
 /*!
