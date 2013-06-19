@@ -34,7 +34,7 @@
 #endif
 
 // MARK: Common definitions
-#include "spxdefine.h"
+#include "spxdefines.h"
 
 // Misc useful includes
 #include <unistd.h>

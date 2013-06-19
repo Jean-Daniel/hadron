@@ -1,15 +1,16 @@
 /*
- *  spxdefine.h
+ *  spxdefines.h
  *  SharedPrefix
  *
  *  Created by Jean-Daniel Dupas.
  *  Copyright © 2013 Jean-Daniel Dupas. All rights reserved.
  *
- * File Generated using “basegen --name=SharedPrefix --prefix=spx --objc --cxx”.
+ *  File version: 115
+ *  File Generated using “basegen --name=SharedPrefix --prefix=spx --objc --cxx”.
  */
 
-#if !defined(SPX_DEFINE_H__)
-#define SPX_DEFINE_H__ 1
+#if !defined(SPX_DEFINES_H__)
+#define SPX_DEFINES_H__ 1
 
 // MARK: Clang Macros
 #ifndef __has_builtin
@@ -191,6 +192,22 @@
 	#else
 		#define CF_RETURNS_NOT_RETAINED
 	#endif
+#endif
+
+#ifndef CF_IMPLICIT_BRIDGING_ENABLED
+  #if __has_feature(arc_cf_code_audited)
+    #define CF_IMPLICIT_BRIDGING_ENABLED _Pragma("clang arc_cf_code_audited begin")
+  #else
+    #define CF_IMPLICIT_BRIDGING_ENABLED
+  #endif
+#endif
+
+#ifndef CF_IMPLICIT_BRIDGING_DISABLED
+  #if __has_feature(arc_cf_code_audited)
+    #define CF_IMPLICIT_BRIDGING_DISABLED _Pragma("clang arc_cf_code_audited end")
+  #else
+    #define CF_IMPLICIT_BRIDGING_DISABLED
+  #endif
 #endif
 
 
@@ -465,4 +482,4 @@
 #endif /* ObjC */
 
 
-#endif /* SPX_DEFINE_H__ */
+#endif /* SPX_DEFINES_H__ */
