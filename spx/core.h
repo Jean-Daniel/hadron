@@ -56,7 +56,7 @@
 
 #else
 
-#include "spxdefine.h"
+#include "spxdefines.h"
 
 /* Mac OS Compatibility */
 #include "os/macerrors.h"
