@@ -61,18 +61,11 @@ typedef double CFAbsoluteTime;
 extern "C" {
 #endif
 
-#ifndef __ANDROID__
-  /* Rely on libbsd to include missing functions */
-  // .Hack to avoid bsd/md5.h inclusion. It conflicts with <openSSL/md5.h>
-  #define _MD5_H_ 1
-  #include <bsd/bsd.h> // Must be in extern "C" block
-#endif /* __ANDROID__ */
-
 static inline void *reallocf(void *ptr, size_t newSize) {
-	void *result = realloc(ptr, newSize);
-	if (!result)
-		free(ptr);
-	return result;
+  void *result = realloc(ptr, newSize);
+  if (!result)
+    free(ptr);
+  return result;
 }
 
 #if defined(__cplusplus)
