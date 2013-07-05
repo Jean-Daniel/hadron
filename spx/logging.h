@@ -58,7 +58,7 @@ void spx_logv(aslclient client, aslmsg msg, int level, const char *format, va_li
 }
 
 #define spx_trace() do { \
-  spx_debug("[%s:%li]: %s\n", strrchr("/" __FILE__, '/') + 1, (long)__LINE__, __PRETTY_FUNCTION__); \
+  spx_debug("[%s:%li]: %s", strrchr("/" __FILE__, '/') + 1, (long)__LINE__, __PRETTY_FUNCTION__); \
 } while(0)
 
 #endif
