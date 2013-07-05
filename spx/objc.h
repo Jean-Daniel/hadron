@@ -143,6 +143,10 @@ SPX_EXTERN void objc_setProperty(id self, SEL _cmd, ptrdiff_t offset, id newValu
 
 #endif //.Hack
 
+// MARK: Key Value Observing Helper
+#define SPXKeyValueObserverContext(name) \
+	static void * const name = (void *)&name;
+
 // MARK: Delegate
 SPX_INLINE bool __SPXDelegateHandle(id<NSObject> delegate, SEL method) { return delegate && [delegate respondsToSelector:method]; }
 /*!
