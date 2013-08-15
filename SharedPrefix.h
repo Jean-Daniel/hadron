@@ -1,6 +1,6 @@
 /*
  *  SharedPrefix.h
- *  SharedPrefix
+ *  hadron
  *
  *  Created by Jean-Daniel Dupas.
  *  Copyright © 2004 - 2012 Jean-Daniel Dupas. All rights reserved.
