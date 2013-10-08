@@ -53,7 +53,7 @@ GCC_THREADSAFE_STATICS = YES
 GCC_SYMBOLS_PRIVATE_EXTERN = YES
 
 // MARK: Language
-GCC_C_LANGUAGE_STANDARD = c99
+GCC_C_LANGUAGE_STANDARD = gnu99
 
 GCC_ENABLE_CPP_EXCEPTIONS = YES
 GCC_ENABLE_CPP_RTTI = NO
@@ -124,7 +124,8 @@ IBC_NOTICES = YES
 IBC_WARNINGS = YES
 
 HA_TARGET_LDFLAGS = -Wl,-weak_reference_mismatches,error
-// Stack protection (disabled by default for 10.4)
+
+// Stack protection
 HA_BASE_OTHER_FLAGS = -fstack-protector-all -I$(HADRON_PATH)/include
 HA_BASE_OTHER_CFLAGS =
 HA_BASE_OTHER_CPLUSPLUSFLAGS =

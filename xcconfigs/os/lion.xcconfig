@@ -2,7 +2,6 @@
 // Pull in the general settings
 #include "../subconfig/base.xcconfig"
 
-// System configuration Min: 10.7, Max: current
 MACOSX_DEPLOYMENT_TARGET = 10.7
 
 CLANG_CXX_LIBRARY = libc++
