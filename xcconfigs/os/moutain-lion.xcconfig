@@ -1,0 +1,11 @@
+
+// Pull in the general settings
+#include "../subconfig/base.xcconfig"
+
+// System configuration Min: 10.8, Max: current
+MACOSX_DEPLOYMENT_TARGET = 10.8
+
+CLANG_CXX_LIBRARY = libc++
+CLANG_CXX_LANGUAGE_STANDARD = c++11
+
+#include "../subconfig/merge.xcconfig"

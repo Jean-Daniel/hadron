@@ -2,6 +2,9 @@
 // macosx is a shortcut for 'latest SDK'
 SDKROOT = macosx
 
+// This is the standard now
+ARCHS = $(ARCHS_STANDARD_64_BIT)
+
 // MARK: Build Options
 PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO
 

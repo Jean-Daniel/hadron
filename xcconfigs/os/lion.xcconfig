@@ -1,13 +1,15 @@
 
-// Lion does not support 32bit Mac
-ARCHS = $(ARCHS_STANDARD_64_BIT)
+// Pull in the general settings
+#include "../subconfig/base.xcconfig"
 
 // System configuration Min: 10.7, Max: current
 MACOSX_DEPLOYMENT_TARGET = 10.7
 
 CLANG_CXX_LIBRARY = libc++
-CLANG_CXX_LANGUAGE_STANDARD = c++0x
+CLANG_CXX_LANGUAGE_STANDARD = c++11
 
 // When targetting 10.7 using 10.8 SDK, we have to link using
 // libarc_lite (for subscript support) which contains weak symbols.
 HA_TARGET_LDFLAGS[sdk=macosx10.8] =
+
+#include "../subconfig/merge.xcconfig"
