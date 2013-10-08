@@ -1,0 +1,4 @@
+
+#include "project.xcconfig"
+
+#include "../hadron/xcconfigs/config/release.xcconfig"
