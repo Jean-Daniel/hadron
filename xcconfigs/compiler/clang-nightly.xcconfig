@@ -3,7 +3,7 @@
 
 GCC_VERSION = com.apple.compilers.llvm.clang.nightly
 
-CLANG = /opt/llvm/nightly/bin/clang
+CLANG = /opt/llvm/bin/clang
 
 GCC_C_LANGUAGE_STANDARD = gnu11
 
