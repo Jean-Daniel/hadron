@@ -17,6 +17,25 @@
   #define CFIndexMin LONG_MIN
 #endif
 
+#if defined(__cplusplus) && __cplusplus >= 201103
+
+#include <memory>
+
+namespace spx {
+  template<typename Ty>
+  struct cftype_delete {
+    constexpr cftype_delete() noexcept = default;
+    template <class U> cftype_delete(const cftype_delete<U>&) noexcept {};
+    void operator()(CF_CONSUMED Ty obj) { if (obj) CFRelease(obj); }
+  };
+
+  // unique_ptr alias used to autorelease CFTypeRef
+  template<typename Ty>
+  using unique_cfref = std::unique_ptr<typename std::remove_pointer<Ty>::type, cftype_delete<Ty>>;
+}
+
+#endif
+
 #if defined(__cplusplus)
   template<typename T> CF_RETURNS_RETAINED
   inline T SPXCFRetain(T aValue) { return aValue ? (T)CFRetain(aValue) : (T)NULL; }
