@@ -20,7 +20,7 @@ typealias asl_object_t = COpaquePointer;
 // prefix in Console output when not running in Xcode (launchd already append a prefix).
 // if it could be a pipe back to launchd, don't prepend a prefix
 @asmname("vproc_swap_integer")
-func _vproc_swap_integer(COpaquePointer, CInt, COpaquePointer, inout CLongLong) -> COpaquePointer;
+func _vproc_swap_integer(COpaquePointer, CInt, UnsafePointer<Int64>, UnsafePointer<Int64>) -> COpaquePointer;
 
 @final
 class Log {
@@ -69,11 +69,11 @@ class Log {
   }
   
   func debug(message : String) {
-    if _hasPrefix {
+    if _cls_vars.hasPrefix {
       var nows = timeval(tv_sec: 0, tv_usec: 0);
       gettimeofday(&nows, nil);
-      let date = _format.stringFromDate(NSDate(timeIntervalSince1970:NSTimeInterval(nows.tv_sec)));
-      "\(date).%.3u \(_progname)[\(getpid()):%x] %s\n".withCString { (var fmt : CString) -> Void in
+      let date = _cls_vars.format.stringFromDate(NSDate(timeIntervalSince1970:NSTimeInterval(nows.tv_sec)));
+      "\(date).%.3u \(_cls_vars.progname)[\(getpid()):%x] %s\n".withCString { (var fmt : CString) -> Void in
         message.withOpaquePointerToCString {
           withVaList([nows.tv_usec / 1000, pthread_mach_thread_np(pthread_self()), $0]) {
             vfprintf(__stderrp, fmt, $0);
@@ -126,19 +126,21 @@ class Log {
   }
   
   #if DEBUG
-  let _format : NSDateFormatter = {
-    let fmt = NSDateFormatter()
-    fmt.dateFormat = "yyyy-MM-dd HH:mm:ss";
-    fmt.locale = NSLocale(localeIdentifier:"en_US");
-    return fmt;
-  }()
-  
-  /* class */ let _progname = String.fromCString(getprogname())
-  
-  /* class */ let _hasPrefix : Bool = {
-    var val : CLongLong = 0;
-    _vproc_swap_integer(nil, 5 /* VPROC_GSK_IS_MANAGED */, nil, &val);
-    return val <= 0;
-  }();
+  struct _cls_vars {
+    static let progname = String.fromCString(getprogname())
+    static let hasPrefix : Bool = {
+      var val : Int64 = 0;
+      _vproc_swap_integer(nil, 5 /* VPROC_GSK_IS_MANAGED */, nil, &val);
+      return val <= 0;
+    }();
+
+    static let format : NSDateFormatter = {
+      let fmt = NSDateFormatter()
+      fmt.dateFormat = "yyyy-MM-dd HH:mm:ss";
+      fmt.locale = NSLocale(localeIdentifier:"en_US");
+      return fmt;
+    }()
+  }
+
   #endif
 }
