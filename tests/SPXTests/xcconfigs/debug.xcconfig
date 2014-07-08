@@ -1,4 +1,4 @@
 
-#include "../../../xcconfigs/project/lion-debug.xcconfig"
-
 #include "project.xcconfig"
+
+#include "../../../xcconfigs/config/debug.xcconfig"

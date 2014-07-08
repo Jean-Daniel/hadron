@@ -8,9 +8,9 @@
 
 #import "SPXTests.h"
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface SPXTests : SenTestCase
+@interface SPXTests : XCTestCase
 
 @end
 
