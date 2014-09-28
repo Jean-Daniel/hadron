@@ -2,3 +2,6 @@
 GCC_DYNAMIC_NO_PIC = $(LD_NO_PIE)
 
 OTHER_LDFLAGS = $(inherited) $(HA_TARGET_LDFLAGS)
+
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
+

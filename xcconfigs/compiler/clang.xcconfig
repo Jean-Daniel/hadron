@@ -5,6 +5,9 @@ GCC_CW_ASM_SYNTAX = YES
 
 GCC_C_LANGUAGE_STANDARD = gnu99
 
+// Xcode 5
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+
 // defined based on the target system version.
 // CLANG_CXX_LANGUAGE_STANDARD = c++0x
 // CLANG_CXX_LIBRARY = libc++
@@ -36,14 +39,14 @@ CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES
 // Should be true but cause duplicate class warning at runtime.
 CLANG_LINK_OBJC_RUNTIME = NO
 
-// Auto enabled module on supported SDKs
-CLANG_ENABLE_MODULES = NO
-CLANG_ENABLE_MODULES[sdk=iphoneos7] = YES
-CLANG_ENABLE_MODULES[sdk=macosx10.9] = YES
+CLANG_ENABLE_OBJC_ARC = YES
 
-CLANG_MODULES_AUTOLINK = NO
-CLANG_MODULES_AUTOLINK[sdk=iphoneos7] = YES
-CLANG_MODULES_AUTOLINK[sdk=macosx10.9] = YES
+// Auto enabled module on supported SDKs
+CLANG_ENABLE_MODULES = YES
+CLANG_ENABLE_MODULES[sdk=macosx10.8] = NO
+
+CLANG_MODULES_AUTOLINK = YES
+CLANG_MODULES_AUTOLINK[sdk=macosx10.8] = NO
 
 // Static Analyzer
 CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES
