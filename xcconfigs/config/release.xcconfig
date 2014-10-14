@@ -1,8 +1,6 @@
 
 GCC_OPTIMIZATION_LEVEL = s
 
-LLVM_VECTORIZE_LOOPS = YES
-
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 
 // Deployment postprocessing is what triggers Xcode to strip
