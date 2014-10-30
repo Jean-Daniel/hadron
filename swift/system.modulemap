@@ -1,0 +1,16 @@
+
+module asl [system] {
+  header "usr/include/asl.h"
+  export *
+}
+
+module CommonCrypto [system] {
+  header "usr/include/CommonCrypto/CommonCrypto.h"
+  export *
+}
+
+module sqlite3 [system] {
+  header "usr/include/sqlite3.h"
+  link "sqlite3"
+  export *
+}

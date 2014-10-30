@@ -4,6 +4,7 @@ ONLY_ACTIVE_ARCH = YES
 
 // No optimization
 GCC_OPTIMIZATION_LEVEL = 0
+SWIFT_OPTIMIZATION_LEVEL = -Onone
 
 // Deployment postprocessing is what triggers Xcode to strip, turn it off
 DEPLOYMENT_POSTPROCESSING = NO
