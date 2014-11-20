@@ -1,7 +1,7 @@
 
 #include "clang.xcconfig"
 
-GCC_VERSION = com.apple.compilers.llvm.clang.nightly
+GCC_VERSION = com.xenonium.compilers.llvm.clang.nightly
 
 CLANG = /opt/llvm/bin/clang
 
