@@ -25,13 +25,13 @@ namespace spx {
   template<typename Ty>
   struct cftype_delete {
     constexpr cftype_delete() noexcept = default;
-    template <class U> cftype_delete(const cftype_delete<U>&) noexcept {};
+    cftype_delete(const cftype_delete<Ty>&) noexcept = default;
     void operator()(CF_CONSUMED Ty obj) { if (obj) CFRelease(obj); }
   };
 
   // unique_ptr alias used to autorelease CFTypeRef
   template<typename Ty>
-  using unique_cfref = std::unique_ptr<typename std::remove_pointer<Ty>::type, cftype_delete<Ty>>;
+  using unique_cfptr = std::unique_ptr<typename std::remove_pointer<Ty>::type, cftype_delete<Ty>>;
 }
 
 #endif

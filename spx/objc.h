@@ -35,6 +35,29 @@
   #endif
 #endif
 
+#if defined(__cplusplus)
+
+#include <memory>
+
+template<class Ty, class X>
+SPX_INLINE Ty bridge_cast(X value) {
+    return (__bridge Ty)value;
+}
+
+namespace spx {
+
+  struct hash {
+    inline
+    size_t operator()(id __v) const noexcept
+    {
+      std::hash<void *> _hasher;
+      return _hasher(bridge_cast<void *>(__v));
+    }
+  };
+}
+
+#endif
+
 /* Hybrid mode */
 #if __has_feature(objc_arc)
   #define spx_dealloc() do {} while(0)
