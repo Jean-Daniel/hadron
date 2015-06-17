@@ -47,8 +47,9 @@ SPX_INLINE Ty bridge_cast(X value) {
 namespace spx {
 
   struct hash {
+    template<class T>
     inline
-    size_t operator()(id __v) const noexcept
+    size_t operator()(T __v) const noexcept
     {
       std::hash<void *> _hasher;
       return _hasher(bridge_cast<void *>(__v));
