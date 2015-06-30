@@ -61,12 +61,10 @@ namespace spx {
 
 /* Hybrid mode */
 #if __has_feature(objc_arc)
-  #define spx_dealloc() do {} while(0)
   #define spx_retain(arg) arg
   #define spx_release(arg) do {} while(0)
   #define spx_autorelease(arg) arg
 #else
-  #define spx_dealloc() [super dealloc]
   #define spx_retain(arg) [arg retain]
   #define spx_release(arg) [arg release]
   #define spx_autorelease(arg) [arg autorelease]
