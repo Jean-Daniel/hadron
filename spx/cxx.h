@@ -11,8 +11,12 @@
 
 #include <cstddef> // set __GLIBCXX__ if libstdc++. Also define nullptr_t
 
+#if !__has_extension(cxx_nullptr)
+  #define nullptr NULL
+#endif
+
 // FIXME: is there a libstdc++ version that provide <type_traits> ?
-#if __has_include(<type_traits>) || defined(_MSC_VER) || (defined(__GLIBCXX__) && __GLIBCXX__ >= 20101114)
+#if __has_include(<type_traits>) || defined(_MSC_VER) || (defined(__GLIBCXX__) && __GLIBCXX__ >= 20080905)
   #include <type_traits>
 
   #if defined(_MSC_VER) && _MSC_VER < 1700

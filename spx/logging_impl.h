@@ -61,15 +61,31 @@ typedef void *aslclient;
 #if defined(DEBUG)
 
 #if defined(__APPLE__)
+SPX_EXTERN pthread_t pthread_self(void);
+
 SPX_EXTERN mach_port_t pthread_mach_thread_np(pthread_t);
 // .hack from CoreFoundation, see comment in __SPXLogGetLinePrefix
 SPX_EXTERN void *vproc_swap_integer(void *, int, int64_t *, int64_t *);
+
+static inline int __get_current_thread_id() {
+  return pthread_mach_thread_np(pthread_self());
+}
+#endif
+
+#if defined(__linux__)
+#include <syscall.h>
+static inline const char *getprogname() {
+  return program_invocation_short_name;
+}
+
+static inline int __get_current_thread_id() {
+  return syscall(SYS_gettid);
+}
 #endif
 
 #ifndef _WIN32
 
 #include <sys/time.h>
-SPX_EXTERN pthread_t pthread_self(void);
 #define spx_printf(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
 #define spx_vprintf(fmt, args) vfprintf(stderr, fmt, args)
 
@@ -99,7 +115,7 @@ void __SPXLogGetLinePrefix(char *buffer, size_t length) {
   localtime_r(&nows.tv_sec, &now);
   strftime(dtime, 32, "%F %T", &now);
 
-  snprintf(buffer, length, "%s.%.3u %s[%u:%x] ", dtime, nows.tv_usec / 1000, getprogname(), getpid(), pthread_mach_thread_np(pthread_self()));
+  snprintf(buffer, length, "%s.%.3u %s[%u:%x] ", dtime, nows.tv_usec / 1000, getprogname(), getpid(), __get_current_thread_id());
 }
 
 #endif

@@ -23,12 +23,14 @@ void _spx_vprintf(const char *fmt, va_list args) {
   char stackbuf[256];
   char *buffer = stackbuf;
 
-  size_t len = _vcprintf_s(fmt, args) + 1; // for '\0'
+  va_list args2;
+  va_copy(args2, args);
+  size_t len = _vscprintf(fmt, args) + 1; // for '\0'
   if (len > 256)
     buffer = new char[len];
 
   /* write the string */
-  len = vsnprintf_s(buffer, len, len, fmt, args);
+  len = vsnprintf_s(buffer, len, len, fmt, args2);
   if (len > 0)
     OutputDebugStringA(buffer);
 
