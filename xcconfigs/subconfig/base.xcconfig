@@ -67,12 +67,13 @@ GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO
 
 // OTHER_CFLAGS = #merged
 // OTHER_CPLUSPLUSFLAGS = #merged
+// OTHER_SWIFT_FLAGS = #merged
 
 GCC_PRECOMPILE_PREFIX_HEADER = YES
 
 HADRON_PATH = ../hadron
 GCC_PREFIX_HEADER = $(HADRON_PATH)/SharedPrefix.h
-SWIFT_INCLUDE_PATHS = $(PROJECT_TEMP_ROOT)/$(PLATFORM_NAME)/HadronModules/
+SWIFT_INCLUDE_PATHS = $(PROJECT_TEMP_ROOT)/$(SDK_NAME)/HadronModules/
 
 GCC_ENABLE_PASCAL_STRINGS = YES
 
@@ -132,6 +133,7 @@ HA_TARGET_LDFLAGS = -Wl,-weak_reference_mismatches,error
 HA_BASE_OTHER_FLAGS = -fstack-protector-all -I$(HADRON_PATH)/include
 HA_BASE_OTHER_CFLAGS =
 HA_BASE_OTHER_CPLUSPLUSFLAGS =
+HA_BASE_OTHER_SWIFT_FLAGS =
 
 // -Wsign-conversion
 HA_BASE_WARNING_FLAGS = -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls
