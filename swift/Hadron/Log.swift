@@ -16,6 +16,7 @@ private func pthread_mach_thread_np(_ : pthread_t) -> mach_port_t;
 // As we only use stderr (and not asl like CF does), we use this same hack to prevent duplicate
 // prefix in Console output when not running in Xcode (launchd already append a prefix).
 // if it could be a pipe back to launchd, don't prepend a prefix
+@discardableResult
 @_silgen_name("vproc_swap_integer")
 private func _vproc_swap_integer(_: OpaquePointer?, _: CInt, _: UnsafePointer<Int64>?, _: UnsafePointer<Int64>?) -> OpaquePointer?;
 
@@ -61,7 +62,7 @@ final class Logger {
         }
       }
     } else {
-      "%s\n".withCString { (str : UnsafePointer<Int8>) in
+      "%s\n".withCString { (str : UnsafePointer<Int8>) -> () in
         message.withCString {
           withVaList([$0]) { vfprintf(__stderrp, str, $0); }
         }
