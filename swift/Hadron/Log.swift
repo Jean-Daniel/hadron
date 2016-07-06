@@ -27,23 +27,23 @@ private func asl_log(_ client: asl_object_t, msg: asl_object_t, level : Int32, f
 final class Logger {
   
   enum Level : Int32 {
-    case Emergency,
-    Alert,
-    Critical,
-    Error,
-    Warning,
-    Notice,
-    Info,
-    Debug
+    case emergency,
+    alert,
+    critical,
+    error,
+    warning,
+    notice,
+    info,
+    debug
   }
 
   // MARK: Convenient methods
-  func warn(message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
-    log(level: .Warning, message: message, client: client, msg: msg);
+  func warn(_ message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
+    log(level: .warning, message: message, client: client, msg: msg);
   }
   
-  func error(message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
-    log(level: .Error, message: message, client: client, msg: msg);
+  func error(_ message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
+    log(level: .error, message: message, client: client, msg: msg);
   }
   
   // MARK: =================== Standard Logging ===================
@@ -52,7 +52,7 @@ final class Logger {
     if Logger.hasPrefix {
       var nows = timeval(tv_sec: 0, tv_usec: 0);
       gettimeofday(&nows, nil);
-      let date = Logger.format.string(from: NSDate(timeIntervalSince1970:NSTimeInterval(nows.tv_sec)));
+      let date = Logger.format.string(from: Date(timeIntervalSince1970:TimeInterval(nows.tv_sec)));
       "\(date).%.3u \(Logger.progname)[\(getpid()):%x] %s\n".withCString { ( fmt : UnsafePointer<Int8>) -> Void in
         message.withCString {
           withVaList([nows.tv_usec / 1000, pthread_mach_thread_np(pthread_self()), $0]) {
@@ -81,11 +81,11 @@ final class Logger {
   #else
   // MARK: Release
   // Instance Methods
-  func debug(message : @autoclosure () -> String) {}
+  func debug(_ message : @autoclosure () -> String) {}
   
   func trace() {}
   
-  func log(level : Level, message : String, client: asl_object_t, msg: asl_object_t) {
+  func log(_ level : Level, message : String, client: asl_object_t, msg: asl_object_t) {
     "%s".withCString { (fmt : UnsafePointer<Int8>) -> Void in
       message.withCString {
         withVaList([$0]) {
@@ -104,10 +104,10 @@ final class Logger {
     return val <= 0;
   }();
 
-  private static let format : NSDateFormatter = {
-    let fmt = NSDateFormatter()
+  private static let format : DateFormatter = {
+    let fmt = DateFormatter()
     fmt.dateFormat = "yyyy-MM-dd HH:mm:ss";
-    fmt.locale = NSLocale(localeIdentifier:"en_US");
+    fmt.locale = Locale(localeIdentifier:"en_US");
     return fmt;
   }()
   #endif
@@ -115,16 +115,16 @@ final class Logger {
 
 private let _logger = Logger();
 
-func spx_log(level : Logger.Level, message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
+func spx_log(_ level : Logger.Level, message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
   _logger.log(level: level, message: message, client: client, msg: msg);
 }
 
-func spx_warn(message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
-  _logger.warn(message: message, client: client, msg: msg);
+func spx_warn(_ message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
+  _logger.warn(message, client: client, msg: msg);
 }
 
-func spx_error(message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
-  _logger.error(message: message, client: client, msg: msg);
+func spx_error(_ message : String, client: asl_object_t = nil, msg: asl_object_t = nil) {
+  _logger.error(message, client: client, msg: msg);
 }
 
 #if DEBUG
@@ -137,7 +137,7 @@ func spx_error(message : String, client: asl_object_t = nil, msg: asl_object_t =
   }
 #else
   // MARK: Release
-  func spx_debug(message : @autoclosure () -> String) { /* noop */  }
+  func spx_debug(_ message : @autoclosure () -> String) { /* noop */  }
 
   func spx_trace() { /* Noop */ }
 #endif
