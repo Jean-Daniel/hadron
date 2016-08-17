@@ -107,7 +107,7 @@ final class Logger {
   private static let format : DateFormatter = {
     let fmt = DateFormatter()
     fmt.dateFormat = "yyyy-MM-dd HH:mm:ss";
-    fmt.locale = Locale(localeIdentifier:"en_US");
+    fmt.locale = Locale(identifier:"en_US");
     return fmt;
   }()
   #endif
