@@ -22,9 +22,15 @@ bool spx_xor(bool a, bool b) { return (a || b) && !(a && b); }
 #endif
 
 #if !defined(__cplusplus) || (defined(__GLIBCXX__) && !defined(_GLIBCXX_USE_C99_MATH_TR1))
+#if !defined(MIN)
   #define MIN(A,B) ({ __typeof__(A) __a = (A); __typeof__(B) __b = (B); __a < __b ? __a : __b; })
+#endif
+#if !defined(MAX)
   #define MAX(A,B) ({ __typeof__(A) __x = (A); __typeof__(B) __y = (B); __x < __y ? __y : __x; })
+#endif
+#if !defined(ABS)
   #define ABS(A)   ({ __typeof__(A) __z = (A); __z < 0 ? -__z : __z; })
+#endif
 #else
   // FIXME: Version number is wrong. should be the first one that introduce std compliant cmath
   #if defined(__GLIBCXX__) && __GLIBCXX__ < 20080905
