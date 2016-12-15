@@ -1,5 +1,5 @@
 
-#include "../../../xcconfigs/os/lion.xcconfig"
+#include "../../../xcconfigs/os/sierra.xcconfig"
 #include "../../../xcconfigs/compiler/clang.xcconfig"
 
 HADRON_PATH = ../

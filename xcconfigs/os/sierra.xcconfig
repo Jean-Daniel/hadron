@@ -2,9 +2,11 @@
 // Pull in the general settings
 #include "../subconfig/base.xcconfig"
 
-MACOSX_DEPLOYMENT_TARGET = 10.8
+MACOSX_DEPLOYMENT_TARGET = 10.12
+
+GCC_C_LANGUAGE_STANDARD = c11
 
 CLANG_CXX_LIBRARY = libc++
-CLANG_CXX_LANGUAGE_STANDARD = c++11
+CLANG_CXX_LANGUAGE_STANDARD = c++14
 
 #include "../subconfig/merge.xcconfig"

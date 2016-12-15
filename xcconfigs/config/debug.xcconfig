@@ -2,6 +2,8 @@
 // Only one arch at a time
 ONLY_ACTIVE_ARCH = YES
 
+ENABLE_TESTABILITY = YES
+
 // No optimization
 GCC_OPTIMIZATION_LEVEL = 0
 SWIFT_OPTIMIZATION_LEVEL = -Onone
