@@ -3,8 +3,6 @@ GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 
 GCC_CW_ASM_SYNTAX = YES
 
-GCC_C_LANGUAGE_STANDARD = gnu99
-
 // Xcode 5
 CLANG_WARN_DOCUMENTATION_COMMENTS = YES
 

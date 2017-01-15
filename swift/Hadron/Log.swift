@@ -128,7 +128,7 @@ func spx_error(_ message : String, client: asl_object_t = nil, msg: asl_object_t
 }
 
 #if DEBUG
-  func spx_debug(message : String) {
+  func spx_debug(_ message : String) {
     _logger.debug(message: message);
   }
 
