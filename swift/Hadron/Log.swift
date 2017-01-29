@@ -83,9 +83,7 @@ final class Logger {
   // Instance Methods
   func debug(_ message : @autoclosure () -> String) {}
   
-  // func trace() {}
-  
-  func log(_ level : Level, message : String, client: asl_object_t, msg: asl_object_t) {
+  func log(level : Level, message : String, client: asl_object_t, msg: asl_object_t) {
     "%s".withCString { (fmt : UnsafePointer<Int8>) -> Void in
       message.withCString {
         withVaList([$0]) {
@@ -132,12 +130,12 @@ func spx_error(_ message : String, client: asl_object_t = nil, msg: asl_object_t
     _logger.debug(message: message);
   }
 
-  func spx_trace(args: @autoclosure () -> String = "", file : String = #file, line : Int = #line, function : String = #function) {
-    _logger.trace(args: args(), file: file, line: line, function: function);
+  func spx_trace(args: String = "", file : String = #file, line : Int = #line, function : String = #function) {
+    _logger.trace(args: args, file: file, line: line, function: function);
   }
 #else
   // MARK: Release
   func spx_debug(_ message : @autoclosure () -> String) { /* noop */  }
 
-  func spx_trace() { /* Noop */ }
+  func spx_trace(args: @autoclosure () -> String = "") { /* Noop */ }
 #endif
