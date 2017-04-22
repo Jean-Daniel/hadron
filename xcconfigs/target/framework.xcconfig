@@ -1,6 +1,9 @@
 
 DEFINES_MODULE = YES
 
+// Signing framework at build time is not recommended
+CODE_SIGN_IDENTITY =
+
 DYLIB_CURRENT_VERSION = $(CURRENT_PROJECT_VERSION)
 
 OTHER_LDFLAGS = $(inherited) $(HA_TARGET_LDFLAGS)
