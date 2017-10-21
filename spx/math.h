@@ -12,11 +12,6 @@
 SPX_INLINE
 bool spx_xor(bool a, bool b) { return (a || b) && !(a && b); }
 
-// Do not rely on macros defined NSObjCRuntime because they are not safe to use with ANSI C (they do not use temp variable)
-#undef MIN
-#undef MAX
-#undef ABS
-
 #if defined(__cplusplus)
   #include <cmath> // define __GLIBCXX__ if needed
 #endif
@@ -80,9 +75,15 @@ bool spx_xor(bool a, bool b) { return (a || b) && !(a && b); }
     abs(T a) { T mask = (a >> (sizeof(T) * CHAR_BIT - 1)); return (a + mask) ^ mask; }
   }
 
+#if !defined(MIN)
   #define MIN(A,B) spxcfg::min(A, B)
+#endif
+#if !defined(MAX)
   #define MAX(A,B) spxcfg::max(A, B)
+#endif
+#if !defined(ABS)
   #define ABS(A)   spxcfg::abs(A)
+#endif
 #endif
 
 /* Windows math.h lacks a lot of standards functions */

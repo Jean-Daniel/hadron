@@ -66,6 +66,36 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
     } while (0)
 #endif
 
+#define spx_verify_string(condition, message) \
+  do { \
+    if (spx_unlikely(!(condition))) \
+      spx_log_error("%s (%s)", message, #condition); \
+  } while (0)
+
+#define spx_verify(condition) spx_verify_string(condition, "condition not reached")
+#define spx_verify_noerr(err) spx_verify(noErr == err)
+
+#ifdef NDEBUG
+#  define spx_require_string(assertion, label, message) \
+     do { \
+       if (spx_unlikely(!(assertion))) \
+         goto label; \
+     } while (0)
+#else
+#  define spx_require_string(assertion, label, message) \
+    do { \
+      if (spx_unlikely(!(assertion))) {\
+        spx_abort("condition failed (" #assertion ") : " message); \
+        goto label; \
+      } \
+    } while (0)
+#endif
+
+#define spx_require(condition, label)  spx_require_string(condition, label, "requirement failure")
+
+#define spx_require_noerr(err, label)  spx_require(noErr == err, label)
+#define spx_require_noerr_string(err, label, message)  spx_require_string(noErr == err, label, message)
+
 #if defined (__OBJC__)
 
 #if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_7

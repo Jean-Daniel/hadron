@@ -1,0 +1,12 @@
+
+// Pull in the general settings
+#include "../subconfig/base.xcconfig"
+
+MACOSX_DEPLOYMENT_TARGET = 10.13
+
+GCC_C_LANGUAGE_STANDARD = c11
+
+CLANG_CXX_LIBRARY = libc++
+CLANG_CXX_LANGUAGE_STANDARD = c++17
+
+#include "../subconfig/merge.xcconfig"
