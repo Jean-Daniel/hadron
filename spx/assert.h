@@ -148,7 +148,7 @@ void _spx_abort(const char *msg, const char *file, uint32_t line) {
 SPX_INLINE SPX_NORETURN SPX_NS_FORMAT(3, 0)
 void SPXThrowExceptionWithInfov(NSString *name, NSDictionary *userInfo, NSString *fmt, va_list args)  {
   NSString *str = [[NSString alloc] initWithFormat:fmt arguments:args];
-  @throw [NSException exceptionWithName:name reason:spx_autorelease(str) userInfo:userInfo];
+  @throw [NSException exceptionWithName:name reason:_spx_autorelease(str) userInfo:userInfo];
 }
 
 //SPX_INLINE __attribute__((__noreturn__))

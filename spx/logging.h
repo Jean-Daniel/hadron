@@ -81,7 +81,7 @@ void spx_logv(aslclient client, aslmsg msg, int level, const char *format, va_li
      NSString *_spx_str = [[NSString alloc] initWithFormat:format, ##__VA_ARGS__]; \
      if (_spx_str) { \
        asl_log(client, msg, level, "%s", [_spx_str UTF8String]); \
-       spx_release(_spx_str); \
+       _spx_release(_spx_str); \
      } \
    } while (0)
 
@@ -103,7 +103,7 @@ void SPXLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list 
   NSString *_spx_str = [[NSString alloc] initWithFormat:format, ##__VA_ARGS__]; \
   if (_spx_str) { \
     spx_debug("%s", [_spx_str UTF8String]); \
-    spx_release(_spx_str); \
+    _spx_release(_spx_str); \
   } \
 } while(0)
 
@@ -112,7 +112,7 @@ void SPXDebugv(NSString *format, va_list args) {
   NSString *_spx_str = [[NSString alloc] initWithFormat:format arguments:args];
   if (_spx_str) {
     spx_debug("%s", [_spx_str UTF8String]);
-    spx_release(_spx_str);
+    _spx_release(_spx_str);
   }
 }
 
@@ -120,7 +120,7 @@ void SPXDebugv(NSString *format, va_list args) {
   NSString *_spx_str = [[NSString alloc] initWithFormat:format, ##__VA_ARGS__]; \
   if (_spx_str) { \
     spx_log(client, msg, level, "%s", [_spx_str UTF8String]); \
-    spx_release(_spx_str); \
+    _spx_release(_spx_str); \
   } \
 } while (0)
 
@@ -129,7 +129,7 @@ void SPXLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list 
   NSString *_spx_str = [[NSString alloc] initWithFormat:format arguments:args];
   if (_spx_str) {
     spx_log(client, msg, level, "%s", [_spx_str UTF8String]);
-    spx_release(_spx_str);
+    _spx_release(_spx_str);
   }
 }
 

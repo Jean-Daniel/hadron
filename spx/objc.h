@@ -61,13 +61,13 @@ namespace spx {
 
 /* Hybrid mode */
 #if __has_feature(objc_arc)
-  #define spx_retain(arg) arg
-  #define spx_release(arg) do {} while(0)
-  #define spx_autorelease(arg) arg
+  #define _spx_retain(arg) arg
+  #define _spx_release(arg) do {} while(0)
+  #define _spx_autorelease(arg) arg
 #else
-  #define spx_retain(arg) [arg retain]
-  #define spx_release(arg) [arg release]
-  #define spx_autorelease(arg) [arg autorelease]
+  #define _spx_retain(arg) [arg retain]
+  #define _spx_release(arg) [arg release]
+  #define _spx_autorelease(arg) [arg autorelease]
 #endif
 
 // Define this when using string in KVC to make the compiler generating
