@@ -90,7 +90,7 @@ void SPXLogv(aslclient client, aslmsg msg, int level, NSString *format, va_list 
   NSString *_spx_str = [[NSString alloc] initWithFormat:format arguments:args];
   if (_spx_str) {
     asl_log(client, msg, level, "%s", [_spx_str UTF8String]);
-    spx_release(_spx_str);
+    _spx_release(_spx_str);
   }
 }
 
