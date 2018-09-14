@@ -49,18 +49,19 @@ GCC_THREADSAFE_STATICS = YES
 GCC_SYMBOLS_PRIVATE_EXTERN = YES
 
 // MARK: Custom Compiler Flags
+HA_WARNING_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
+HA_WARNING_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo -Woverloaded-virtual
 
-HA_BASE_OTHER_FLAGS = -ferror-limit=50 -fstack-protector-all -I$(HADRON_PATH)/include
-// OTHER_CFLAGS = #merged
-HA_BASE_OTHER_CFLAGS =
-// OTHER_CPLUSPLUSFLAGS = #merged
-HA_BASE_OTHER_CPLUSPLUSFLAGS =
+// flags common to C and C++
+HA_OTHER_FLAGS = -ferror-limit=50 -fstack-protector-all -I$(HADRON_PATH)/include
 
-// WARNING_CFLAGS = #merged
+OTHER_CFLAGS = $(inherited) $(HA_OTHER_FLAGS) $(HA_WARNING_CFLAGS)
+// C++ only flags and warning. Do not use inherited else it will inherite default settings which include C flags
+OTHER_CPLUSPLUSFLAGS = $(HA_OTHER_FLAGS) $(HA_WARNING_CPLUSPLUSFLAGS)
+
+// Warning flags common to C and C++.
 // -Wsign-conversion
-HA_BASE_WARNING_FLAGS = -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
-HA_BASE_WARNING_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
-HA_BASE_WARNING_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo -Woverloaded-virtual
+WARNING_CFLAGS = $(inherited) -Wmost -Wextra -Wno-unused-parameter -Wfloat-equal -Wpointer-arith -Wwrite-strings -Wredundant-decls -Wno-idiomatic-parentheses -Wenum-compare -Warray-bounds -Wlarge-by-value-copy -Wself-assign -Wold-style-cast -Wavailability -Wsentinel -Wunreachable-code
 
 // MARK: Language
 GCC_C_LANGUAGE_STANDARD = gnu11
@@ -91,9 +92,6 @@ CLANG_ENABLE_OBJC_ARC = YES
 // MARK: Preprocessing
 ENABLE_NS_ASSERTIONS = YES
 ENABLE_STRICT_OBJC_MSGSEND = YES
-
-// GCC_PREPROCESSOR_DEFINITIONS = #merged
-HA_BASE_GCC_PREPROCESSOR_DEFINITIONS =
 
 // MARK: -
 // MARK: Warnings - All languages
@@ -193,11 +191,5 @@ CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES
 CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 
 // MARK: -
-// MARK: Swift Compiler - Custom Flags
-
-// MARK: Swift Compiler - Custom Flags
-// OTHER_SWIFT_FLAGS = #merged
-HA_BASE_OTHER_SWIFT_FLAGS =
-
 // MARK: Swift Compiler - Search Path
 SWIFT_INCLUDE_PATHS = $(PROJECT_TEMP_ROOT)/$(SDK_NAME)/HadronModules/
