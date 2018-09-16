@@ -155,9 +155,9 @@ void __SPXTrace(id self, SEL _cmd, const char *filename, long line) {
  @param exception An id representing the Exception to log.
  */
 #define SPXLogException(exception) do { \
-  SPXLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s (%s:%li): %@", \
+  SPXLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s (%s:%i): %@", \
          [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
-         __func__, strrchr("/" __FILE__, '/') + 1, (long)__LINE__, exception); \
+         __func__, strrchr("/" __FILE__, '/') + 1, __LINE__, exception); \
 } while(0)
 
 /*!
@@ -166,9 +166,9 @@ void __SPXTrace(id self, SEL _cmd, const char *filename, long line) {
  @param exception An id representing the Exception to log.
  */
 #define SPXCLogException(exception) do { \
-  SPXLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s() [%s:%li]: %@", \
+  SPXLog(NULL, NULL, ASL_LEVEL_ERR, @"%@ caught in %s() [%s:%i]: %@", \
          [exception respondsToSelector:@selector(name)] ? [exception name] : @"Undefined Exception" , \
-         __func__, strrchr("/" __FILE__, '/') + 1, (long)__LINE__, exception); \
+         __func__, strrchr("/" __FILE__, '/') + 1, __LINE__, exception); \
 } while(0)
 
 #endif /* __OBJC__ */
