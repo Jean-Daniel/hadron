@@ -64,7 +64,7 @@ final class Logger {
     } else {
       "%s\n".withCString { (str : UnsafePointer<Int8>) -> () in
         message.withCString {
-          withVaList([$0]) { vfprintf(__stderrp, str, $0); }
+          withVaList([$0]) { vfprintf(__stderrp, str, $0); } as ()
         }
       }
     }

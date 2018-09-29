@@ -24,4 +24,6 @@ WARNING_CFLAGS = $(inherited) -Winit-self -Wno-extra
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) NDEBUG=1 NS_BLOCK_ASSERTIONS
 
 // MARK: Swift Compiler - Code Generation
-SWIFT_OPTIMIZATION_LEVEL = -Owholemodule
+SWIFT_COMPILATION_MODE = wholemodule
+SWIFT_OPTIMIZATION_LEVEL = -Osize
+
