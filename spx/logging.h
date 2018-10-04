@@ -14,7 +14,7 @@
 // MARK: =================== Standard Logging ===================
 // MARK: Generic
 #define spx_log(format, ...) os_log(OS_LOG_DEFAULT, format, ## __VA_ARGS__)
-#define spx_info(format, ...) os_log_info(OS_LOG_DEFAULT, format, ## __VA_ARGS__)
+#define spx_log_info(format, ...) os_log_info(OS_LOG_DEFAULT, format, ## __VA_ARGS__)
 
 #define spx_log_error(format, ...) os_log_error(OS_LOG_DEFAULT, format, ## __VA_ARGS__)
 #define spx_log_fault(format, ...) os_log_fault(OS_LOG_DEFAULT, format, ## __VA_ARGS__)
@@ -38,6 +38,9 @@
 
 #if defined(DEBUG)
 // MARK: Debug
+
+OBJC_EXPORT const char *class_getName(Class cls);
+
 #  define spx_trace_objc() do { \
 			Class cls = [self class]; \
 			spx_debug("[%s:%d]: %c[%s %s]\n", strrchr("/" __FILE__, '/') + 1, __LINE__, self == (id)cls ? '+' : '-', class_getName(cls), sel_getName(_cmd)); \
