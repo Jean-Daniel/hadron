@@ -9,10 +9,6 @@
 import os
 import Foundation
 
-import os.activity
-
-let i = _create_ac
-
 @inline(__always)
 func spx_info(dso: UnsafeRawPointer = #dsohandle, log: OSLog = OSLog.default, _ message: StaticString) {
   os_log(message, dso: dso, log: log, type: .info)
