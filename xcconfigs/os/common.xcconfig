@@ -197,3 +197,12 @@ CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 SWIFT_VERSION = 4.2
 // MARK: Swift Compiler - Search Path
 SWIFT_INCLUDE_PATHS = $(PROJECT_TEMP_ROOT)/$(SDK_NAME)/HadronModules/
+
+// MARK: -
+// Useful definitions
+
+// Modern bundle format
+HA_LD_RUNPATH_SEARCH_PATHS = @executable_path/Frameworks
+
+// macOS Bundle format
+HA_LD_RUNPATH_SEARCH_PATHS[sdk=macos*] = @executable_path/../Frameworks
