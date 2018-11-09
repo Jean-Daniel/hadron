@@ -1,0 +1,16 @@
+//
+//  extension.xcconfig
+//  Psymo
+//
+//  Created by Jean-Daniel Dupas on 09/11/2018.
+//  Copyright © 2018 Xenonium. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+GCC_DYNAMIC_NO_PIC = $(LD_NO_PIE)
+
+OTHER_LDFLAGS = $(inherited) $(HA_TARGET_LDFLAGS)
+
+LD_RUNPATH_SEARCH_PATHS = $(inherited) $(HA_LD_RUNPATH_SEARCH_PATHS) @executable_path/../../../../Frameworks
