@@ -35,6 +35,7 @@ VERSION_INFO_BUILDER = Jean-Daniel Dupas
 
 // MARK: -
 // MARK: Code Generation
+GCC_NO_COMMON_BLOCKS = YES
 GCC_GENERATE_DEBUGGING_SYMBOLS = YES
 
 // Enable PIC by default, as this is required by PIE.
@@ -150,7 +151,6 @@ CLANG_WARN_RANGE_LOOP_ANALYSIS = YES
 CLANG_WARN_SUSPICIOUS_MOVE = YES
 GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES
 
-
 // MARK: Warnings - Objective-C
 CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
 CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
@@ -199,10 +199,15 @@ SWIFT_VERSION = 4.2
 SWIFT_INCLUDE_PATHS = $(PROJECT_TEMP_ROOT)/$(SDK_NAME)/HadronModules/
 
 // MARK: -
-// Useful definitions
+// MARK: Metal
+MTL_FAST_MATH = YES
+
+// MARK: -
+// MARK: Helpers
 
 // Modern bundle format
 HA_LD_RUNPATH_SEARCH_PATHS = @executable_path/Frameworks @loader_path/Frameworks
 
 // macOS Bundle format
 HA_LD_RUNPATH_SEARCH_PATHS[sdk=macos*] = @executable_path/../Frameworks @loader_path/../Frameworks
+
