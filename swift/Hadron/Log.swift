@@ -2,8 +2,8 @@
 //  Log.swift
 //  Hadron
 //
-//  Created by Jean-Daniel Dupas on 20/06/2014.
-//  Copyright (c) 2014 Xenonium. All rights reserved.
+//  Created by Jean-Daniel Dupas
+//  Copyright © 2018 Xenonium. All rights reserved.
 //
 
 import os

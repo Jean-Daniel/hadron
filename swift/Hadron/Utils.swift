@@ -2,8 +2,8 @@
 //  StdLib.swift
 //  Psymo
 //
-//  Created by Jean-Daniel on 28/05/2016.
-//  Copyright © 2016 Xenonium. All rights reserved.
+//  Created by Jean-Daniel Dupas
+//  Copyright © 2018 Xenonium. All rights reserved.
 //
 
 import Foundation
