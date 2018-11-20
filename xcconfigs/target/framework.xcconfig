@@ -1,4 +1,6 @@
 
+LD_NO_PIE = YES
+
 DEFINES_MODULE = YES
 
 // Signing framework at build time is not recommended

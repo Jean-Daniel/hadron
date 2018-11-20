@@ -195,8 +195,6 @@ CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 // MARK: -
 // Default to the last version
 SWIFT_VERSION = 4.2
-// MARK: Swift Compiler - Search Path
-SWIFT_INCLUDE_PATHS = $(PROJECT_TEMP_ROOT)/$(SDK_NAME)/HadronModules/
 
 // MARK: -
 // MARK: Metal
