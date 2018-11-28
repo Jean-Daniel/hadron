@@ -1,5 +1,5 @@
 
-LD_NO_PIE = YES
+LD_NO_PIE =
 
 DEFINES_MODULE = YES
 
