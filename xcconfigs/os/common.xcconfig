@@ -194,7 +194,7 @@ CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 
 // MARK: -
 // Default to the last version
-SWIFT_VERSION = 4.2
+SWIFT_VERSION = 5.0
 
 // MARK: -
 // MARK: Metal
