@@ -1,13 +1,7 @@
-//
-//  extension.xcconfig
-//  Psymo
-//
-//  Created by Jean-Daniel Dupas
-//  Copyright © 2018 Xenonium. All rights reserved.
-//
-
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
+
+ENABLE_HARDENED_RUNTIME = YES
 
 GCC_DYNAMIC_NO_PIC = $(LD_NO_PIE)
 
