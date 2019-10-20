@@ -1,6 +1,4 @@
 
-CODE_SIGN_IDENTITY = Apple Development
-
 // Only one arch at a time
 ONLY_ACTIVE_ARCH = YES
 

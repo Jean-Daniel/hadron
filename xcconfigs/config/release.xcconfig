@@ -1,7 +1,4 @@
 
-CODE_SIGN_IDENTITY = Apple Distribution
-CODE_SIGN_IDENTITY[sdk=macosx*] = Developer ID Application
-
 // MARK: Build Options
 DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 
