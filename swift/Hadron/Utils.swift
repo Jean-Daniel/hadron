@@ -16,7 +16,7 @@ func with<T>(_ object: T, update: (inout T) throws -> (Void)) rethrows -> T {
 }
 
 @objc
-class _BundleAnchor : NSObject {}
+private class _BundleAnchor : NSObject {}
 
 extension Bundle {
   static let current : Bundle = Bundle(for: _BundleAnchor.self)
