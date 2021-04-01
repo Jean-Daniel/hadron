@@ -1,7 +1,8 @@
 
 LD_NO_PIE =
 
-DEFINES_MODULE = YES
+// Not required in swift can cause issues
+// DEFINES_MODULE = YES
 
 // Signing framework at build time is not recommended
 CODE_SIGN_STYLE = Manual
