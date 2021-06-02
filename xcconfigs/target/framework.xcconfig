@@ -4,7 +4,7 @@ LD_NO_PIE =
 // Not required in swift can cause issues
 // DEFINES_MODULE = YES
 
-// Signing framework at build time is not recommended
+// Signing framework at build time is not recommended (but required when using Swift PM dependencies)
 CODE_SIGN_STYLE = Manual
 CODE_SIGN_IDENTITY =
 
