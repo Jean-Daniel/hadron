@@ -2,6 +2,6 @@
 // Pull in the general settings
 #include "common.xcconfig"
 
-MACOSX_DEPLOYMENT_TARGET = 10.13
+MACOSX_DEPLOYMENT_TARGET = 13.1
 
 CLANG_CXX_LANGUAGE_STANDARD = c++17
