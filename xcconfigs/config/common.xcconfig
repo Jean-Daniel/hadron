@@ -53,15 +53,12 @@ GCC_THREADSAFE_STATICS = YES
 GCC_SYMBOLS_PRIVATE_EXTERN = YES
 
 // MARK: Custom Compiler Flags
-HA_WARNING_CFLAGS = -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
-HA_WARNING_CPLUSPLUSFLAGS = -Wctor-dtor-privacy -Wsign-promo -Woverloaded-virtual
-
 // flags common to C and C++
-HA_OTHER_FLAGS = -ferror-limit=50 -fstack-protector-all -I$(HADRON_PATH)/include
+_HA_OTHER_FLAGS = -ferror-limit=50 -fstack-protector-all -I$(HADRON_PATH)/include
 
-OTHER_CFLAGS = $(inherited) $(HA_OTHER_FLAGS) $(HA_WARNING_CFLAGS)
+OTHER_CFLAGS = $(inherited) $(_HA_OTHER_FLAGS) -Wdiv-by-zero -Wnested-externs -Wold-style-definition -Wmissing-declarations
 // C++ only flags and warning. Do not use inherited else it will inherite default settings which include C flags
-OTHER_CPLUSPLUSFLAGS = $(HA_OTHER_FLAGS) $(HA_WARNING_CPLUSPLUSFLAGS)
+OTHER_CPLUSPLUSFLAGS = $(_HA_OTHER_FLAGS) -Wctor-dtor-privacy -Wsign-promo -Woverloaded-virtual
 
 // Warning flags common to C and C++.
 // -Wsign-conversion
@@ -204,7 +201,9 @@ CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 
 // MARK: -
 // Default to the last version
-SWIFT_VERSION = 5.7
+SWIFT_VERSION = 6.0
+
+_EXPERIMENTAL_SWIFT_EXPLICIT_MODULES = YES
 
 // MARK: -
 // MARK: Metal
