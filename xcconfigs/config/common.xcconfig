@@ -4,6 +4,8 @@ CODE_SIGN_IDENTITY = Apple Development
 // MARK: Build Options
 PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO
 
+ENABLE_USER_SCRIPT_SANDBOXING = YES
+
 // MARK: Deployment
 SKIP_INSTALL = YES
 
@@ -199,18 +201,16 @@ CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES
 CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES
 CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES
 
-// MARK: -
+// MARK: - Swift Version
 // Default to the last version
 SWIFT_VERSION = 6.0
 
 _EXPERIMENTAL_SWIFT_EXPLICIT_MODULES = YES
 
-// MARK: -
-// MARK: Metal
+// MARK: - Metal
 MTL_FAST_MATH = YES
 
-// MARK: -
-// MARK: Helpers
+// MARK: - Helpers
 
 // Modern bundle format
 HA_LD_RUNPATH_SEARCH_PATHS = @executable_path/Frameworks @loader_path/Frameworks
