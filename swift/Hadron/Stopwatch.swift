@@ -23,10 +23,10 @@ struct StopWatch {
       return Double(time) * factor
     }
 
-    static var seconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR / 1e9)
-    static var milliseconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR / 1e6)
-    static var microseconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR / 1e3)
-    static var nanoseconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR)
+    static let seconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR / 1e9)
+    static let milliseconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR / 1e6)
+    static let microseconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR / 1e3)
+    static let nanoseconds = Unit(factor: ABSOLUTE_TO_NANO_FACTOR)
   }
 
   private var _start : UInt64 = 0
